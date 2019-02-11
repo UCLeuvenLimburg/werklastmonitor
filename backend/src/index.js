@@ -1,5 +1,7 @@
 const config = require('./config');
 
+require('./database');
+
 const express = require('express');
 const app = express();
 
@@ -11,8 +13,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
-
+app.use('/labs', require('./routes/labRoutes'));
 app.use('/worksessions', require('./routes/worksessionRouter'));
+app.use('/workdays', require('./routes/workdayRouter'));
 
 app.listen(config.port, () => {
 	console.log(`API running on port ${config.port}`);
