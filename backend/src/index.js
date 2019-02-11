@@ -11,7 +11,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
-app.use(require('./routes/worksessionRouter'));
+
+app.use('/worksessions', require('./routes/worksessionRouter'));
 
 app.listen(config.port, () => {
 	console.log(`API running on port ${config.port}`);
