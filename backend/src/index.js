@@ -16,6 +16,8 @@ app.use(morgan('combined'));
 app.use('/labs', require('./routes/labRoutes'));
 app.use('/worksessions', require('./routes/worksessionRouter'));
 app.use('/workdays', require('./routes/workdayRouter'));
+app.use('/milestones', require('./routes/milestoneRoutes'));
+
 
 app.listen(config.port, () => {
 	console.log(`API running on port ${config.port}`);
