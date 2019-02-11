@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 app.use(morgan('combined'));
 
 app.use('/labs', require('./routes/labRoutes'));
-app.use('/worksessions', require('./routes/worksessionRouter'));
-app.use('/workdays', require('./routes/workdayRouter'));
+app.use('/worksessions', require('./routes/worksessionRoutes'));
+app.use('/workdays', require('./routes/workdayRoutes'));
 app.use('/milestones', require('./routes/milestoneRoutes'));
 
 
