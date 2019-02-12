@@ -26,6 +26,7 @@
     "sass": "^1.16.0",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-pug": "^1.0.7",
+    "vue-cli-plugin-svg": "^0.1.2",
     "vue-template-compiler": "^2.5.21"
   }
 }

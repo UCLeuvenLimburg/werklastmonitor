@@ -1,7 +1,24 @@
 <template lang="pug">
 	#app
-		router-view
+		.content
+			app-header
+			main.main-width
+				router-view
+		app-footer
 </template>
+
+<script>
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+
+export default {
+	name: 'App',
+	components: {
+		AppHeader,
+		AppFooter
+	}
+};
+</script>
 
 <style lang="scss">
 @import 'assets/css/definitions';
@@ -27,5 +44,42 @@
 
 body {
 	font: 1rem $font;
+	color: $color-fg;
+	background: $color-bg;
+	height: 100%;
+}
+
+#app {
+	min-height: 100vh;
+
+	.content {
+		min-height: 100vh;
+		padding-bottom: 54px;
+	}
+
+	footer {
+		margin-top: -54px;
+	}
+}
+
+.main-width {
+	display: block;
+	margin: 0 auto;
+	width: 80%;
+}
+
+.right {
+	margin-left: auto;
+}
+
+main {
+	margin-top: 32px !important;
+	background: $color-content-bg;
+	padding: 32px;
+}
+
+h1 {
+	font-size: 32px;
+	font-weight: bold;
 }
 </style>
