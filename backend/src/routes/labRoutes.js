@@ -4,12 +4,26 @@ const Milestone = require('../models/milestoneModel');
 
 let labRouter = express.Router();
 
+const getMilestones = async (milestones) => {
+	if (milestones.length > 0 && milestones[0].constructor !== String) {
+		let milestoneObjects = await Milestone.insertMany(milestones);
+		milestones = [];
+		for (let milestone of milestoneObjects) {
+			milestones.push(milestone._id);
+		}
+	}
+	return await Milestone.find({ _id: { $in: milestones } });
+};
+
 labRouter.route('/')
 	.get((req, res) => {
-		Lab.find((err, labs) => {
+		Lab.find(async (err, labs) => {
 			if (err) {
 				res.status(500).send(err);
 			} else {
+				for (let i = 0; i < labs.length; ++i) {
+					labs[i].milestones = await Milestone.find({ _id: { $in: labs[i].milestones } });
+				}
 				res.json(labs);
 			}
 		});
@@ -20,15 +34,7 @@ labRouter.route('/')
 		lab.startDate = req.body.startDate;
 		lab.endDate = req.body.endDate;
 		lab.hoursEstimate = req.body.hoursEstimate;
-
-		let milestones = req.body.milestones;
-		if (milestones.length > 0) {
-			if (milestones[0].constructor === String) {
-				lab.milestones = await Milestone.find({ _id: { $in: milestones } });
-			} else {
-				lab.milestones = await Milestone.insertMany(req.body.milestones);
-			}
-		}
+		lab.milestones = await getMilestones(req.body.milestones);
 
 		lab.save();
 		res.json(lab);
@@ -46,7 +52,8 @@ labRouter.use('/:labId', (req, res, next) => {
 });
 
 labRouter.route('/:labId')
-	.get((req, res) => {
+	.get(async (req, res) => {
+		req.lab.milestones = await Milestone.find({ _id: { $in: req.lab.milestones } });
 		res.json(req.lab);
 	})
 	.put(async (req, res) => {
@@ -54,15 +61,7 @@ labRouter.route('/:labId')
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
 		req.lab.hoursEstimate = req.body.hoursEstimate;
-
-		let milestones = req.body.milestones;
-		if (milestones.length > 0) {
-			if (milestones[0].constructor === String) {
-				req.lab.milestones = await Milestone.find({ _id: { $in: milestones } });
-			} else {
-				req.lab.milestones = await Milestone.insertMany(req.body.milestones);
-			}
-		}
+		req.lab.milestones = await getMilestones(req.body.milestones);
 
 		req.lab.save();
 		res.json(req.lab);

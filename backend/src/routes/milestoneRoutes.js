@@ -11,6 +11,7 @@ milestoneRouter.route('/')
 	})
 	.post((req, res) => {
 		let milestone = new Milestone();
+		milestone.lab = req.body.lab;
 		milestone.name = req.body.name;
 		milestone.duration = req.body.duration;
 		milestone.isDone = req.body.isDone;
