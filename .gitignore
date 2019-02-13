@@ -1,4 +1,2 @@
-
-frontend/package-lock\.json
-
-\.directory
+**/package-lock\.json
+**/\.directory
