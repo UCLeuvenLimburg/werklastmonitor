@@ -34,6 +34,7 @@ labRouter.route('/')
 		lab.startDate = req.body.startDate;
 		lab.endDate = req.body.endDate;
 		lab.hoursEstimate = req.body.hoursEstimate;
+		lab.courseId = req.body.courseId;
 		lab.milestones = await getMilestones(req.body.milestones);
 
 		lab.save();
@@ -61,6 +62,7 @@ labRouter.route('/:labId')
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
 		req.lab.hoursEstimate = req.body.hoursEstimate;
+		req.lab.courseId = req.body.courseId;
 		req.lab.milestones = await getMilestones(req.body.milestones);
 
 		req.lab.save();

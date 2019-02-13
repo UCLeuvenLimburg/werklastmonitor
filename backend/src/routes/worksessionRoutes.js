@@ -11,7 +11,7 @@ worksessionRouter.route('/')
 				res.status('500').send(err);
 			}
 			else {
-				res.json(worksessions);
+				res.status('200').send(worksessions);
 			}
 		})
 	})
@@ -48,7 +48,7 @@ worksessionRouter.use('/:worksession_Id', (req,res, next) => {
 
 worksessionRouter.route('/:worksession_Id')
 	.get((req, res) => {
-		res.json(req.worksession);
+		res.status('200').send(req.worksession);
 	})
 	.put(async (req, res) => {
 		req.worksession.startDate = req.body.startDate;

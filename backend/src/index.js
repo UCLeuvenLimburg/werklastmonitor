@@ -17,6 +17,7 @@ app.use('/labs', require('./routes/labRoutes'));
 app.use('/worksessions', require('./routes/worksessionRoutes'));
 app.use('/workdays', require('./routes/workdayRoutes'));
 app.use('/milestones', require('./routes/milestoneRoutes'));
+app.use('/courses', require('./routes/courseRoutes'));
 
 
 app.listen(config.port, () => {
