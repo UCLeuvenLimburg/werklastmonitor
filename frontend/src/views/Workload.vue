@@ -3,7 +3,7 @@
 		h1 Werklast
 		p Overzicht van werklast per maand.
 		graph-stackbar(
-			height="400",
+			:height="400",
 			:labels="labels",
 			:full-mode="false",
 			:show-text="true",
@@ -16,7 +16,7 @@
 <script>
 export default {
 	name: 'workload',
-	data: function () {
+	data () {
 		return {
 			names: [ 'Computersystemen', 'Web 1', 'Netwerken', 'BOP' ],
 			values: [
