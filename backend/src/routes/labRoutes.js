@@ -65,6 +65,15 @@ labRouter.route('/:labId')
 
 		req.lab.save();
 		res.json(req.lab);
+	})
+	.delete((req, res) => {
+		req.lab.remove((err) => {
+			if(err) {
+				res.status(500).send(err);
+			} else {
+				res.status(204).send('removed');
+			}
+		});
 	});
 
 module.exports = labRouter;

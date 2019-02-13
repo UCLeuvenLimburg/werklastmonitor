@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
 const chai = require('chai');
 const expect = chai.expect;
+const should = chai.should;
+const chaiHttp = require('chai-http');
+const server = require('../src/index');
 
 const Milestone = require('../src/models/milestoneModel');
 
@@ -16,18 +19,13 @@ describe('Milestone tests', () => {
 		});
 	});
 
-	describe('database tests', () => {
-		it('saves a valid milestone', (done) => {
-			let testMilestone = new Milestone({
-				name: 'testMilestone',
-				duration: 5,
-				isDone: false
-			});
-
-			testMilestone.save();
+	beforeEach((done) => {
+		Milestone.remove({}, (err) => {
 			done();
-		});
+		})
+	});
 
+	describe('database tests', () => {
 		it('returns the milestone that was added', (done) => {
 			let testMilestone = new Milestone({
 				name: 'testMilestone',
@@ -41,6 +39,52 @@ describe('Milestone tests', () => {
 			});
 
 			done();
+		});
+	});
+
+	describe('/GET milestones', () => {
+		it('should return all milestones', (done) => {
+			let testMilestone = new Milestone({
+				name: 'testMilestone',
+				duration: 5,
+				isDone: false
+			});
+			testMilestone.save();
+
+			chai.request(server)
+				.get('/milestones')
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a('array');
+					res.body.length.should.be.equal(1);
+				});
+
+			done();
+		});
+	});
+
+	describe('/POST milestone', () => {
+		it('should POST a milestone', (done) => {
+			let milestone = {
+				name: "testmilestone",
+				duration: 5,
+				isDone: false
+			};
+
+			chai.request(server)
+				.post('/milestone')
+				.send(milestone)
+				.end((err, res) => {
+					res.should.have(200);
+					res.body.should.be.a('object');
+					res.body.milestone.should.have.property('name');
+					res.body.milestone.should.have.property('duration');
+					res.body.milestone.should.have.property('isDone');
+
+					expect(milestone).to.equal(res.body.milestone);
+
+					done();
+				});
 		});
 	});
 });
