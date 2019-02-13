@@ -1,11 +1,8 @@
-<template>
-		<div>
-			<h1>Excel-bestand uploaden</h1>
-			<p>Selecteer een Office Excel, LibreOffice Calc, of een CSV-bestand.</p>
-			<div>
-			<input type="file" accept=".xls,.xlsx,.ods,.csv" @change="onFileChange">
-			</div>
-		</div>
+<template lang="pug">
+	.page.upload
+		h1 Excel-bestand uploaden
+		p Selecteer een Office Excel, LibreOffice Calc, of een CSV-bestand.
+		input.button(type="file", accept=".xls,.xlsx,.ods,.csv" @change="onFileChange")
 </template>
 
 <script>

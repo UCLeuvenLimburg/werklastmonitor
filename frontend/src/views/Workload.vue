@@ -1,20 +1,16 @@
-<template>
-		<div>
-			<h1>Werklast</h1>
-			<p>Overzicht van werklast per maand.</p>
-			<div id="app">
-				<graph-stackbar
-					:height="400"
-					:labels="labels"
-					:full-mode="false"
-					:show-text="true"
-					:names="names"
-					:values="values">
-					<legends :names="names" :filter="true"></legends>
-					<tooltip :names="names" :position="'right'"></tooltip>
-				</graph-stackbar>
-			</div>
-		</div>
+<template lang="pug">
+	.page.workload
+		h1 Werklast
+		p Overzicht van werklast per maand.
+		graph-stackbar(
+			height="400",
+			:labels="labels",
+			:full-mode="false",
+			:show-text="true",
+			:names="names",
+			:values="values")
+			legends(:names="names", :filter="true")
+			tooltip(:names="names", position="right")
 </template>
 
 <script>
