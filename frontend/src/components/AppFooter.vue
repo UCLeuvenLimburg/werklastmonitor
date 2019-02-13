@@ -15,7 +15,7 @@ export default {
 			return moment().year();
 		}
 	}
-}
+};
 </script>
 
 <style lang="scss" scoped>

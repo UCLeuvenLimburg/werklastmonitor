@@ -74,6 +74,7 @@ body {
 
 main {
 	margin-top: 32px !important;
+	margin-bottom: 32px !important;
 	background: $color-content-bg;
 	padding: 32px;
 }

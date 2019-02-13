@@ -4,13 +4,13 @@
 			li
 				router-link(to="/") Home
 			li
-				router-link(to="#") Test
+				router-link(to="/workload") Werklast
 			li
 				router-link(to="/Agenda") Agenda
 			li
 				router-link(to="#") Test
 			li
-				router-link(to="#") Test
+				router-link(to="/upload") Upload
 			li.right
 				router-link.highlight(to="#") Aanmelden
 </template>
