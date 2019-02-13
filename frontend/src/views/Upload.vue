@@ -3,10 +3,14 @@
 		h1 Excel-bestand uploaden
 		p Selecteer een Office Excel, LibreOffice Calc, of een CSV-bestand.
 		input(name="file", id="file", type="file", accept=".xls,.xlsx,.ods,.csv" @change="onFileChange")
-		label(for="file") Kies een bestand...
+		label(for="file")
+			mdi-upload-icon
+			p Kies een bestand...
 </template>
 
 <script>
+import 'mdi-vue/UploadIcon';
+
 import XLSX from 'xlsx';
 
 export default {
@@ -53,7 +57,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-input {
+@import '../assets/css/definitions';
 
+input {
+	width: .1px;
+	height: .1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+label {
+	margin-top: 4px;
+	font-weight: bold;
+	color: $color-content-bg;
+	background: $color-accent;
+	display: inline-flex;
+	flex-direction: row;
+	padding: 8px;
+	cursor: pointer;
+	transition: .2s ease;
+
+	&:hover {
+		background: $color-fg;
+	}
+
+	svg {
+		fill: $color-content-bg;
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
+	p {
+		padding: 0 8px;
+		line-height: 1.5rem;
+	}
 }
 </style>
