@@ -18,7 +18,11 @@ module.exports = {
 			'error',
 			'single'
 		],
-		'no-tabs': 0
+		'no-tabs': 0,
+		'semi': [
+			'error',
+			'always'
+		]
 	},
 	parserOptions: {
 		parser: 'babel-eslint'
