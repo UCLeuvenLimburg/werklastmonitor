@@ -11,8 +11,7 @@ having to override as much.
 
 .theme-default .cv-header,
 .theme-default .cv-header-day {
-	background-color: #e00049;
-	color: white;
+	background-color: #f0f0f0;
 }
 
 .theme-default .cv-header .periodLabel {
@@ -20,20 +19,12 @@ having to override as much.
 }
 
 .theme-default .cv-header button {
-	color: white;
-	background-color: #003469;
-	border: 0;
-}
-
-.theme-default .cv-header button:hover {
-	color: white;
-	background-color: #e00049;
-	border: 0;
+	color: #7f7f7f;
 }
 
 .theme-default .cv-header button:disabled {
 	color: #ccc;
-	background-color: #e00049;
+	background-color: #f7f7f7;
 }
 
 /* Grid */
@@ -53,19 +44,20 @@ having to override as much.
 /* Events */
 
 .theme-default .cv-event {
-	border-color: transparent;
+	border-color: #e0e0f0;
 	border-radius: 0.5em;
-	background-color: #e00049;
+	background-color: #e7e7ff;
 	text-overflow: ellipsis;
-	color: white;
 }
 
 .theme-default .cv-event.purple {
-	background-color: #003469;
+	background-color: #f0e0ff;
+	border-color: #e7d7f7;
 }
 
 .theme-default .cv-event.orange {
-	background-color: #ed6d2d;
+	background-color: #ffe7d0;
+	border-color: #f7e0c7;
 }
 
 .theme-default .cv-event.continued::before,
