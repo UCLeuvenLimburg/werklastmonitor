@@ -10,7 +10,7 @@
 					:show-text="true"
 					:names="names"
 					:values="values">
-					<legends :names="names"></legends>
+					<legends :names="names" :filter="true"></legends>
 					<tooltip :names="names" :position="'right'"></tooltip>
 				</graph-stackbar>
 			</div>
