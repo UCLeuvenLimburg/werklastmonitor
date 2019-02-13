@@ -11,7 +11,9 @@
     "axios": "^0.18.0",
     "moment": "^2.24.0",
     "vue": "^2.5.22",
+    "vue-graph": "^0.8.2",
     "vue-router": "^3.0.1",
+    "vue-simple-calendar": "^4.2.1",
     "vuex": "^3.0.1",
     "xlsx": "^0.14.1"
   },
