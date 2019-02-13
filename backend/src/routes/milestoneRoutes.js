@@ -1,5 +1,6 @@
 const express = require('express');
 const Milestone = require('../models/milestoneModel');
+const {check, validationResult} = require('express-validator/check');
 
 let milestoneRouter = express.Router();
 
@@ -9,9 +10,18 @@ milestoneRouter.route('/')
 			res.json(milestones);
 		});
 	})
-	.post((req, res) => {
+	.post([
+		check('milestone.name').isEmpty().withMessage('Milestone name cannot be empty'),
+		check('milestone.duration').isEmpty().withMessage('Milestone duration cannot be empty'),
+		check('milestone.isDone').isEmpty().isBoolean().withMessage('Milestone isDone must be a boolean')
+	], (req, res) => {
+		const errors = validationResult(req);
+
+		if(!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
 		let milestone = new Milestone();
-		milestone.lab = req.body.lab;
 		milestone.name = req.body.name;
 		milestone.duration = req.body.duration;
 		milestone.isDone = req.body.isDone;
