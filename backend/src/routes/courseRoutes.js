@@ -1,5 +1,7 @@
 const express = require('express');
 const Course = require('../models/courseModel');
+const { body, validationResult } = require('express-validator/check');
+// const { sanitizeBody } = require('express-validator/filter');
 
 const courseRouter = express.Router();
 
@@ -14,7 +16,15 @@ courseRouter.route('/')
 		})
 	})
 
-	.post((req, res) => {
+	.post([
+		body('name').not().isEmpty().trim().withMessage('Name of the course cant be empty.'),
+		body('fase').isInt({min: 1, max: 6}).withMessage('Fases can only be from 1-6'),
+		body('courseCode').exists().withMessage('course code is required')
+	],(req, res) => {
+		const errors = validationResult(req);
+		if(!errors.isEmpty()) {
+			return res.status('422').json({ errors: errors.array() });
+		}
 		let course = new Course();
 		course.name = req.body.name;
 		course.fase = req.body.fase;
