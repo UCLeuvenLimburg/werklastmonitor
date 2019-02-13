@@ -6,7 +6,7 @@
 			li
 				router-link(to="#") Test
 			li
-				router-link(to="#") Test
+				router-link(to="/Agenda") Agenda
 			li
 				router-link(to="#") Test
 			li
@@ -18,7 +18,7 @@
 <script>
 export default {
 	name: 'AppNavBar'
-}
+};
 </script>
 
 <style lang="scss" scoped>
