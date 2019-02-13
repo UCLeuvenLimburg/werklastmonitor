@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Upload from './views/Upload.vue';
+import Workload from './views/Workload.vue';
 
 Vue.use(Router);
 
@@ -18,6 +19,11 @@ export default new Router({
 			path: '/upload',
 			name: 'upload',
 			component: Upload
+		},
+		{
+			path: '/workload',
+			name: 'workload',
+			component: Workload
 		}
 		// ,
 		// {

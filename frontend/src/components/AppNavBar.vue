@@ -4,7 +4,7 @@
 			li
 				router-link(to="/") Home
 			li
-				router-link(to="#") Test
+				router-link(to="/workload") Werklast
 			li
 				router-link(to="#") Test
 			li
