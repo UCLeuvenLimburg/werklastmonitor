@@ -20,6 +20,7 @@ worksessionRouter.route('/')
 	.post( [
 		body('startDate').isAfter().withMessage('Please enter a valid date'),
 		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
 		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
 	], async (req, res) => {
@@ -30,6 +31,7 @@ worksessionRouter.route('/')
 		let worksession = new Worksession();
 		worksession.startDate = req.body.startDate;
 		worksession.endDate = req.body.endDate;
+		worksession.studentNumber = req.body.studentNumber;
 		worksession.lab = req.body.lab;
 		// worksession.workdays = req.body.workdays;
 
@@ -63,6 +65,7 @@ worksessionRouter.route('/:worksession_Id')
 	.put([
 		body('startDate').isAfter().withMessage('Please enter a valid date'),
 		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
 		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
 	],async (req, res) => {
@@ -72,6 +75,7 @@ worksessionRouter.route('/:worksession_Id')
 		}
 		req.worksession.startDate = req.body.startDate;
 		req.worksession.endDate = req.body.endDate;
+		req.worksession.studentNumber = req.body.studentNumber;
 		req.worksession.lab = req.body.lab;
 		// req.worksession.workdays = req.body.workdays;
 
