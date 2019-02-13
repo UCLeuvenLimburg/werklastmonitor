@@ -22,7 +22,7 @@ require('../assets/css/default.css');
 
 export default {
 	name: 'app',
-	data: function () {
+	data () {
 		return {
 			showDate: new Date(),
 			events: [{ id: '1', startDate: '2019-02-01', endDate: '2019-02-02', title: 'Werkstukje' }]
