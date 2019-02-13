@@ -1,6 +1,7 @@
 const express = require('express');
 const Worksession = require('../models/worksessionModel');
 const Workday = require('../models/workdayModel');
+const { body, validationResult } = require('express-validator/check');
 
 const worksessionRouter = express.Router();
 
@@ -16,10 +17,21 @@ worksessionRouter.route('/')
 		})
 	})
 
-	.post(async (req, res) => {
+	.post( [
+		body('startDate').isAfter().withMessage('Please enter a valid date'),
+		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
+		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
+		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
+	], async (req, res) => {
+		const errors = validationResult(req);
+		if(!errors.isEmpty()) {
+			return res.status('422').json({ errors: errors.array() });
+		}
 		let worksession = new Worksession();
 		worksession.startDate = req.body.startDate;
 		worksession.endDate = req.body.endDate;
+		worksession.studentNumber = req.body.studentNumber;
 		worksession.lab = req.body.lab;
 		// worksession.workdays = req.body.workdays;
 
@@ -50,9 +62,20 @@ worksessionRouter.route('/:worksession_Id')
 	.get((req, res) => {
 		res.status('200').send(req.worksession);
 	})
-	.put(async (req, res) => {
+	.put([
+		body('startDate').isAfter().withMessage('Please enter a valid date'),
+		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
+		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
+		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
+	],async (req, res) => {
+		const errors = validationResult(req);
+		if(!errors.isEmpty()) {
+			return res.status('422').json({ errors: errors.array() });
+		}
 		req.worksession.startDate = req.body.startDate;
 		req.worksession.endDate = req.body.endDate;
+		req.worksession.studentNumber = req.body.studentNumber;
 		req.worksession.lab = req.body.lab;
 		// req.worksession.workdays = req.body.workdays;
 

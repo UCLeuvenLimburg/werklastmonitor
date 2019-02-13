@@ -17,7 +17,7 @@ courseRouter.route('/')
 	})
 
 	.post([
-		body('name').not().isEmpty().trim().withMessage('Name of the course cant be empty.'),
+		body('name').trim().not().isEmpty().withMessage('Name of the course cant be empty.'),
 		body('fase').isInt({min: 1, max: 6}).withMessage('Fases can only be from 1-6'),
 		body('courseCode').exists().withMessage('course code is required')
 	],(req, res) => {

@@ -1,5 +1,6 @@
 const express = require('express');
 const Workday = require('../models/workdayModel');
+const { body, validationResult } = require('express-validator/check');
 
 const workdayRouter = express.Router();
 
@@ -9,7 +10,14 @@ workdayRouter.route('/')
 			res.json(workdays);
 		});
 	})
-	.post((req, res) => {
+	.post([
+		body('day').isAfter().withMessage('You cant undo your mistakes!'),
+		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
+	], (req, res) => {
+		const errors = validationResult(req);
+		if(!errors.isEmpty()) {
+			return res.status('422').json({ errors: errors.array() });
+		}
 		let workday = new Workday();
 		workday.day = req.body.day;
 		workday.workhours = req.body.workhours;
@@ -32,7 +40,14 @@ workdayRouter.route('/:workday_Id')
 	.get((req, res) => {
 		res.json(req.workday);
 	})
-	.put((req, res) => {
+	.put([
+		body('day').isAfter().withMessage('You cant undo your mistakes!'),
+		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
+	],(req, res) => {
+		const errors = validationResult(req);
+		if(!errors.isEmpty()) {
+			return res.status('422').json({ errors: errors.array() });
+		}
 		req.workday.day = req.body.day;
 		req.workday.workhours = req.body.workhours;
 		req.workday.save();

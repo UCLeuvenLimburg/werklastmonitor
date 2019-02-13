@@ -11,8 +11,13 @@ milestoneRouter.route('/')
 		});
 	})
 	.post([
+<<<<<<< HEAD
 		check('name').not().isEmpty().withMessage('Milestone name cannot be empty'),
 		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
+=======
+		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
+		check('duration').isInt().withMessage('Milestone duration cannot be empty'),
+>>>>>>> 4761a9d3898f45669d6909564cbb106bef10001f
 		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
 	], (req, res) => {
 		const errors = validationResult(req);
