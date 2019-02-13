@@ -37,13 +37,14 @@ nav {
 		li a {
 			display: block;
 			padding: 16px;
-			color: $color-fg;
+			color: $color-content-bg;
 			text-decoration: none;
 			font-size: 1.2rem;
 			line-height: 1.2rem;
 			transition: .2s ease;
 
 			&:hover {
+				color: $color-fg;
 				background: $color-content-bg;
 			}
 

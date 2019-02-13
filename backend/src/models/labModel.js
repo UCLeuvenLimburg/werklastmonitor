@@ -7,6 +7,7 @@ const labSchema = new Schema({
 	startDate: { type: Date },
 	endDate: { type: Date },
 	hourEstimate: { type: Number },
+	courseId: { type: Schema.Types.ObjectId, ref: 'Course'},
 	milestones: [{ type: Schema.Types.ObjectId, ref: 'Milestone' }]
 });
 module.exports = mongoose.model('Lab', labSchema);

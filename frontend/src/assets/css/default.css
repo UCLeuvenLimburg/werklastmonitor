@@ -1,9 +1,6 @@
 /*
 **************************************************************
-This theme is the default shipping theme, it includes some
-decent defaults, but is separate from the calendar component
-to make it easier for users to implement their own themes w/o
-having to override as much.
+Eigen aangepast thema
 **************************************************************
 */
 
@@ -11,7 +8,8 @@ having to override as much.
 
 .theme-default .cv-header,
 .theme-default .cv-header-day {
-	background-color: #f0f0f0;
+	background-color: #e00049;
+	color: white;
 }
 
 .theme-default .cv-header .periodLabel {
@@ -19,12 +17,20 @@ having to override as much.
 }
 
 .theme-default .cv-header button {
-	color: #7f7f7f;
+	color: white;
+	background-color: #003469;
+	border: 0;
+}
+
+.theme-default .cv-header button:hover {
+	color: #003469;
+	background-color: white;
+	border: 0;
 }
 
 .theme-default .cv-header button:disabled {
 	color: #ccc;
-	background-color: #f7f7f7;
+	background-color: #e00049;
 }
 
 /* Grid */
@@ -44,20 +50,19 @@ having to override as much.
 /* Events */
 
 .theme-default .cv-event {
-	border-color: #e0e0f0;
+	border-color: transparent;
 	border-radius: 0.5em;
-	background-color: #e7e7ff;
+	background-color: #e00049;
 	text-overflow: ellipsis;
+	color: white;
 }
 
 .theme-default .cv-event.purple {
-	background-color: #f0e0ff;
-	border-color: #e7d7f7;
+	background-color: #003469;
 }
 
 .theme-default .cv-event.orange {
-	background-color: #ffe7d0;
-	border-color: #f7e0c7;
+	background-color: #ed6d2d;
 }
 
 .theme-default .cv-event.continued::before,

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "mdi-vue": "^0.2.14",
     "moment": "^2.24.0",
     "vue": "^2.5.22",
     "vue-graph": "^0.8.2",

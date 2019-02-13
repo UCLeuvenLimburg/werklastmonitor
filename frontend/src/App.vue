@@ -77,10 +77,15 @@ main {
 	margin-bottom: 32px !important;
 	background: $color-content-bg;
 	padding: 32px;
+
+	p {
+		padding: 4px 0;
+	}
 }
 
 h1 {
 	font-size: 32px;
 	font-weight: bold;
+	padding-bottom: 16px;
 }
 </style>
