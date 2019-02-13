@@ -11,13 +11,8 @@ milestoneRouter.route('/')
 		});
 	})
 	.post([
-<<<<<<< HEAD
-		check('name').not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
-=======
 		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt().withMessage('Milestone duration cannot be empty'),
->>>>>>> 4761a9d3898f45669d6909564cbb106bef10001f
+		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
 		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
 	], (req, res) => {
 		const errors = validationResult(req);
@@ -60,13 +55,19 @@ milestoneRouter.route('/:milestoneId')
 		});
 	})
 	.put([
-		check('name').not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
+		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
+		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be a positive integer'),
 		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
 	], (req, res) => {
-		req.milestone.name = req.body.milestone.name;
-		req.milestone.duration = req.body.milestone.duration;
-		req.milestone.isDone = req.body.milestone.isDone;
+		const errors = validationResult(req);
+
+		if(!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
+		req.milestone.name = req.body.name;
+		req.milestone.duration = req.body.duration;
+		req.milestone.isDone = req.body.isDone;
 
 		req.milestone.save();
 		res.json(req.milestone);
