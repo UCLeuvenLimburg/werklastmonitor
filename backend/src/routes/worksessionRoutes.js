@@ -1,6 +1,6 @@
 const express = require('express');
-const Worksession = require('../models/worksession');
-const Workday = require('../models/workday');
+const Worksession = require('../models/worksessionModel');
+const Workday = require('../models/workdayModel');
 
 const worksessionRouter = express.Router();
 

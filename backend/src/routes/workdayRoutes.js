@@ -1,5 +1,5 @@
 const express = require('express');
-const Workday = require('../models/workday');
+const Workday = require('../models/workdayModel');
 
 const workdayRouter = express.Router();
 
