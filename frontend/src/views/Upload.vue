@@ -66,6 +66,10 @@ input {
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
+
+	&:focus + label {
+		background: $color-fg;
+	}
 }
 
 label {
