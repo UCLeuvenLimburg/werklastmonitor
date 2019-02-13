@@ -6,9 +6,7 @@
 			li
 				router-link(to="/workload") Werklast
 			li
-				router-link(to="/Agenda") Agenda
-			li
-				router-link(to="#") Test
+				router-link(to="/agenda") Agenda
 			li
 				router-link(to="/upload") Upload
 			li.right

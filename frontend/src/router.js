@@ -2,10 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
 
-import Agenda from './views/Agenda.vue';
-import Upload from './views/Upload.vue';
-import Workload from './views/Workload.vue';
-
 Vue.use(Router);
 
 export default new Router({
@@ -18,28 +14,19 @@ export default new Router({
 			component: Home
 		},
 		{
-			path: '/Agenda',
+			path: '/agenda',
 			name: 'agenda',
-			component: Agenda
+			component: () => import(/* webpackChunkName: "agenda" */ './views/Agenda.vue')
 		},
 		{
 			path: '/upload',
 			name: 'upload',
-			component: Upload
+			component: () => import(/* webpackChunkName: "upload" */ './views/Upload.vue')
 		},
 		{
 			path: '/workload',
 			name: 'workload',
-			component: Workload
+			component: () => import(/* webpackChunkName: "workload" */ './views/Workload.vue')
 		}
-		// ,
-		// {
-		// path: '/about',
-		// name: 'about',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		// component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-		// }
 	]
 });
