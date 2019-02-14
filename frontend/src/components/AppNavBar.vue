@@ -10,7 +10,7 @@
 			li
 				router-link(to="/upload") Upload
 			li.right
-				router-link.highlight(to="#") Aanmelden
+				router-link.highlight(to="/login") Aanmelden
 </template>
 
 <script>
