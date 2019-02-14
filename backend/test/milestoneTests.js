@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
-const chai = require('chai');
-const expect = chai.expect;
-const should = chai.should;
-const chaiHttp = require('chai-http');
 const server = require('../src/index');
-
-const Milestone = require('../src/models/milestoneModel');
+let assert = require('assert');
+let request = require('supertest');
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let should = chai.should();
+let Milestone = require('../src/models/milestoneModel');
 
 chai.use(chaiHttp);
 
@@ -20,17 +20,78 @@ describe('Milestone tests', () => {
 		});
 	});
 
-	describe('database tests', () => {
-		it('returns the milestone that was added', (done) => {
-			let testMilestone = new Milestone({
-				name: 'testMilestone',
+	describe('/POST milestone', () => {
+		it('should create a milestone', (done) => {
+			let milestone = {
+				name: 'testMilestonee',
 				duration: 5,
 				isDone: false
-			});
-			testMilestone.save();
+			};
 
-			Milestone.findById(testMilestone._id, (err, milestone) => {
-				expect(milestone).to.equal(testMilestone);
+			chai.request(server)
+				.post('/milestones')
+				.send(milestone)
+				.end((err, res) => {
+					res.body.name.should.eql('testMilestonee');
+					res.body.duration.should.eql(5);
+					res.body.isDone.should.eql(false);
+				});
+
+			done();
+		});
+
+		it('should return 1 error message for a milestone with an empty name', (done) => {
+			let invalidMilestone = {
+				name: '',
+				duration: 5,
+				isDone: false
+			}
+
+			chai.request(server)
+			.post('/milestones')
+			.send(invalidMilestone)
+			.end((err, res) => {
+				res.should.have.status(422);
+				res.body.should.have.property('errors');
+				res.body.errors.length.should.be.eql(1);
+			});
+
+			done();
+		});
+
+		it('should return 1 error message for a milestone with a negative duration', (done) => {
+			let invalidMilestone = {
+				name: 'fff',
+				duration: -1,
+				isDone: false
+			}
+
+			chai.request(server)
+			.post('/milestones')
+			.send(invalidMilestone)
+			.end((err, res) => {
+				res.should.have.status(422);
+				res.body.should.have.property('errors');
+				res.body.errors.length.should.be.eql(1);
+			});
+
+			done();
+		});
+
+		it('should return 1 error message for a milestone with an invalid boolean for isDone', (done) => {
+			let invalidMilestone = {
+				name: 'fff',
+				duration: 5,
+				isDone: "5"
+			}
+
+			chai.request(server)
+			.post('/milestones')
+			.send(invalidMilestone)
+			.end((err, res) => {
+				res.should.have.status(422);
+				res.body.should.have.property('errors');
+				res.body.errors.length.should.be.eql(1);
 			});
 
 			done();
@@ -38,47 +99,31 @@ describe('Milestone tests', () => {
 	});
 
 	describe('/GET milestones', () => {
-		it('should return all milestones', (done) => {
-			let testMilestone = new Milestone({
-				name: 'testMilestone',
-				duration: 5,
-				isDone: false
-			});
-			testMilestone.save();
-
-			chai.request(server)
+		it('should get a milestone', (done) => {
+			request(server)
 				.get('/milestones')
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.be.a('array');
-				});
-
-			done();
+				.expect(200, done);
 		});
-	});
 
-	describe('/POST milestone', () => {
-		it('should POST a milestone', (done) => {
-			let milestone = {
-				name: "testmilestone",
-				duration: 5,
-				isDone: false
-			};
-
-			chai.request(server)
-				.post('/milestone')
-				.send(milestone)
-				.end((err, res) => {
-					res.should.have(200);
-					res.body.should.be.a('object');
-					res.body.milestone.should.have.property('name');
-					res.body.milestone.should.have.property('duration');
-					res.body.milestone.should.have.property('isDone');
-
-					expect(milestone).to.equal(res.body.milestone);
-
-					done();
+		describe('/GET/:id milestones', () => {
+			it('should return the requested milestone', (done) => {
+				let testMilestone = new Milestone( {
+					name: "testjsjsj",
+					duration: 8,
+					isDone: false
 				});
+
+				testMilestone.save((err, milestone) => {
+					chai.request(server)
+						.get('/milestones/' + milestone._id)
+						.end((err, res) => {
+							res.body.should.have.property('_id').eql(testMilestone._id);
+						});
+				});
+
+
+				done();
+			})
 		});
 	});
 });
