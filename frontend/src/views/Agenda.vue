@@ -3,7 +3,9 @@
 		h1 Agenda
 		calendar-view.calendar.theme-default(
 			:show-date="showDate",
-			:events="events")
+			:events="events",
+			:startingDayOfWeek=1,
+			:locale="nl")
 			calendar-view-header(
 				slot="header",
 				slot-scope="t",
