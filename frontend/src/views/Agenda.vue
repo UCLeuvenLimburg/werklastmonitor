@@ -19,7 +19,7 @@ require('../assets/css/default.css');
 // require('vue-simple-calendar/static/css/holidays-us.css');
 
 export default {
-	name: 'app',
+	name: 'agenda',
 	components: {
 		CalendarView,
 		CalendarViewHeader
@@ -33,6 +33,12 @@ export default {
 					startDate: '2019-02-01',
 					endDate: '2019-02-02',
 					title: 'Werkstukje'
+				},
+				{
+					id: '2',
+					startDate: '2019-02-08',
+					title: 'Deadline schrijfopdracht (Computersystemen)',
+					classes: 'purple'
 				}
 			]
 		};
