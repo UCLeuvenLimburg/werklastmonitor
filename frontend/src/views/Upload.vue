@@ -38,13 +38,16 @@ export default {
 				}
 				const workbook = XLSX.read(data, { type: rABS ? 'binary' : 'array', cellDates: true });
 				const sheetnamelist = workbook.SheetNames;
-				let opdrachten = XLSX.utils.sheet_to_json(workbook.Sheets[sheetnamelist[0]]);
+				let opdrachten;
+				for (let i = 0; i < workbook.Sheets.length; ++i) {
+					opdrachten += XLSX.utils.sheet_to_json(workbook.Sheets[sheetnamelist[i]]);
+				}
 				for (let i = 0; i < opdrachten.length; i++) {
-					opdrachten[i].Begindatum.setHours(opdrachten[i].Begindatum.getHours() + 2);
-					opdrachten[i].Einddatum.setHours(opdrachten[i].Einddatum.getHours() + 2);
+					opdrachten[i].startdatum.setHours(opdrachten[i].startdatum.getHours() + 2);
+					opdrachten[i].einddatum.setHours(opdrachten[i].einddatum.getHours() + 2);
 				}
 				console.log(opdrachten);
-				console.log('De eerste opdrachtnaam is ' + opdrachten[1].Opdracht);
+				console.log('De eerste opdrachtnaam is ' + opdrachten[0].naam);
 			};
 			if (rABS) {
 				reader.readAsBinaryString(file);
