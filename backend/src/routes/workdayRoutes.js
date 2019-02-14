@@ -22,7 +22,7 @@ workdayRouter.route('/')
 		workday.day = req.body.day;
 		workday.workhours = req.body.workhours;
 		workday.save();
-		res.json(workday);
+		res.status('201').send(workday);
 	});
 
 workdayRouter.use('/:workday_Id', (req, res, next) => {

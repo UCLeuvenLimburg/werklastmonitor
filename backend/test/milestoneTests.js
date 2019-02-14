@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
 const chai = require('chai');
 const expect = chai.expect;
@@ -82,3 +82,4 @@ describe('Milestone tests', () => {
 		});
 	});
 });
+*/
