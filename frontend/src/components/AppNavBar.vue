@@ -8,6 +8,8 @@
 			li
 				router-link(to="/agenda") Agenda
 			li
+				router-link(to="/addsession") Toevoegen
+			li
 				router-link(to="/upload") Upload
 			li.right
 				router-link.highlight(to="#") Aanmelden
