@@ -20,7 +20,7 @@ const getValidationChecks = () => {
 	return [
 		check('name').trim().not().isEmpty().withMessage('Lab name cannot be empty'),
 		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
-		// check('endDate').isAfter(new Date('startDate').toDateString()).withMessage('End date of lab must be valid and after start date'),
+		check('endDate').custom((value, { req }) => value >= req.body.startDate),
 		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
 		check('courseId').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
 		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
