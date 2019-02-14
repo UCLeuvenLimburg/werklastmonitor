@@ -1,27 +1,20 @@
-<template>
-	<div id="page addsession">
-		<h1>Voeg een werksessie toe</h1>
-			<fieldset>
-				<label for="beginDate">Begindatum</label>
-				<input type="date" name="beginDate" id="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange">
-				<label for="endDate">Einddatum</label>
-				<input type="date" name="endDate" id="endDate" :min="minDate" :max="maxDate" @change="handleEndChange">
-			</fieldset>
-			<fieldset>
-				<label for="course">Vak</label>
-				<select required id="course">
-					<option v-for="course in courses" :key="course">{{ course }}</option>
-				</select>
-			</fieldset>
-			<ul id="daylist">
-				<li v-for="(day, index) in days" :key="day">
-					<label :for="day">Aantal uur op dag {{ index + 1 }}</label>
-					<input type="number" :id="day" min="0" max="8" value="0">
-				</li>
-			</ul>
-		<button v-if="submitVisible" v-on:click="submitForm()" id="submitSession">Toevoegen</button>
-	</div>
-
+<template lang="pug">
+   .page.addsession
+      h1 Voeg een werksessie toe
+      fieldset
+        label(for="beginDate") Begindatum
+        input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange")
+        label(for="endDate") Einddatum
+        input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" @change="handleEndChange")
+      fieldset
+        label(for="course") Vak
+        select#course(required="")
+          option(v-for="course in courses" :key="course") {{ course }}
+      ul#daylist
+        li(v-for="(day, index) in days" :key="day")
+          label(:for="day") Aantal uur op dag {{ index + 1 }}
+          input(type="number" :id="day" min="0" max="8" value="0")
+      button(v-if="submitVisible" v-on:click="submitForm()") Toevoegen
 </template>
 
 <script>
@@ -71,11 +64,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 	fieldset {
 		border: 0px;
 	}
-	fieldset input, fieldset select, ul input {
+	input, select {
 		width: 100%;
 		padding: 12px 20px;
 		margin: 8px 0;
@@ -85,7 +78,7 @@ export default {
 		box-sizing: border-box;
 	}
 
-	#submitSession {
+	button {
 		width: 100%;
 		background-color: #e00049;
 		color: white;
@@ -102,7 +95,7 @@ export default {
 		list-style-type: none;
 	}
 
-	#submitSession:hover {
+	button:hover {
 		background-color: #003469;
 	}
 </style>
