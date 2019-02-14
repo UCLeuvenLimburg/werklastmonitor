@@ -43,7 +43,7 @@ nav {
 			line-height: 1.2rem;
 			transition: .2s ease;
 
-			&:hover {
+			&.router-link-exact-active, &:hover {
 				color: $color-fg;
 				background: $color-content-bg;
 			}
