@@ -4,17 +4,21 @@ const {check, validationResult} = require('express-validator/check');
 
 let milestoneRouter = express.Router();
 
+const getValidationChecks = () => {
+	return [
+		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
+		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
+		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
+	];
+};
+
 milestoneRouter.route('/')
 	.get((req, res) => {
 		Milestone.find({}, (err, milestones) => {
 			res.json(milestones);
 		});
 	})
-	.post([
-		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
-		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
-	], (req, res) => {
+	.post(getValidationChecks(), (req, res) => {
 		const errors = validationResult(req);
 
 		if(!errors.isEmpty()) {
@@ -54,11 +58,7 @@ milestoneRouter.route('/:milestoneId')
 			}
 		});
 	})
-	.put([
-		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be a positive integer'),
-		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
-	], (req, res) => {
+	.put(getValidationChecks(), (req, res) => {
 		const errors = validationResult(req);
 
 		if(!errors.isEmpty()) {

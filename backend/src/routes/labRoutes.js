@@ -16,6 +16,19 @@ const getMilestones = async (milestones) => {
 	return await Milestone.find({ _id: { $in: milestones } });
 };
 
+const getValidationChecks = () => {
+	return [
+		check('name').trim().not().isEmpty().withMessage('Lab name cannot be empty'),
+		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
+		// check('endDate').isAfter(new Date('startDate').toDateString()).withMessage('End date of lab must be valid and after start date'),
+		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
+		check('courseId').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
+		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
+		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
+		check('milestones.*.isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
+	];
+};
+
 labRouter.route('/')
 	.get((req, res) => {
 		Lab.find(async (err, labs) => {
@@ -30,14 +43,7 @@ labRouter.route('/')
 			}
 		});
 	})
-	.post([
-		check('name').trim().not().isEmpty().withMessage('Lab name cannot be empty'),
-		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
-		// check('endDate').isAfter(new Date('startDate').toDateString()).withMessage('End date of lab must be valid and after start date'),
-		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
-		check('courseId').trim().not().isEmpty().withMessage('Course ID cannot me empty')
-		// TODO: check for valid milestones
-	] ,async (req, res) => {
+	.post(getValidationChecks() ,async (req, res) => {
 		const errors = validationResult(req);
 
 		if(!errors.isEmpty()) {
@@ -72,7 +78,13 @@ labRouter.route('/:labId')
 		req.lab.milestones = await Milestone.find({ _id: { $in: req.lab.milestones } });
 		res.json(req.lab);
 	})
-	.put(async (req, res) => {
+	.put(getValidationChecks(), async (req, res) => {
+		const errors = validationResult(req);
+
+		if(!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
 		req.lab.name = req.body.name;
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
