@@ -12,7 +12,7 @@
 			li
 				router-link(to="/upload") Upload
 			li.right
-				router-link.highlight(to="#") Aanmelden
+				router-link.highlight(to="/login") Aanmelden
 </template>
 
 <script>
@@ -45,7 +45,7 @@ nav {
 			line-height: 1.2rem;
 			transition: .2s ease;
 
-			&:hover {
+			&.router-link-exact-active, &:hover {
 				color: $color-fg;
 				background: $color-content-bg;
 			}

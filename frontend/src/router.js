@@ -32,6 +32,11 @@ export default new Router({
 			path: '/addsession',
 			name: 'addsession',
 			component: () => import(/* webpackChunkName: "workload" */ './views/AddSession.vue')
+		},
+		{
+			path: '/login',
+			name: 'login',
+			component: () => import(/* webpackChunkName: "login" */ './views/Login')
 		}
 	]
 });

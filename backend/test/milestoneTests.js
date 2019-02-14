@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
 const server = require('../src/index');
 let assert = require('assert');
@@ -127,3 +127,4 @@ describe('Milestone tests', () => {
 		});
 	});
 });
+*/
