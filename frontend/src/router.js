@@ -27,6 +27,11 @@ export default new Router({
 			path: '/workload',
 			name: 'workload',
 			component: () => import(/* webpackChunkName: "workload" */ './views/Workload.vue')
+		},
+		{
+			path: '/login',
+			name: 'login',
+			component: () => import(/* webpackChunkName: "login" */ './views/Login')
 		}
 	]
 });
