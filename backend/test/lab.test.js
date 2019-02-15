@@ -48,7 +48,7 @@ describe('Lab tests', () => {
 					res.body.milestones[0].name.should.eql('testMilestone1');
 					res.body.milestones[0].duration.should.eql(7);
 					res.body.milestones[0].isDone.should.eql(false);
-			});
+				});
 
 			done();
 		});

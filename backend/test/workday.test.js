@@ -34,6 +34,7 @@ describe('Workday tests', () => {
 					if(err) {
 						console.error(err);
 					}
+					expect(res).to.have.status(200);
 					// expect(res.body.day).to.be.eql(testWorkday.day);
 					expect(res.body.workhours).to.be.eql(testWorkday.workhours);
 
@@ -53,13 +54,13 @@ describe('Workday tests', () => {
 				.post('/workdays')
 				.send(testWorkday)
 				.end((err, res) => {
-					if(err) {
+					if (err) {
 						console.error(err);
 					}
 					expect(res).to.have.status(201);
 					expect(res.body).to.be.a('object');
-					expect(res.body).to.have.property('day');
-					expect(res.body).to.have.property('workhours');
+					expect(res.body).to.have.property('day')
+					expect(res.body.workhours).to.be.eql(testWorkday.workhours)
 
 					done();
 				});
