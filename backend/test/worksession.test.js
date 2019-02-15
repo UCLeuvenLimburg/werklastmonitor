@@ -54,13 +54,15 @@ describe('Worksession tests',() => {
 					if(err) {
 						console.error(err);
 					}
+
 					expect(res).to.have.status(200);
-					expect(res.body.studentNumber).to.be.eql(testWorksession.studentNumber);
-					expect(res.body.lab).to.be.eql(testWorksession.lab);
+					expect(res.body.studentNumber.toString()).to.be.eql(testWorksession.studentNumber.toString());
+					expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
 
 					done();
-				})
-		})
+				});
+		});
+
 	});
 
 	describe('/POST worksession', () => {
@@ -105,7 +107,7 @@ describe('Worksession tests',() => {
 					expect(res.body).to.have.property('startDate');
 					expect(res.body).to.have.property('endDate');
 					expect(res.body.studentNumber).to.be.eql(testWorksession.studentNumber);
-					expect(res.body.lab).to.be.eql(testWorksession.lab);
+					expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
 
 					done();
 				});

@@ -12,6 +12,12 @@
 				slot-scope="t",
 				:header-props="t.headerProps",
 				@input="setShowDate")
+
+		app-modal(ref="showEventModal")
+			span(slot="title") {{ selectedEvent.title }}
+			div
+				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
+				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
 </template>
 
 <script>
@@ -21,11 +27,14 @@ import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar';
 // you should just create <link> elements for these. Both are optional, you can create your own theme if you prefer.
 require('../assets/css/default.css');
 
+import AppModal from '@/components/AppModal';
+
 export default {
 	name: 'agenda',
 	components: {
 		CalendarView,
-		CalendarViewHeader
+		CalendarViewHeader,
+		AppModal
 	},
 	data () {
 		return {
@@ -43,7 +52,13 @@ export default {
 					title: 'Deadline schrijfopdracht (Computersystemen)',
 					classes: 'purple'
 				}
-			]
+			],
+			selectedEvent: {
+				id: null,
+				startDate: null,
+				endDate: null,
+				title: null
+			}
 		};
 	},
 	methods: {
@@ -51,24 +66,25 @@ export default {
 			this.showDate = d;
 		},
 		showEvent (e) {
-			// Nodig als iets slecht leesbaar is
-			// Op den duur wellicht vervangen met iets van vue
-			moment.locale('nl');
-			let details = e.title + '\n' + moment(e.startDate).format('D MMMM');
-			if (moment(e.endDate).format() !== moment(e.startDate).format()) {
-				alert(details + ' – ' + moment(e.endDate).format('D MMMM'));
-			} else {
-				alert(details);
-			}
+			this.selectedEvent = e;
+			this.$refs.showEventModal.show();
 		}
 	}
 };
 </script>
 
 <style lang="scss" scoped>
-.calendar {
-	height: 620px;
-	margin-left: auto;
-	margin-right: auto;
+.agenda {
+	.calendar {
+		height: 620px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	span.section-title {
+		display: inline-block;
+		width: 3rem;
+		font-weight: bold;
+	}
 }
 </style>
