@@ -14,8 +14,8 @@
 				option(v-for="course in courses" :key="course") {{ course }}
 		ul#daylist
 			li(v-for="(day, index) in days" :key="day")
-		label(:for="day") Aantal uur op dag {{ index + 1 }}
-			input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
+				label(:for="day") Aantal uur op dag {{ index + 1 }}
+				input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
 		button(v-if="submitVisible" v-on:click="submitForm") Toevoegen
 </template>
 

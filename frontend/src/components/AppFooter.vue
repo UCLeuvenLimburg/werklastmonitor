@@ -32,6 +32,20 @@ footer {
 		display: flex;
 		flex-direction: row;
 		padding: 16px 64px;
+
+		@media screen and (max-width: 1024px) {
+			flex-direction: column;
+			padding: 16px 32px;
+
+			p {
+				padding-bottom: 16px;
+				margin-left: 0;
+
+				&:last-of-type {
+					padding-bottom: 0;
+				}
+			}
+		}
 	}
 }
 </style>

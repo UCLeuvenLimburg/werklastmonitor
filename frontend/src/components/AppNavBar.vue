@@ -1,6 +1,9 @@
 <template lang="pug">
 	nav
-		ul
+		.mobile-menu(@click="toggleMenu")
+			mdi-menu-icon.right(:class="{ open: isMobileMenuOpen }")
+
+		ul(:class="{ mobile: isMobileMenuOpen }", @click="isMobileMenuOpen = false")
 			li
 				router-link(to="/") Home
 			li
@@ -13,11 +16,25 @@
 				router-link(to="/upload") Upload
 			li.right
 				router-link.highlight(to="/login") Aanmelden
+
+		.mobile-menu-close(v-if="isMobileMenuOpen", @click="isMobileMenuOpen = false")
 </template>
 
 <script>
+import 'mdi-vue/MenuIcon';
+
 export default {
-	name: 'AppNavBar'
+	name: 'AppNavBar',
+	data () {
+		return {
+			isMobileMenuOpen: false
+		};
+	},
+	methods: {
+		toggleMenu () {
+			this.isMobileMenuOpen = !this.isMobileMenuOpen;
+		}
+	}
 };
 </script>
 
@@ -31,10 +48,74 @@ nav {
 	right: 0;
 	bottom: 0;
 
+	.mobile-menu {
+		display: none;
+
+		@media screen and (max-width: 1024px) {
+			display: flex;
+			flex-direction: row;
+			transition: .2s ease;
+			padding: 24px;
+
+			svg {
+				width: 42px;
+				height: 42px;
+				fill: $color-content-bg;
+				transition: .2s ease;
+				cursor: pointer;
+
+				&:hover, &.open {
+					background: $color-content-bg;
+					fill: $color-accent;
+				}
+			}
+		}
+	}
+
+	.mobile-menu-close {
+		display: none;
+
+		@media screen and (max-width: 1024px) {
+			position: fixed;
+			display: block;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 950;
+		}
+	}
+
 	ul {
 		display: flex;
 		flex-direction: row;
 		list-style: none;
+
+		@media screen and (max-width: 1024px) {
+			display: none;
+
+			&.mobile {
+				display: flex;
+				flex-direction: column;
+				position: fixed;
+				top: 91px;
+				left: 0;
+				width: 100%;
+				background: $color-accent;
+				overflow-y: visible;
+				z-index: 9999;
+
+				li {
+					&.right {
+						margin-left: 0;
+					}
+
+					a {
+						text-align: center;
+					}
+				}
+			}
+		}
 
 		li a {
 			display: block;
@@ -45,7 +126,7 @@ nav {
 			line-height: 1.2rem;
 			transition: .2s ease;
 
-			&.router-link-exact-active, &:hover {
+			&.router-link-exact-active, &:hover, &:focus {
 				color: $color-fg;
 				background: $color-content-bg;
 			}
@@ -62,23 +143,4 @@ nav {
 		}
 	}
 }
-@media only screen and (max-width: 940px) {
-	nav {
-		position: static;
-		left: 0;
-	}
-}
-
-@media only screen and (max-width: 726px) {
-	nav{
-		position: static;
-		ul {
-			flex-direction: column;
-		}
-	}
-	.right{
-		margin-left: 0;
-	}
-}
-
 </style>
