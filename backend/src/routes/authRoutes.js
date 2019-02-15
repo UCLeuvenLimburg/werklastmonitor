@@ -10,9 +10,6 @@ const LdapStrategy = require('passport-ldapauth');
 passport.use(new LdapStrategy({
 	server: {
 		url: `ldap://${config.ldap.host}:${config.ldap.port}`,
-		bindDN: 'cn=root',
-		bindCredentials: 'secret',
-		searchBase: 'ou=passport-ldapauth',
 		searchFilter: `(uid=${config.ldap.userId})`
 	}
 }, (user, done) => {
