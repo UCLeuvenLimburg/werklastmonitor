@@ -47,6 +47,10 @@ body {
 	color: $color-fg;
 	background: $color-bg;
 	height: 100%;
+
+	@media screen and (max-width: 1024px) {
+		background: $color-fg;
+	}
 }
 
 #app {
@@ -55,10 +59,19 @@ body {
 	.content {
 		min-height: 100vh;
 		padding-bottom: 54px;
+
+		@media screen and (max-width: 1024px) {
+			padding-bottom: 0;
+			min-height: 0;
+		}
 	}
 
 	footer {
 		margin-top: -54px;
+
+		@media screen and (max-width: 1024px) {
+			margin-top: 0;
+		}
 	}
 }
 
@@ -66,6 +79,10 @@ body {
 	display: block;
 	margin: 0 auto;
 	width: 80%;
+
+	@media screen and (max-width: 1024px) {
+		width: 100%;
+	}
 }
 
 .right {
@@ -80,6 +97,11 @@ main {
 
 	p {
 		padding: 4px 0;
+	}
+
+	@media screen and (max-width: 1024px) {
+		margin-top: 91px !important;
+		margin-bottom: 0 !important;
 	}
 }
 
