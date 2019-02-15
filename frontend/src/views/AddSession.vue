@@ -1,6 +1,8 @@
 <template lang="pug">
    .page.addsession
       h1 Voeg een werksessie toe
+      div
+        p {{ message }}
       fieldset
         label(for="beginDate") Begindatum
         input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange")
@@ -8,12 +10,12 @@
         input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" @change="handleEndChange")
       fieldset
         label(for="course") Vak
-        select#course(required="")
+        select#course(required="", @change='setCourse')
           option(v-for="course in courses" :key="course") {{ course }}
       ul#daylist
         li(v-for="(day, index) in days" :key="day")
           label(:for="day") Aantal uur op dag {{ index + 1 }}
-          input(type="number" :id="day" min="0" max="8" value="0")
+          input(type="number" :id="day" min="0" max="8" value="0" v-model="workHours[index]" required)
       button(v-if="submitVisible" v-on:click="submitForm()") Toevoegen
 </template>
 
@@ -30,7 +32,10 @@ export default {
 			courses: ['BOP', 'Netwerken'],
 			minDate: moment(new Date((new Date()).getFullYear(), 0, 1)).format('YYYY-MM-DD'),
 			maxDate: moment(new Date((new Date()).getFullYear(), 11, 31)).format('YYYY-MM-DD'),
-			submitVisible: false
+			submitVisible: false,
+			selectedCourse: 'BOP',
+			workHours: [],
+			message: ''
 		};
 	},
 	methods: {
@@ -57,8 +62,28 @@ export default {
 				this.submitVisible = false;
 			}
 		},
+		setCourse (e) {
+			this.selectedCourse = e.target.options[e.target.options.selectedIndex].valueOf().value;
+		},
 		submitForm () {
-			console.log('Something');
+			if (this.workHours.length !== this.days.length) {
+				this.message = 'Je dient voor elk dag een aantal werkuren in te vullen. Dit kan ook nul zijn.';
+			} else {
+				let worksession = {};
+				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
+				worksession.endDate = moment(this.endDate).add(2, 'hours').toDate();
+				worksession.studentNumber = 'r0178471';
+				worksession.lab = this.selectedCourse;
+				let workdays = [];
+				for (let i = 0; i < this.days.length; i++) {
+					let day = {};
+					day.workhours = this.workHours[i];
+					day.day = moment(this.beginDate).add(2, 'hours').add(i, 'days').toDate();
+					workdays.push(day);
+				}
+				worksession.workdays = workdays;
+				console.log(worksession);
+			}
 		}
 	}
 };
@@ -66,7 +91,7 @@ export default {
 
 <style lang="scss" scoped>
 	fieldset {
-		border: 0px;
+		border: 0;
 	}
 	input, select {
 		width: 100%;
