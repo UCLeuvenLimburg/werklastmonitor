@@ -110,7 +110,7 @@ describe('Worksession tests',() => {
 					done();
 				});
 		});
-		it('Post throws exceptions when no body', (done) => {
+		it('Post throws exceptions when no body in req', (done) => {
 			let testWorksession = new Worksession({
 
 			});
@@ -125,6 +125,90 @@ describe('Worksession tests',() => {
 					console.log(res);
 					expect(res).to.have.status(422);
 					expect(res.body.errors).lengthOf(7);
+
+					done();
+				});
+		});
+		it('Post throws exception when the enddate is before the startdate', (done) => {
+			let testLab = new Lab({
+				name: 'testLab4d4d4',
+				startDate: '2020-01-05',
+				endDate: '2020-05-22',
+				hourEstimate: 14,
+				courseId: '5555',
+				milestones: [
+					{
+						name: 'testMilestone1',
+						duration: 7,
+						isDone: false
+					}
+				]
+			});
+			testLab.save();
+			let tworkday = new Workday({
+				day: Date.now(),
+				workhours: 10
+			});
+			tworkday.save();
+			let testWorksession = new Worksession({
+				startDate: Date.now(),
+				endDate: '2019-02-14',
+				studentNumber: 'r0635688',
+				lab: testLab._id,
+				workdays: [tworkday._id]
+			});
+
+			chai.request(server)
+				.post('/worksessions')
+				.send(testWorksession)
+				.end((err, res) => {
+					if(err) {
+						console.error(err.errors);
+					}
+					expect(res).to.have.status(422);
+					expect(res.body.errors).lengthOf(1);
+
+					done();
+				})
+		})
+		it('Post throws exceptions for dates in the past', (done) => {
+			let testLab = new Lab({
+				name: 'testLab4d4d4',
+				startDate: '2020-01-05',
+				endDate: '2020-05-22',
+				hourEstimate: 14,
+				courseId: '5555',
+				milestones: [
+					{
+						name: 'testMilestone1',
+						duration: 7,
+						isDone: false
+					}
+				]
+			});
+			testLab.save();
+			let tworkday = new Workday({
+				day: Date.now(),
+				workhours: 10
+			});
+			tworkday.save();
+			let testWorksession = new Worksession({
+				startDate: '2019-02-13',
+				endDate: '2019-02-14',
+				studentNumber: 'r0635688',
+				lab: testLab._id,
+				workdays: [tworkday._id]
+			});
+
+			chai.request(server)
+				.post('/worksessions')
+				.send(testWorksession)
+				.end((err, res) => {
+					if (err) {
+						console.error(err);
+					}
+					expect(res).to.have.status(422);
+					expect(res.body.errors).lengthOf(2);
 
 					done();
 				});
