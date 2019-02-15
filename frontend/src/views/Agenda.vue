@@ -5,6 +5,7 @@
 			:show-date="showDate",
 			:events="events",
 			:startingDayOfWeek=1,
+			@click-event="showEvent"
 			locale="nl")
 			calendar-view-header(
 				slot="header",
@@ -14,11 +15,11 @@
 </template>
 
 <script>
+import moment from 'moment';
 import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar';
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
 // you should just create <link> elements for these. Both are optional, you can create your own theme if you prefer.
 require('../assets/css/default.css');
-// require('vue-simple-calendar/static/css/holidays-us.css');
 
 export default {
 	name: 'agenda',
@@ -48,6 +49,17 @@ export default {
 	methods: {
 		setShowDate (d) {
 			this.showDate = d;
+		},
+		showEvent (e) {
+			// Nodig als iets slecht leesbaar is
+			// Op den duur wellicht vervangen met iets van vue
+			moment.locale('nl');
+			let details = e.title + '\n' + moment(e.startDate).format('D MMMM');
+			if (moment(e.endDate).format() !== moment(e.startDate).format()) {
+				alert(details + ' – ' + moment(e.endDate).format('D MMMM'));
+			} else {
+				alert(details);
+			}
 		}
 	}
 };

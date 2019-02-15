@@ -62,4 +62,23 @@ nav {
 		}
 	}
 }
+@media only screen and (max-width: 940px) {
+	nav {
+		position: static;
+		left: 0;
+	}
+}
+
+@media only screen and (max-width: 726px) {
+	nav{
+		position: static;
+		ul {
+			flex-direction: column;
+		}
+	}
+	.right{
+		margin-left: 0;
+	}
+}
+
 </style>

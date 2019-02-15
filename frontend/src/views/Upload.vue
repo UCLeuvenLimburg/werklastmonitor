@@ -36,18 +36,61 @@ export default {
 				if (!rABS) {
 					data = new Uint8Array(data);
 				}
-				const workbook = XLSX.read(data, { type: rABS ? 'binary' : 'array', cellDates: true });
-				const sheetnamelist = workbook.SheetNames;
-				let opdrachten;
-				for (let i = 0; i < workbook.Sheets.length; ++i) {
-					opdrachten += XLSX.utils.sheet_to_json(workbook.Sheets[sheetnamelist[i]]);
+				let workbook = XLSX.read(data, { type: rABS ? 'binary' : 'array', cellDates: true });
+				let sheetNameList = workbook.SheetNames;
+
+				let labWorkSheet = workbook.Sheets[sheetNameList[0]];
+				let labsJSON = XLSX.utils.sheet_to_json(labWorkSheet, { header: 1 });
+
+				let milestoneWorkSheet = workbook.Sheets[sheetNameList[1]];
+				let milestoneJSON = XLSX.utils.sheet_to_json(milestoneWorkSheet, { header: 1 });
+
+				let labs = [];
+
+				for (let i = 1; i < labsJSON.length; ++i) {
+					let labJSONTemplate = {
+						name: '',
+						startDate: '',
+						endDate: '',
+						hourEstimate: '',
+						courseId: '',
+						milestones: []
+					};
+
+					labJSONTemplate.name = labsJSON[i][0];
+					labJSONTemplate.startDate = labsJSON[i][1];
+					labJSONTemplate.endDate = labsJSON[i][2];
+					labJSONTemplate.hourEstimate = labsJSON[i][3];
+					labJSONTemplate.courseId = labsJSON[i][4];
+
+					labs.push(labJSONTemplate);
 				}
+
+				for (let i = 1; i < milestoneJSON.length; ++i) {
+					let milestoneJSONTemplate = {
+						name: '',
+						duration: '',
+						isDone: false
+					};
+
+					milestoneJSONTemplate.name = milestoneJSON[i][0];
+					milestoneJSONTemplate.duration = milestoneJSON[i][1];
+
+					labs.forEach(lab => {
+						if (lab.name === milestoneJSON[i][2]) {
+							lab.milestones.push(milestoneJSONTemplate);
+						}
+					});
+				}
+
+				console.log('labs');
+				console.log(labs);
+				/*
 				for (let i = 0; i < opdrachten.length; i++) {
 					opdrachten[i].startdatum.setHours(opdrachten[i].startdatum.getHours() + 2);
 					opdrachten[i].einddatum.setHours(opdrachten[i].einddatum.getHours() + 2);
 				}
-				console.log(opdrachten);
-				console.log('De eerste opdrachtnaam is ' + opdrachten[0].naam);
+				*/
 			};
 			if (rABS) {
 				reader.readAsBinaryString(file);
