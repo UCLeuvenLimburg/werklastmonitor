@@ -27,6 +27,14 @@ header {
 	color: $color-content-bg;
 	width: 100%;
 
+	@media screen and (max-width: 1024px) {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 999;
+	}
+
 	.inner {
 		position: relative;
 
