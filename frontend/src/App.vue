@@ -88,4 +88,19 @@ h1 {
 	font-weight: bold;
 	padding-bottom: 16px;
 }
+
+::-webkit-scrollbar {
+	width: 10px;
+	background: darken($color-blue-light, 15%);
+}
+
+::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 24px 24px $color-fg;
+	border: 2px solid transparent;
+	border-radius: 8px;
+}
+
+::-webkit-scrollbar-track-piece {
+	background: transparent;
+}
 </style>
