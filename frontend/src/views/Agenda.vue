@@ -5,7 +5,7 @@
 			:show-date="showDate",
 			:events="events",
 			:startingDayOfWeek=1,
-			:locale="nl")
+			locale="nl")
 			calendar-view-header(
 				slot="header",
 				slot-scope="t",

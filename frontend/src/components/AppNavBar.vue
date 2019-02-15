@@ -8,6 +8,8 @@
 			li
 				router-link(to="/agenda") Agenda
 			li
+				router-link(to="/addsession") Toevoegen
+			li
 				router-link(to="/upload") Upload
 			li.right
 				router-link.highlight(to="/login") Aanmelden
@@ -43,7 +45,7 @@ nav {
 			line-height: 1.2rem;
 			transition: .2s ease;
 
-			&:hover {
+			&.router-link-exact-active, &:hover {
 				color: $color-fg;
 				background: $color-content-bg;
 			}
