@@ -22,7 +22,7 @@ const getValidationChecks = () => {
 		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
 		check('endDate').custom((value, { req }) => value >= req.body.startDate),
 		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
-		check('course').trim().not().isEmpty().withMessage('Course cannot me empty'),
+		check('courseId').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
 		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
 		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
 		check('milestones.*.isDone').isBoolean().withMessage('Milestone isDone must be a boolean')

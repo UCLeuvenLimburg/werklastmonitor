@@ -30,7 +30,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -41,11 +41,11 @@ describe('Worksession tests',() => {
 			});
 			testLab.save();
 			let testWorksession = new Worksession({
-				startDate: moment(),
+				startDate: moment().add(1, 'days'),
 				endDate: '2020-02-15',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
-				workdays: []
+				workdays: ['5c669626f756114810e51c27']
 			});
 			testWorksession.save();
 
@@ -73,7 +73,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -89,8 +89,8 @@ describe('Worksession tests',() => {
 			});
 			tworkday.save();
 			let testWorksession = new Worksession({
-				startDate: moment(),
-				endDate: moment().add(1, 'days'),
+				startDate: moment().add(1, 'days'),
+				endDate: moment().add(2, 'days'),
 				studentNumber: 'r0635688',
 				lab: testLab._id,
 				workdays: [tworkday._id]
@@ -139,7 +139,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -181,7 +181,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -197,7 +197,7 @@ describe('Worksession tests',() => {
 			});
 			tworkday.save();
 			let testWorksession = new Worksession({
-				startDate: '2019-02-13',
+				startDate: moment().add(1, 'days'),
 				endDate: '2019-02-14',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
@@ -226,7 +226,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -237,19 +237,19 @@ describe('Worksession tests',() => {
 			});
 			testLab.save();
 			let tworkday = new Workday({
-				day: moment(),
+				day: moment().add(1, 'days'),
 				workhours: 10
 			});
 			tworkday.save();
 			let testWorksession = new Worksession({
-				startDate: moment(),
+				startDate: '2019-12-05',
 				endDate: '2020-02-15',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
 				workdays: [tworkday._id]
 			});
 			let updatedWorksession = new Worksession({
-				startDate: moment(),
+				startDate: '2019-12-05',
 				endDate: '2020-02-15',
 				studentNumber: 'r000',
 				lab: testLab._id,
@@ -278,7 +278,7 @@ describe('Worksession tests',() => {
 				startDate: '2020-01-05',
 				endDate: '2020-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				courseId: '5c66e78eccc05c1fecc95022',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -294,14 +294,14 @@ describe('Worksession tests',() => {
 			});
 			tworkday.save();
 			let testWorksession = new Worksession({
-				startDate: moment(),
+				startDate: moment().add(1, 'days'),
 				endDate: '2020-02-15',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
 				workdays: [tworkday._id]
 			});
 			let updatedWorksession = new Worksession({
-				startDate: moment(),
+				startDate: moment().add(1, 'days'),
 				endDate: '2020-02-14',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
