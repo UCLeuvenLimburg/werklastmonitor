@@ -15,7 +15,7 @@
       ul#daylist
         li(v-for="(day, index) in days" :key="day")
           label(:for="day") Aantal uur op dag {{ index + 1 }}
-          input(type="number" :id="day" min="0" max="8" value="0" v-model="workHours[index]" required)
+          input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
       button(v-if="submitVisible" v-on:click="submitForm()") Toevoegen
 </template>
 
@@ -66,8 +66,14 @@ export default {
 			this.selectedCourse = e.target.options[e.target.options.selectedIndex].valueOf().value;
 		},
 		submitForm () {
-			if (this.workHours.length !== this.days.length) {
-				this.message = 'Je dient voor elk dag een aantal werkuren in te vullen. Dit kan ook nul zijn.';
+			let numeric = true;
+			for (let i = 0; i < this.workHours.length; i++) {
+				if (isNaN(this.workHours[i]) || this.workHours[i] === '' || this.workHours[i] < 0 || this.workHours[i] > 8) {
+					numeric = false;
+				}
+			}
+			if (this.workHours.length !== this.days.length || !numeric) {
+				this.message = 'Je dient voor elk dag een aantal werkuren tussen 0 en 8 in te vullen.';
 			} else {
 				let worksession = {};
 				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
