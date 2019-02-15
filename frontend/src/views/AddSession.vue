@@ -1,22 +1,22 @@
 <template lang="pug">
-   .page.addsession
-      h1 Voeg een werksessie toe
-      div
-        p {{ message }}
-      fieldset
-        label(for="beginDate") Begindatum
-        input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange")
-        label(for="endDate") Einddatum
-        input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" @change="handleEndChange")
-      fieldset
-        label(for="course") Vak
-        select#course(required="", @change='setCourse')
-          option(v-for="course in courses" :key="course") {{ course }}
-      ul#daylist
-        li(v-for="(day, index) in days" :key="day")
-          label(:for="day") Aantal uur op dag {{ index + 1 }}
-          input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
-      button(v-if="submitVisible" v-on:click="submitForm()") Toevoegen
+	.page.addsession
+		h1 Voeg een werksessie toe
+		div
+			p {{ message }}
+		fieldset
+			label(for="beginDate") Begindatum
+			input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange")
+			label(for="endDate") Einddatum
+			input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" @change="handleEndChange")
+		fieldset
+			label(for="course") Vak
+			select#course(required="", @change='setCourse')
+				option(v-for="course in courses" :key="course") {{ course }}
+		ul#daylist
+			li(v-for="(day, index) in days" :key="day")
+		label(:for="day") Aantal uur op dag {{ index + 1 }}
+			input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
+		button(v-if="submitVisible" v-on:click="submitForm") Toevoegen
 </template>
 
 <script>
