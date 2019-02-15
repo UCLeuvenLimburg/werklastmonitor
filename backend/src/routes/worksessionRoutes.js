@@ -18,8 +18,8 @@ worksessionRouter.route('/')
 	})
 
 	.post( [
-		body('startDate').isAfter().withMessage('Please enter a valid date'),
-		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('startDate').isISO8601().isAfter().withMessage('Please enter a valid date'),
+		body('endDate').isISO8601().custom((value, { req }) => value >= req.body.startDate).withMessage('Your enddate needs to be valid and after your startdate!'),
 		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
 		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
@@ -63,8 +63,8 @@ worksessionRouter.route('/:worksession_Id')
 		res.status('200').send(req.worksession);
 	})
 	.put([
-		body('startDate').isAfter().withMessage('Please enter a valid date'),
-		body('endDate').isAfter(body('startDate')).withMessage('Your enddate needs to be valid en after your startdate!'),
+		body('startDate').isISO8601().withMessage('Please enter a valid date'),
+		body('endDate').isISO8601().custom((value, { req }) => value >= req.body.startDate).withMessage('Your enddate needs to be valid and after your startdate!'),
 		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
 		body('workdays').not().isEmpty().withMessage('A workperiod needs to have workdays')
