@@ -32,7 +32,7 @@ export default {
 			this.visible = false;
 		},
 		outsideBounds (target) {
-			if (target == this.$refs.modalWrapper) {
+			if (target === this.$refs.modalWrapper) {
 				this.hide();
 			}
 		}
