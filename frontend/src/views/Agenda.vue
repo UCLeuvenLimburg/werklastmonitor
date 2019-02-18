@@ -159,13 +159,19 @@ export default {
 		font-weight: bold;
 	}
 	a.button {
+		cursor: pointer;
 		appearance: button;
 		text-decoration: none;
 		color: white;
 		background-color: #e00049;
 		padding:5px;
-		margin:2px;
 		border-radius: 4px;
+		font-size: 120%;
+		display: inline-block;
+		margin: 15px 5px 5px;
+	}
+	a.button:hover {
+		background-color: #003469;
 	}
 }
 </style>
