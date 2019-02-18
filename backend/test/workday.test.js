@@ -144,52 +144,41 @@ describe('Workday tests', () => {
 	});
 
 	describe('/PUT workday', () => {
-		it('updates successfully with valid params', (done) => {
+		it('updates successfully with valid params', async () => {
 			let testWorkday = new Workday({
 				day: Date.now(),
 				workhours: 0
 			});
-			testWorkday.save();
+			await testWorkday.save();
 			let updatedWorkday = new Workday({
 				day: Date.now(),
 				workhours: 10
 			});
-			chai.request(server)
-				.put('/workdays/' + testWorkday._id)
-				.send(updatedWorkday)
-				.end((err, res) => {
-					if(err) {
-						console.error(err);
-					}
-					expect(res).to.have.status(200);
-					expect(res.body.workhours).to.be.eql(updatedWorkday.workhours);
-					expect(res.body.workhours).to.be.not.eql(testWorkday.workhours);
 
-					done();
-				});
+			let res = await chai.request(server)
+				.put('/workdays/' + testWorkday._id)
+				.send(updatedWorkday);
+
+			expect(res).to.have.status(200);
+			expect(res.body.workhours).to.be.eql(updatedWorkday.workhours);
+			expect(res.body.workhours).to.be.not.eql(testWorkday.workhours);
 		});
-		it('Does not update with invalid params', (done) => {
+		it('Does not update with invalid params', async () => {
 			let testWorkday = new Workday({
 				day: Date.now(),
 				workhours: 0
 			});
-			testWorkday.save();
+			await testWorkday.save();
 			let updatedWorkday = new Workday({
 				day: '2019-02-13',
 				workhours: 25
 			});
-			chai.request(server)
+			let res = await chai.request(server)
 				.put('/workdays/' + testWorkday._id)
-				.send(updatedWorkday)
-				.end((err, res) => {
-					if(err) {
-						console.error(err);
-					}
-					expect(res).to.have.status(422);
-					expect(res.body.errors).lengthOf(2);
+				.send(updatedWorkday);
 
-					done();
-				});
+			expect(res).to.have.status(422);
+			expect(res.body.errors).lengthOf(2);
 		});
 	});
 

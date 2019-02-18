@@ -43,19 +43,21 @@ describe('Worksession tests',() => {
 			});
 			testWorksession.save();
 
-			chai.request(server)
-				.get('/worksessions/' + testWorksession._id)
-				.end((err, res) => {
-					if(err) {
-						console.error(err);
-					}
+			setTimeout(() => {
+				chai.request(server)
+					.get('/worksessions/' + testWorksession._id)
+					.end((err, res) => {
+						if(err) {
+							console.error(err);
+						}
 
-					expect(res).to.have.status(200);
-					expect(res.body.studentNumber.toString()).to.be.eql(testWorksession.studentNumber.toString());
-					expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
+						expect(res).to.have.status(200);
+						expect(res.body.studentNumber.toString()).to.be.eql(testWorksession.studentNumber.toString());
+						expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
 
-					done();
-				});
+						done();
+					});
+			}, 500);
 		});
 
 	});
@@ -122,7 +124,7 @@ describe('Worksession tests',() => {
 					}
 
 					expect(res).to.have.status(422);
-					expect(res.body.errors).lengthOf(7);
+					expect(res.body.errors).lengthOf(6);
 
 					done();
 				});
@@ -144,12 +146,12 @@ describe('Worksession tests',() => {
 			});
 			testLab.save();
 			let tworkday = new Workday({
-				day: moment(),
+				day: moment().add(1, 'days'),
 				workhours: 10
 			});
 			tworkday.save();
 			let testWorksession = new Worksession({
-				startDate: moment(),
+				startDate: moment().add(1, 'days'),
 				endDate: '2019-02-14',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
@@ -214,7 +216,7 @@ describe('Worksession tests',() => {
 	});
 
 	describe('/PUT worksession', () => {
-		it('updates successfully with valid params', (done) => {
+		it('updates successfully with valid params', async () => {
 			let testLab = new Lab({
 				name: 'testLab4d4d4',
 				startDate: '2020-01-05',
@@ -229,12 +231,12 @@ describe('Worksession tests',() => {
 					}
 				]
 			});
-			testLab.save();
+			await testLab.save();
 			let tworkday = new Workday({
 				day: moment().add(1, 'days'),
 				workhours: 10
 			});
-			tworkday.save();
+			await tworkday.save();
 			let testWorksession = new Worksession({
 				startDate: '2019-12-05',
 				endDate: '2020-02-15',
@@ -249,24 +251,17 @@ describe('Worksession tests',() => {
 				lab: testLab._id,
 				workdays: [tworkday._id]
 			})
-			testWorksession.save();
+			await testWorksession.save();
 
-			chai.request(server)
+			let res = await chai.request(server)
 				.put('/worksessions/' + testWorksession._id)
-				.send(updatedWorksession)
-				.end((err, res) => {
-					if (err) {
-						console.error(err);
-					}
+				.send(updatedWorksession);
 
-					expect(res).to.have.status(200);
-					expect(res.body.studentNumber).to.be.eql(updatedWorksession.studentNumber);
-					expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
-
-					done();
-				});
+			expect(res).to.have.status(200);
+			expect(res.body.studentNumber).to.be.eql(updatedWorksession.studentNumber);
+			expect(res.body.lab.toString()).to.be.eql(testWorksession.lab.toString());
 		});
-		it('does not update for invalid changes', (done) => {
+		it('does not update for invalid changes', async () => {
 			let testLab = new Lab({
 				name: 'testLab4d4d4',
 				startDate: '2020-01-05',
@@ -281,12 +276,12 @@ describe('Worksession tests',() => {
 					}
 				]
 			});
-			testLab.save();
+			await testLab.save();
 			let tworkday = new Workday({
 				day: moment(),
 				workhours: 10
 			});
-			tworkday.save();
+			await tworkday.save();
 			let testWorksession = new Worksession({
 				startDate: moment().add(1, 'days'),
 				endDate: '2020-02-15',
@@ -296,25 +291,19 @@ describe('Worksession tests',() => {
 			});
 			let updatedWorksession = new Worksession({
 				startDate: moment().add(1, 'days'),
-				endDate: '2020-02-14',
+				endDate: '2019-02-14',
 				studentNumber: 'r0635688',
 				lab: testLab._id,
 				workdays: [tworkday._id]
 			})
-			testWorksession.save();
+			await testWorksession.save();
 
-			chai.request(server)
+			let res = await chai.request(server)
 				.put('/worksessions/' + testWorksession._id)
-				.send(updatedWorksession)
-				.end((err, res) => {
-					if (err) {
-						console.error(err);
-					}
-					expect(res).to.have.status(422);
-					expect(res.body.errors).lengthOf(1);
+				.send(updatedWorksession);
 
-					done();
-				});
+			expect(res).to.have.status(422);
+			expect(res.body.errors).lengthOf(1);
 		});
 	});
 });
