@@ -3,7 +3,6 @@ const config = require('../config');
 const express = require('express');
 const {check, validationResult} = require('express-validator/check');
 
-const basicAuth = require('basic-auth')
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 
@@ -12,11 +11,12 @@ const getLDAPConfiguration = (req, callback) => {
 	process.nextTick(() => {
 		callback(null, {
 			server: {
-				url: `ldap://${config.ldap.host}:${config.ldap.port}`,
-				searchBase: 'ou=Users,ou=Root,dc=int,dc=ucll,dc=be',
-				searchFilter: '(cn=*{{username}}*)'
-			},
-			credentialsLookup: basicAuth
+				url: 'ldap://ad.ucll.be:389',
+				bindDN: `${req.body.username}@ucll.be`,
+				bindCredentials: req.body.password,
+				searchBase: 'OU=Users,OU=Root,DC=int,DC=ucll,DC=be',
+				searchFilter: `(cn=*${req.body.username}*)`
+			}
 		});
 	});
 };
