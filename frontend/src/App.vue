@@ -56,9 +56,13 @@ body {
 #app {
 	min-height: 100vh;
 
+	@media screen and (max-width: 1024px) {
+		min-height: auto;
+	}
+
 	.content {
 		min-height: 100vh;
-		padding-bottom: 54px;
+		padding-bottom: 55px;
 
 		@media screen and (max-width: 1024px) {
 			padding-bottom: 0;
@@ -67,7 +71,7 @@ body {
 	}
 
 	footer {
-		margin-top: -54px;
+		margin-top: -55px;
 
 		@media screen and (max-width: 1024px) {
 			margin-top: 0;
