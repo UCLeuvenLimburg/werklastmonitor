@@ -5,7 +5,9 @@
 			:show-date="showDate",
 			:events="events",
 			:startingDayOfWeek=1,
-			@click-event="showEvent"
+			@click-event="showEvent",
+		@drop-on-date="dropDate",
+		enableDragDrop=true,
 			locale="nl")
 			calendar-view-header(
 				slot="header",
@@ -22,6 +24,7 @@
 
 <script>
 import AppModal from '@/components/AppModal';
+import moment from 'moment';
 import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar';
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
 // you should just create <link> elements for these. Both are optional, you can create your own theme if you prefer.
@@ -66,6 +69,36 @@ export default {
 		showEvent (e) {
 			this.selectedEvent = e;
 			this.$refs.showEventModal.show();
+		},
+		dropDate (e, date) {
+			if (!e.classes.includes('purple')) {
+				let newDate = moment(date);
+				var oldStart = moment(e.startDate); // todays date
+				var oldEnd = moment(e.endDate); // another date
+				let days = Math.abs(oldEnd.diff(oldStart, 'days'));
+				let newStart = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
+				newDate.add(days, 'days');
+				let newEnd = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
+				let confirmChange = confirm('Wilt u de werksessie verplaatsen?');
+				if (confirmChange) {
+					this.events = [
+						{
+							id: '1',
+							startDate: newStart,
+							endDate: newEnd,
+							title: 'Werkstukje'
+						},
+						{
+							id: '2',
+							startDate: '2019-02-08',
+							title: 'Deadline schrijfopdracht (Computersystemen)',
+							classes: 'purple'
+						}
+					];
+				}
+			} else {
+				alert('Je kunt deadlines niet verplaatsen.');
+			}
 		}
 	}
 };
