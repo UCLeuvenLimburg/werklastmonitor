@@ -20,6 +20,9 @@
 			div
 				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
 				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
+				div(v-if='editable')
+					a.button(href='/addsession?id=1') Aanpassen
+					a.button Verwijderen
 </template>
 
 <script>
@@ -59,7 +62,8 @@ export default {
 				startDate: null,
 				endDate: null,
 				title: null
-			}
+			},
+			editable: false
 		};
 	},
 	methods: {
@@ -67,8 +71,14 @@ export default {
 			this.showDate = d;
 		},
 		showEvent (e) {
+			if (!e.classes.includes('purple')) {
+				this.editable = true;
+			} else {
+				this.editable = false;
+			}
 			this.selectedEvent = e;
 			this.$refs.showEventModal.show();
+			// this.editable = false;
 		},
 		dropDate (e, date) {
 			if (!e.classes.includes('purple')) {
@@ -116,6 +126,15 @@ export default {
 		display: inline-block;
 		width: 3rem;
 		font-weight: bold;
+	}
+	a.button {
+		appearance: button;
+		text-decoration: none;
+		color: white;
+		background-color: #e00049;
+		padding:5px;
+		margin:2px;
+		border-radius: 4px;
 	}
 }
 </style>

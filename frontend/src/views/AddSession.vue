@@ -5,13 +5,14 @@
 			p {{ message }}
 		fieldset
 			label(for="beginDate") Begindatum
-			input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" @change="handleBeginChange")
+			input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" :value="beginDateFormatted" @change="handleBeginChange")
 			label(for="endDate") Einddatum
-			input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" @change="handleEndChange")
+			input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" :value="endDateFormatted" @change="handleEndChange")
 		fieldset
 			label(for="course") Vak
-			select#course(required="", @change='setCourse')
-				option(v-for="course in courses" :key="course") {{ course }}
+			select#course(required="" @change='setCourse')
+				option(v-if="startFromId" :value="selectedCourse" selected) {{ selectedCourse }}
+				option(v-for="course in courses" :key="course" :value="course") {{ course }}
 		ul#daylist
 			li(v-for="(day, index) in days" :key="day")
 				label(:for="day") Aantal uur op dag {{ index + 1 }}
@@ -21,7 +22,6 @@
 
 <script>
 import moment from 'moment';
-
 export default {
 	name: 'addsession',
 	data () {
@@ -29,13 +29,16 @@ export default {
 			days: [],
 			beginDate: new Date(2000, 1, 1),
 			endDate: new Date(2000, 1, 1),
+			beginDateFormatted: '',
+			endDateFormatted: '',
 			courses: ['BOP', 'Netwerken'],
 			minDate: moment(new Date((new Date()).getFullYear(), 0, 1)).format('YYYY-MM-DD'),
 			maxDate: moment(new Date((new Date()).getFullYear(), 11, 31)).format('YYYY-MM-DD'),
 			submitVisible: false,
 			selectedCourse: 'BOP',
 			workHours: [],
-			message: ''
+			message: '',
+			startFromId: false
 		};
 	},
 	methods: {
@@ -43,11 +46,13 @@ export default {
 			let selection = e.target.valueOf().value;
 			this.beginDate = moment(selection).toDate();
 			this.showDays();
+			this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
 		},
 		handleEndChange (e) {
 			let selection = e.target.valueOf().value;
 			this.endDate = moment(selection).toDate();
 			this.showDays();
+			this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
 		},
 		showDays () {
 			if (this.beginDate >= moment(this.minDate).toDate() && this.endDate >= moment(this.minDate).toDate() && this.beginDate <= this.endDate) {
@@ -88,8 +93,33 @@ export default {
 					workdays.push(day);
 				}
 				worksession.workdays = workdays;
-				console.log(worksession);
+				if (!this.startFromId) {
+					console.log('Create');
+					console.log(worksession);
+				} else {
+					console.log('Update');
+					console.log(worksession);
+				}
 			}
+		}
+	},
+	beforeMount () {
+		console.log('Ok');
+		let uri = window.location.search.substring(1);
+		let params = new URLSearchParams(uri);
+		console.log(params.get('id'));
+		let id = params.get('id');
+		if (id) {
+			this.startFromId = true;
+			this.beginDate = new Date(2019, 2, 23);
+			this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
+			this.endDate = new Date(2019, 2, 25);
+			this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
+			this.selectedCourse = 'Netwerken';
+			let filteredCourses = this.courses.filter(e => e !== this.selectedCourse);
+			this.courses = filteredCourses;
+			this.workHours = [1, 4, 5];
+			this.showDays();
 		}
 	}
 };
