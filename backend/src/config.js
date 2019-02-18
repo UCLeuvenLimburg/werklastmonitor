@@ -5,5 +5,8 @@ module.exports = {
 		host: 'ad.ucll.be',
 		port: 389,
 		userId: '{{username}}@ucll.be'
+	},
+	database: {
+		poolSize: 100
 	}
 };
