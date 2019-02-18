@@ -31,13 +31,7 @@ describe('Worksession tests',() => {
 				endDate: '2020-05-22',
 				hourEstimate: 14,
 				courseId: '5c66e78eccc05c1fecc95022',
-				milestones: [
-					{
-						name: 'testMilestone1',
-						duration: 7,
-						isDone: false
-					}
-				]
+				milestones: []
 			});
 			testLab.save();
 			let testWorksession = new Worksession({
