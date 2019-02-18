@@ -21,8 +21,18 @@
 				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
 				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
 				div(v-if='editable')
-					a.button(href='/addsession?id=1') Aanpassen
-					a.button Verwijderen
+					a.button(:href="'/addsession?id='+ selectedEvent.id") Aanpassen
+					a.button(v-on:click="deleteEvent") Verwijderen
+		app-modal(ref="showWarningModal")
+			span(slot="title") Waarschuwing
+			div
+				p Je kunt deadlines niet verplaatsen.
+		app-modal(ref="showConfirmModal")
+			span(slot="title") Bevestiging
+			div
+				p Wilt u de werksessie verplaatsen?
+				a.button(v-on:click="confirmTrue") Ja
+				a.button(v-on:click="confirmFalse") Nee
 </template>
 
 <script>
@@ -63,7 +73,10 @@ export default {
 				endDate: null,
 				title: null
 			},
-			editable: false
+			editable: false,
+			confirm: false,
+			newStart: '',
+			newDate: ''
 		};
 	},
 	methods: {
@@ -86,29 +99,47 @@ export default {
 				var oldStart = moment(e.startDate); // todays date
 				var oldEnd = moment(e.endDate); // another date
 				let days = Math.abs(oldEnd.diff(oldStart, 'days'));
-				let newStart = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
+				this.newStart = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
 				newDate.add(days, 'days');
-				let newEnd = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
-				let confirmChange = confirm('Wilt u de werksessie verplaatsen?');
-				if (confirmChange) {
-					this.events = [
-						{
-							id: '1',
-							startDate: newStart,
-							endDate: newEnd,
-							title: 'Werkstukje'
-						},
-						{
-							id: '2',
-							startDate: '2019-02-08',
-							title: 'Deadline schrijfopdracht (Computersystemen)',
-							classes: 'purple'
-						}
-					];
-				}
+				this.newEnd = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
+				this.confirm = false;
+				this.$refs.showConfirmModal.show();
 			} else {
-				alert('Je kunt deadlines niet verplaatsen.');
+				// alert('Je kunt deadlines niet verplaatsen.');
+				this.$refs.showWarningModal.show();
 			}
+		},
+		confirmTrue () {
+			this.events = [
+				{
+					id: '1',
+					startDate: this.newStart,
+					endDate: this.newEnd,
+					title: 'Werkstukje'
+				},
+				{
+					id: '2',
+					startDate: '2019-02-08',
+					title: 'Deadline schrijfopdracht (Computersystemen)',
+					classes: 'purple'
+				}
+			];
+			this.$refs.showConfirmModal.hide();
+		},
+		confirmFalse () {
+			this.$refs.showConfirmModal.hide();
+		},
+		deleteEvent () {
+			this.events = [
+				{
+					id: '2',
+					startDate: '2019-02-08',
+					title: 'Deadline schrijfopdracht (Computersystemen)',
+					classes: 'purple'
+				}
+			];
+			console.log(this.selectedEvent.title + ' is nu weg!');
+			this.$refs.showEventModal.hide();
 		}
 	}
 };
