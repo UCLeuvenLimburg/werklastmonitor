@@ -3,6 +3,7 @@ const config = require('../config');
 const express = require('express');
 const {check, validationResult} = require('express-validator/check');
 
+const basicAuth = require('basic-auth')
 const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 
@@ -10,8 +11,10 @@ const LdapStrategy = require('passport-ldapauth');
 passport.use(new LdapStrategy({
 	server: {
 		url: `ldap://${config.ldap.host}:${config.ldap.port}`,
-		searchFilter: `(uid=${config.ldap.userId})`
-	}
+		searchBase: 'OU=Users,OU=Root,DC=int,DC=ucll,DC=be',
+		searchFilter: '(cn=*{{username}}*)'
+	},
+	credentialsLookup: basicAuth
 }, (user, done) => {
 	console.log(user);
 	return done(null, user);
