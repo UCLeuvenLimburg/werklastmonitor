@@ -1,6 +1,7 @@
 const express = require('express');
 const Lab = require('../models/labModel');
 const Milestone = require('../models/milestoneModel');
+const Course = require('../models/courseModel')
 const {check, validationResult} = require('express-validator/check');
 
 let labRouter = express.Router();
@@ -22,7 +23,7 @@ const getValidationChecks = () => {
 		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
 		check('endDate').custom((value, { req }) => value >= req.body.startDate),
 		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
-		check('courseId').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
+		check('course').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
 		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
 		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
 		check('milestones.*.isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
@@ -37,6 +38,7 @@ labRouter.route('/')
 			} else {
 				for (let i = 0; i < labs.length; ++i) {
 					labs[i].milestones = await Milestone.find({ _id: { $in: labs[i].milestones } });
+					labs[i].course = await Course.findOne({ _id: labs[i].course });
 				}
 
 				res.json(labs);
@@ -55,7 +57,11 @@ labRouter.route('/')
 		lab.startDate = req.body.startDate;
 		lab.endDate = req.body.endDate;
 		lab.hourEstimate = req.body.hourEstimate;
-		lab.courseId = req.body.courseId;
+		if (req.body.course.match(/^[0-9a-f]{24}$/g)) {
+			lab.course = await Course.findOne({ _id: req.body.course });
+		} else {
+			lab.course = await Course.findOne({ courseCode: req.body.course });
+		}
 		lab.milestones = await getMilestones(req.body.milestones);
 
 		lab.save();
@@ -76,6 +82,7 @@ labRouter.use('/:labId', (req, res, next) => {
 labRouter.route('/:labId')
 	.get(async (req, res) => {
 		req.lab.milestones = await Milestone.find({ _id: { $in: req.lab.milestones } });
+		req.lab.course = await Course.findOne({ _id: req.lab.course });
 		res.json(req.lab);
 	})
 	.put(getValidationChecks(), async (req, res) => {
@@ -89,10 +96,15 @@ labRouter.route('/:labId')
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
 		req.lab.hourEstimate = req.body.hourEstimate;
-		req.lab.courseId = req.body.courseId;
+		if (req.body.course.match(/^[0-9a-f]{24}$/g)) {
+			req.lab.course = req.body.course;
+		} else {
+			req.lab.course = (await Course.findOne({ courseCode: req.body.course }))._id;
+		}
 		req.lab.milestones = await getMilestones(req.body.milestones);
 
-		req.lab.save();
+		await req.lab.save();
+		req.lab.course = await Course.findOne({ _id: req.lab.course });
 		res.json(req.lab);
 	})
 	.delete((req, res) => {

@@ -12,6 +12,7 @@
 import 'mdi-vue/UploadIcon';
 
 import XLSX from 'xlsx';
+import LabsService from '@/api/LabsService';
 
 export default {
 	name: 'upload',
@@ -28,6 +29,12 @@ export default {
 			}
 			this.parseSheet(files[0]);
 		},
+		formatDate (date) {
+			let tempDate = new Date(date);
+			let month = (tempDate.getMonth() + 1 < 10) ? '0' + (tempDate.getMonth() + 1) : (tempDate.getMonth() + 1);
+			let day = (tempDate.getDate() < 10) ? '0' + tempDate.getDate() : tempDate.getDate();
+			return (tempDate.getFullYear() + '-' + month + '-' + day);
+		},
 		parseSheet (file) {
 			let reader = new FileReader();
 			let rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
@@ -40,10 +47,10 @@ export default {
 				let sheetNameList = workbook.SheetNames;
 
 				let labWorkSheet = workbook.Sheets[sheetNameList[0]];
-				let labsJSON = XLSX.utils.sheet_to_json(labWorkSheet, { header: 1 });
+				let labsJSON = XLSX.utils.sheet_to_json(labWorkSheet, { header: 1, dateNF: 'YYYY-MM-DD' });
 
 				let milestoneWorkSheet = workbook.Sheets[sheetNameList[1]];
-				let milestoneJSON = XLSX.utils.sheet_to_json(milestoneWorkSheet, { header: 1 });
+				let milestoneJSON = XLSX.utils.sheet_to_json(milestoneWorkSheet, { header: 1, dateNF: 'YYYY-MM-DD' });
 
 				let labs = [];
 
@@ -53,7 +60,7 @@ export default {
 						startDate: '',
 						endDate: '',
 						hourEstimate: '',
-						courseId: '',
+						course: '',
 						milestones: []
 					};
 
@@ -61,7 +68,7 @@ export default {
 					labJSONTemplate.startDate = labsJSON[i][1];
 					labJSONTemplate.endDate = labsJSON[i][2];
 					labJSONTemplate.hourEstimate = labsJSON[i][3];
-					labJSONTemplate.courseId = labsJSON[i][4];
+					labJSONTemplate.course = labsJSON[i][4];
 
 					labs.push(labJSONTemplate);
 				}
@@ -83,14 +90,18 @@ export default {
 					});
 				}
 
-				console.log('labs');
+				labs.forEach(lab => {
+					lab.startDate.setHours(lab.startDate.getHours() + 1);
+					lab.endDate.setHours(lab.endDate.getHours() + 1);
+					lab.startDate = this.formatDate(lab.startDate);
+					lab.endDate = this.formatDate(lab.endDate);
+				});
+
 				console.log(labs);
-				/*
-				for (let i = 0; i < opdrachten.length; i++) {
-					opdrachten[i].startdatum.setHours(opdrachten[i].startdatum.getHours() + 2);
-					opdrachten[i].einddatum.setHours(opdrachten[i].einddatum.getHours() + 2);
-				}
-				*/
+
+				labs.forEach(async (lab) => {
+					console.log(await LabsService.post(lab));
+				});
 			};
 			if (rABS) {
 				reader.readAsBinaryString(file);
