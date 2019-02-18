@@ -7,6 +7,8 @@
 			li
 				router-link(to="/") Home
 			li
+				router-link(to="/courses") Vakken
+			li
 				router-link(to="/workload") Werklast
 			li
 				router-link(to="/agenda") Agenda

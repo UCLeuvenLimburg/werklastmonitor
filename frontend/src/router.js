@@ -34,6 +34,11 @@ export default new Router({
 			component: () => import(/* webpackChunkName: "workload" */ './views/AddSession.vue')
 		},
 		{
+			path: '/courses',
+			name: 'courses',
+			component: () => import(/* webpackChunkName: "workload" */ './views/Courses.vue')
+		},
+		{
 			path: '/login',
 			name: 'login',
 			component: () => import(/* webpackChunkName: "login" */ './views/Login')
