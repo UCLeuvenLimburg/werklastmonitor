@@ -18,7 +18,7 @@ courseRouter.route('/')
 
 	.post([
 		body('name').trim().not().isEmpty().withMessage('Name of the course cant be empty.'),
-		body('fase').isInt({min: 1, max: 6}).withMessage('Fases can only be from 1-6'),
+		body('semester').isInt({min: 1, max: 6}).withMessage('Semesters can only be from 1-6'),
 		body('courseCode').exists().withMessage('course code is required')
 	],(req, res) => {
 		const errors = validationResult(req);
@@ -27,7 +27,7 @@ courseRouter.route('/')
 		}
 		let course = new Course();
 		course.name = req.body.name;
-		course.fase = req.body.fase;
+		course.semester = req.body.semester;
 		course.courseCode = req.body.courseCode;
 		course.save();
 		res.status('201').send(course);
