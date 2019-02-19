@@ -7,10 +7,10 @@
 						mdi-window-close-icon
 
 				h3.month
-					.prev(@click="prevMonth")
+					.month-button.prev(@click="prevMonth")
 						mdi-chevron-left-icon
 					span {{ month | dateFormatMonthFull }}
-					.next(@click="nextMonth")
+					.month-button.next(@click="nextMonth")
 						mdi-chevron-right-icon
 
 				table
@@ -159,6 +159,52 @@ export default {
 				}
 			}
 
+			.month {
+				position: relative;
+				padding: 10px;
+				text-align: center;
+
+				.next {
+					right: 30%;
+					width: 35px;
+					height: 35px;
+				}
+
+				.prev {
+					left: 30%;
+					width: 35px;
+					height: 35px;
+				}
+
+				.month-button {
+					display: block;
+					position: absolute;
+					display: inline;
+					top: 50%;
+					transform: translateY(-50%);
+					transition: .2s ease;
+					border-radius: 50%;
+
+					svg {
+						fill: $color-fg;
+						position: absolute;
+						display: block;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+					}
+
+					&:hover {
+						background-color: $color-fg;
+						fill: $color-content-bg;
+
+						svg {
+							fill: $color-content-bg;
+						}
+					}
+				}
+			}
+
 			table {
 				padding: 200px;
 				width: 100%;
@@ -177,6 +223,7 @@ export default {
 							border-radius: 50%;
 							margin: 0 auto;
 							line-height: 48px;
+							transition: 0.2s ease;
 						}
 
 						&:hover .table-cell {
