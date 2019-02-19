@@ -33,6 +33,7 @@ app.use('/workdays', require('./routes/workdayRoutes'));
 app.use('/milestones', require('./routes/milestoneRoutes'));
 app.use('/courses', require('./routes/courseRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
+app.use('/users', require('./routes/userRoutes'));
 
 app.listen(config.port, () => {
 	console.log(`API running on port ${config.port}`);

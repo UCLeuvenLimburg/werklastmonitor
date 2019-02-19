@@ -45,7 +45,6 @@ worksessionRouter.route('/')
 				worksession.workdays = await Workday.insertMany(req.body.workdays);
 			}
 		}
-		console.log(req.body);
 		worksession.save();
 		res.status('201').send(worksession);
 	})
