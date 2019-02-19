@@ -1,7 +1,7 @@
 const express = require('express');
 const Program = require('../models/programModel');
 const Course = require('../models/courseModel')
-// const {check, validationResult} = require('express-validator/check');
+const {check, validationResult} = require('express-validator/check');
 
 let programRouter = express.Router();
 /*
@@ -11,6 +11,13 @@ const getCourses = async(courses) => {
 	}
 }
 */
+const getValidationChecks = () => {
+	return [
+		check('name').trim().not().isEmpty().withMessage('Program name cannot be empty'),
+		check('courses').not().isEmpty().withMessage('Program courses cannot be empty')
+	];
+};
+
 programRouter.route('/')
 	.get((req, res) => {
 		Program.find(async (err, programs) => {
@@ -20,14 +27,13 @@ programRouter.route('/')
 				for (let i = 0; i < programs.length; ++i) {
 					let coursesObject = await Course.find({ _id: { $in: programs[i].courses } });
 					programs[i].courses = coursesObject;
-					console.log(coursesObject);
 				}
 
 				res.json(programs);
 			}
 		});
 	})
-	.post(async (req, res) => {
+	.post(getValidationChecks(), async (req, res) => {
 		let program = new Program();
 		program.name = req.body.name;
 		program.courses = await Course.find({ _id: { $in: req.body.courses } });
@@ -60,6 +66,19 @@ programRouter.route('/:programId')
 				res.status(204).send('removed');
 			}
 		});
+	})
+	.put(getValidationChecks(), async (req, res) => {
+		const errors = validationResult(req);
+
+		if(!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
+		req.program.name = req.body.name;
+		req.program.courses = await Course.find({ _id: { $in: req.body.courses } });
+
+		await req.program.save();
+		res.json(req.program);
 	});
 
 module.exports = programRouter;
