@@ -1,0 +1,75 @@
+{
+	"name": "Algoritmisch denken",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI04A"
+},
+{
+	"name": "Probleemoplossend denken",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI71A"
+},
+{
+	"name": "Bomen en grafen",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI72A"
+},
+{
+	"name": "Beginselen van objectgericht programmeren",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI38X"
+},
+{
+	"name": "OO programmeren",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI53X"
+},
+{
+	"name": "Webontwikkeling 1",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI65X"
+},
+{
+	"name": "Webontwikkeling 2",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI66X"
+},
+{
+	"name": "Computersystemen",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI26A"
+},
+{
+	"name": "Computernetwerken 1",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI24A"
+},
+{
+	"name": "Computernetwerken 2",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI67X"
+},
+{
+	"name": "Scripttalen",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI59A"
+},
+{
+	"name": "Besturingssystemen 1",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI10A"
+},
+{
+	"name": "Technieken van datamodellering",
+	"semester" : 1,
+	"courseCode": "B-UCLL-MBI62X"
+},
+{
+	"name": "Databanken - dataquerying",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI63X"
+},
+{
+	"name": "Business Process Management",
+	"semester" : 2,
+	"courseCode": "B-UCLL-MBI13A"
+},
