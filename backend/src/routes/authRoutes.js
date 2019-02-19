@@ -7,12 +7,20 @@ const passport = require('passport');
 const LdapStrategy = require('passport-ldapauth');
 
 // LDAP
-passport.use(new LdapStrategy({
-	server: {
-		url: `ldap://${config.ldap.host}:${config.ldap.port}`,
-		searchFilter: `(uid=${config.ldap.userId})`
-	}
-}, (user, done) => {
+const getLDAPConfiguration = (req, callback) => {
+	process.nextTick(() => {
+		callback(null, {
+			server: {
+				url: 'ldap://ad.ucll.be:389',
+				bindDN: `${req.body.username}@ucll.be`,
+				bindCredentials: req.body.password,
+				searchBase: 'OU=Users,OU=Root,DC=int,DC=ucll,DC=be',
+				searchFilter: `(cn=*${req.body.username}*)`
+			}
+		});
+	});
+};
+passport.use(new LdapStrategy(getLDAPConfiguration, (user, done) => {
 	console.log(user);
 	return done(null, user);
 }));

@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "node ./node_modules/nodemon/bin/nodemon.js src/index.js --exec \"npm run lint && node\"",
     "lint": "eslint \"src/**/*.js\"",
-	"test": "mocha",
-	"test-with-coverage": "nyc --reporter=text mocha"
+    "test": "mocha",
+    "test-with-coverage": "nyc --reporter=text mocha"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "basic-auth": "^2.0.1",
     "body-parser": "^1.18.3",
     "chai-http": "^4.2.1",
     "colors": "^1.3.3",
