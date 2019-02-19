@@ -129,4 +129,9 @@ h1 {
 ::-webkit-scrollbar-track-piece {
 	background: transparent;
 }
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
 </style>

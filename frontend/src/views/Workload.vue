@@ -7,31 +7,42 @@
 				option(value='month', selected='selected') Maand
 				option(value='week') Week
 				option(value='day') Dag
+
+			button(@click="showDateRangePicker") Kies periode
+			app-date-range-picker(ref="dateRangePicker", :type="selectedFilter", :range="selectedRange")
 		graph-stackbar(
 			:height="400",
-			:labels="labels",
+			:labels="labsForPeriod.tags",
 			:full-mode="false",
 			:show-text="true",
-			:names="names",
-			:values="values")
-			legends(:names="names", :filter="true")
-			tooltip(:names="names", position="right")
+			:names="labsForPeriod.names",
+			:values="labsForPeriod.hours")
+			legends(:names="labsForPeriod.names", :filter="true")
+			tooltip(:names="labsForPeriod.names", position="right")
 </template>
 
 <script>
+import AppDateRangePicker from '@/components/AppDateRangePicker';
+
+import LabsService from '@/api/LabsService';
+import moment from 'moment';
+
 export default {
 	name: 'workload',
+	components: {
+		AppDateRangePicker
+	},
 	data () {
 		return {
-			// View per month is default
-			names: [ 'Computersystemen', 'Web 1', 'Netwerken', 'BOP' ],
-			values: [
-				[ 10, 5, 5, 5, 10, 11 ],
-				[ 8, 5, 6, 10, 2, 5 ],
-				[ 10, 5, 7, 5, 10, 10 ],
-				[ 8, 10, 7, 10, 10, 11 ]
+			labs: [],
+			startDate: moment('2019-02-01'),
+			endDate: moment('2019-03-01'),
+			filters: [
+				'Maand',
+				'Week',
+				'Dag'
 			],
-			labels: [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ]
+			selectedFilter: 0
 		};
 	},
 	methods: {
@@ -65,7 +76,61 @@ export default {
 				];
 				this.labels = [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ];
 			};
+		},
+		showDateRangePicker (e) {
+			this.$refs.dateRangePicker.show();
+		},
+		getLabsForPeriod (start, end) {
+			let self = this;
+			let labs = {
+				names: [],
+				hours: [],
+				tags: []
+			};
+
+			this.labs.forEach((lab) => {
+				if (moment(lab.startDate) < end && moment(lab.endDate) > start) {
+				// if (moment(lab.startDate) <= start && moment(lab.endDate) >= end) {
+					let diff = moment(lab.endDate).diff(moment(lab.startDate), 'days');
+					let amount = lab.hourEstimate / diff;
+					let labHours = [];
+					for (let i = 0; i < 4; ++i) {
+						labHours.push(amount);
+					}
+
+					labs.hours.push(labHours);
+					labs.names.push(lab.name);
+
+					switch (self.selectedFilter) {
+					case self.filters[0]:
+						//
+						break;
+
+					case self.filters[1]:
+						console.log('test 2');
+						break;
+					}
+
+					labs.tags = [ '02/19', '03/19' ];
+				}
+			});
+			return labs;
 		}
+	},
+	computed: {
+		datePickerType () {
+			return ['month', 'week', 'date'][this.selectedFilter];
+		},
+		labsForPeriod () {
+			return this.getLabsForPeriod(this.startDate, this.endDate);
+		}
+	},
+	created () {
+		let self = this;
+		(async () => {
+			let labs = await LabsService.get();
+			self.labs = labs.data;
+		})();
 	}
 };
 </script>
