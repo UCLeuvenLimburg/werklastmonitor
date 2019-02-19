@@ -18,6 +18,13 @@ Vue.filter('dateFormatDayMonth', (value) => {
 	}
 });
 
+Vue.filter('dateFormatMonthFull', (value) => {
+	if (value) {
+		let str = value.format('MMMM');
+		return str.charAt(0).toUpperCase() + str.substr(1);
+	}
+});
+
 new Vue({
 	router,
 	store,

@@ -6,6 +6,13 @@
 					.date-range-picker-close-button(@click="hide")
 						mdi-window-close-icon
 
+				h3.month
+					.prev(@click="prevMonth")
+						mdi-chevron-left-icon
+					span {{ month | dateFormatMonthFull }}
+					.next(@click="nextMonth")
+						mdi-chevron-right-icon
+
 				table
 					tr
 						th Ma
@@ -21,6 +28,8 @@
 
 <script>
 import 'mdi-vue/WindowCloseIcon';
+import 'mdi-vue/ChevronLeftIcon';
+import 'mdi-vue/ChevronRightIcon';
 
 import moment from 'moment';
 
@@ -33,7 +42,8 @@ export default {
 	data () {
 		return {
 			visible: false,
-			month: moment().date(1)
+			month: moment().date(1),
+			weeks: []
 		};
 	},
 	methods: {
@@ -47,11 +57,16 @@ export default {
 			if (target === this.$refs.modalWrapper) {
 				this.hide();
 			}
-		}
-
-	},
-	computed: {
-		weeks () {
+		},
+		prevMonth () {
+			this.month.subtract(1, 'month');
+			this.updateCalendar();
+		},
+		nextMonth () {
+			this.month = this.month.add(1, 'month');
+			this.updateCalendar();
+		},
+		updateCalendar () {
 			let weeks = [];
 			let week = [];
 			let daysInPrevMonth = moment(this.month).subtract(1, 'month').daysInMonth();
@@ -69,8 +84,11 @@ export default {
 				week.push(i);
 			}
 			weeks.push(week);
-			return weeks;
+			this.weeks = weeks;
 		}
+	},
+	created () {
+		this.updateCalendar();
 	}
 };
 </script>
