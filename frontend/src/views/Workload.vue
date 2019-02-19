@@ -7,6 +7,9 @@
 				option(value='month', selected='selected') Maand
 				option(value='week') Week
 				option(value='day') Dag
+
+			button(@click="showDateRangePicker") Kies periode
+			app-date-range-picker(ref="dateRangePicker", :type="selectedFilter", :range="selectedRange")
 		graph-stackbar(
 			:height="400",
 			:labels="labels",
@@ -19,8 +22,15 @@
 </template>
 
 <script>
+import AppDateRangePicker from '@/components/AppDateRangePicker';
+
+import moment from 'moment';
+
 export default {
 	name: 'workload',
+	components: {
+		AppDateRangePicker
+	},
 	data () {
 		return {
 			// View per month is default
@@ -31,7 +41,12 @@ export default {
 				[ 10, 5, 7, 5, 10, 10 ],
 				[ 8, 10, 7, 10, 10, 11 ]
 			],
-			labels: [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ]
+			labels: [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ],
+			selectedFilter: 0,
+			selectedRange: {
+				startDate: moment(),
+				endDate: moment()
+			}
 		};
 	},
 	methods: {
@@ -65,6 +80,9 @@ export default {
 				];
 				this.labels = [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ];
 			};
+		},
+		showDateRangePicker (e) {
+			this.$refs.dateRangePicker.show();
 		}
 	}
 };
