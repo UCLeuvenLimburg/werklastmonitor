@@ -19,20 +19,20 @@ export default {
 		return {
 			labs: [{
 				name: 'Schrijfopdracht',
-				startDate: new Date(),
-				endDate: new Date(),
+				startDate: new Date(2019, 2, 2),
+				endDate: new Date(2019, 2, 3),
 				hourEstimate: 50,
 				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
 				milestones: [{ name: 'Eerste pagina', duration: 30, isDone: true }, { name: 'Tweede pagina', duration: 30, isDone: false }]
 			}, { name: 'Leesopdracht',
-				startDate: new Date(),
-				endDate: new Date(),
+				startDate: new Date(2019, 2, 10),
+				endDate: new Date(2019, 2, 10),
 				hourEstimate: 50,
 				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
 				milestones: [{ name: 'Gelezen', duration: 30, isDone: false }]
 			}, { name: 'Rudymoppen verzinnen',
-				startDate: new Date(),
-				endDate: new Date(),
+				startDate: new Date(2019, 3, 3),
+				endDate: new Date(2019, 3, 7),
 				hourEstimate: 50,
 				course: { name: 'Netwerken', fase: 1, courseCode: 'RUDY' },
 				milestones: [{ name: 'Flauwe mop googlen', duration: 30, isDone: false }]
