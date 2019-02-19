@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.main
 	h1 Dit is een test
 	ul.index
 		li(v-on:click="showMonths") Maand
@@ -31,20 +31,75 @@ export default {
 			monthview: false,
 			month: moment().format('MMMM'),
 			daysInMonth: moment().daysInMonth(),
-			days: []
+			days: [],
+			weeks: []
 		};
 	},
 	methods: {
 		showMonths () {
-			console.log('fired');
-			this.monthview = true;
+			if (this.monthview) {
+				this.monthview = false;
+			} else {
+				this.monthview = true;
+			}
 		},
 		showWeeks () {
 			let count = moment().daysInMonth(this.month);
 			this.days = [];
-			for(let i=1; i< count + 1; i++) {
+			let week = [];
+			for (let i = 1; i < count + 1; i++) {
+				let dag = moment().month(this.month).date(i);
 				this.days.push(moment().month(this.month).date(i).format('DD'));
-				console.log(moment().month(this.month).date(i));
+				// console.log(moment().month(this.month).date(i));
+				console.log(dag.format('DD'));
+				if (dag.format('DD') === '01') {
+					week = [];
+					console.log(dag.day());
+					let start = this.lelijk(dag.day());
+					console.log('start' + start);
+					for (let j = start; j > 0; j--) {
+						// console.log(dag.add(-1, 'days').format('dddd - DD'));
+						week.push(moment(dag).add(-j, 'days').format('dddd - DD'));
+					}
+					week.push(dag.format('dddd - DD'));
+				}
+				else if (dag.day() === 1) {
+					this.weeks.push(week);
+					week = [];
+					week.push(dag.format('dddd - DD'));
+				}
+				else if (dag.format('DD') == count) {
+					week.push(dag.format('dddd - DD'));
+					let size = week.length;
+					console.log(size);
+					for ( let k = size; k < 7; k++)
+					{
+						week.push(dag.add(1, 'days').format('dddd - DD'));
+					}
+					this.weeks.push(week);
+				}
+				else {
+					week.push(dag.format('dddd - DD'));
+				}
+			}
+			console.log(this.weeks);
+		},
+		lelijk (e) {
+			switch(e) {
+			case 0:
+				return 6;
+			case 6:
+				return 5;
+			case 5:
+				return 4;
+			case 4:
+				return 3;
+			case 3:
+				return 2;
+			case 2:
+				return 1;
+			case 1:
+				return 0;
 			}
 		},
 		getMonth (e) {
@@ -56,6 +111,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main{
+	margin-bottom: 50px;
+}
 .index{
 	color: blue;
 	list-style: none;
