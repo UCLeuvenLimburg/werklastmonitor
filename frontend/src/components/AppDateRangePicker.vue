@@ -23,7 +23,8 @@
 						th Za
 						th Zo
 					tr.dates(v-for="week, weekKey of weeks", :ref="`week-${weekKey}`")
-						td(v-for="day, dayKey of week", :ref="`weekday-${weekKey}-${dayKey}`") {{ day }}
+						td(v-for="day, dayKey of week", :ref="`weekday-${weekKey}-${dayKey}`")
+							.table-cell {{ day }}
 </template>
 
 <script>
@@ -159,11 +160,36 @@ export default {
 			}
 
 			table {
+				padding: 200px;
 				width: 100%;
+				table-layout: fixed;
 
-				th {
-					background: $color-fg;
-					color: $color-content-bg;
+				tr {
+					td {
+						text-align: center;
+						border: 1px solid rgba(0, 0, 0, .10);
+						padding: 10px;
+
+						.table-cell {
+							display: block;
+							height: 48px;
+							width: 48px;
+							border-radius: 50%;
+							margin: 0 auto;
+							line-height: 48px;
+						}
+
+						&:hover .table-cell {
+							background-color: $color-accent;
+							color: $color-content-bg;
+						}
+					}
+
+					th {
+						background: $color-fg;
+						color: $color-content-bg;
+						padding: 10px;
+					}
 				}
 			}
 		}
