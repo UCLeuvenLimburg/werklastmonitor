@@ -1,24 +1,17 @@
 <template lang="pug">
 	.page.workload
 		h1 Werklast
-		p
-			| Overzicht van werklast per&nbsp;
-			select(@change='handleChange')
-				option(value='month', selected='selected') Maand
-				option(value='week') Week
-				option(value='day') Dag
-
-			button(@click="showDateRangePicker") Kies periode
-			app-date-range-picker(ref="dateRangePicker", :type="selectedFilter", :range="selectedRange")
+		button(@click="showDateRangePicker") Kies periode
+		app-date-range-picker(ref="dateRangePicker")
 		graph-stackbar(
 			:height="400",
-			:labels="labsForPeriod.tags",
+			:labels="filteredLabs.tags",
 			:full-mode="false",
 			:show-text="true",
-			:names="labsForPeriod.names",
-			:values="labsForPeriod.hours")
-			legends(:names="labsForPeriod.names", :filter="true")
-			tooltip(:names="labsForPeriod.names", position="right")
+			:names="filteredLabs.names",
+			:values="filteredLabs.hours")
+			legends(:names="filteredLabs.names", :filter="true")
+			tooltip(:names="filteredLabs.names", position="right")
 </template>
 
 <script>
@@ -34,86 +27,86 @@ export default {
 	},
 	data () {
 		return {
-			labs: [],
-			startDate: moment('2019-02-01'),
-			endDate: moment('2019-03-01'),
-			filters: [
-				'Maand',
-				'Week',
-				'Dag'
-			],
-			selectedFilter: 0
+			labs: []
 		};
 	},
 	methods: {
-		handleChange (e) {
-			let selection = e.target.options[e.target.options.selectedIndex].valueOf().value;
-			if (selection === 'day') {
-				this.names = [ 'Computersystemen', 'Web 1', 'Netwerken', 'BOP' ];
-				this.values = [
-					[ 3, 5, 2, 5, 2, 3 ],
-					[ 8, 5, 6, 10, 2, 1 ],
-					[ 10, 5, 7, 5, 1, 2 ],
-					[ 8, 10, 7, 4, 2, 2 ]
-				];
-				this.labels = [ 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag' ];
-			} else if (selection === 'week') {
-				this.names = [ 'Computersystemen', 'Web 1', 'Netwerken', 'BOP' ];
-				this.values = [
-					[ 5, 5, 2, 5 ],
-					[ 8, 5, 6, 10 ],
-					[ 8, 5, 7, 5 ],
-					[ 8, 10, 7, 4 ]
-				];
-				this.labels = [ '01-07/02', '08-14/02', '15-23/02', '23-30/02' ];
-			} else {
-				this.names = [ 'Computersystemen', 'Web 1', 'Netwerken', 'BOP' ];
-				this.values = [
-					[ 10, 5, 5, 5, 10, 11 ],
-					[ 8, 5, 6, 10, 2, 5 ],
-					[ 10, 5, 7, 5, 10, 10 ],
-					[ 8, 10, 7, 10, 10, 11 ]
-				];
-				this.labels = [ '01/19', '02/19', '03/19', '04/19', '05/19', '06/19' ];
-			};
-		},
-		showDateRangePicker (e) {
+		showDateRangePicker () {
 			this.$refs.dateRangePicker.show();
 		},
-		getLabsForPeriod (start, end) {
+		getLabsForPeriod (type, start, end) {
 			let self = this;
 			let labs = {
 				names: [],
 				hours: [],
 				tags: []
 			};
+			let time = moment(start);
 
-			this.labs.forEach((lab) => {
-				if (moment(lab.startDate) < end && moment(lab.endDate) > start) {
-				// if (moment(lab.startDate) <= start && moment(lab.endDate) >= end) {
-					let diff = moment(lab.endDate).diff(moment(lab.startDate), 'days');
-					let amount = lab.hourEstimate / diff;
-					let labHours = [];
-					for (let i = 0; i < 4; ++i) {
-						labHours.push(amount);
-					}
-
-					labs.hours.push(labHours);
-					labs.names.push(lab.name);
-
-					switch (self.selectedFilter) {
-					case self.filters[0]:
-						//
-						break;
-
-					case self.filters[1]:
-						console.log('test 2');
-						break;
-					}
-
-					labs.tags = [ '02/19', '03/19' ];
+			switch (type) {
+			case 0:
+				while (time.isBefore(end)) {
+					labs.tags.push(time.format('MMMM, YYYY'));
+					time.add(1, 'month');
 				}
+				break;
+
+			case 1:
+				while (time.isBefore(end)) {
+					labs.tags.push(`${time.format('DD/MM/YYYY')} - ${moment(time).add(6, 'days').format('DD/MM/YYYY')}`);
+					time.add(1, 'week');
+				}
+				break;
+
+			case 2:
+				while (time.isSameOrBefore(end)) {
+					labs.tags.push(time.format('DD/MM/YYYY'));
+					time.add(1, 'day');
+				}
+				break;
+			}
+
+			self.labs.forEach((lab) => {
+				let day = moment(lab.startDate);
+				let endDay = moment(lab.endDate);
+				let labHours = [];
+
+				if (day.isSameOrBefore(end) && endDay.isSameOrAfter(start)) {
+					let days = endDay.diff(day, 'days');
+					let hoursPerDay = lab.hourEstimate / days;
+					let hours = 0;
+
+					day = moment(start);
+					while (day.isSameOrBefore(end)) {
+						switch (type) {
+						case 0:
+							hours += hoursPerDay;
+							if (day.date() === day.daysInMonth()) {
+								labHours.push(hours);
+								hours = 0;
+							}
+							break;
+
+						case 1:
+							hours += hoursPerDay;
+							if (day.isoWeekday() === 7) {
+								labHours.push(hours);
+								hours = 0;
+							}
+							break;
+
+						case 2:
+							labHours.push(hoursPerDay);
+							break;
+						}
+						day.add(1, 'day');
+					}
+				}
+
+				labs.names.push(lab.name);
+				labs.hours.push(labHours);
 			});
+
 			return labs;
 		},
 		toColor (id) {
@@ -130,15 +123,17 @@ export default {
 		}
 	},
 	computed: {
-		datePickerType () {
-			return ['month', 'week', 'date'][this.selectedFilter];
-		},
-		labsForPeriod () {
-			return this.getLabsForPeriod(this.startDate, this.endDate);
+		filteredLabs () {
+			return this.getLabsForPeriod(
+				this.$store.state.dateRange.type,
+				this.$store.state.dateRange.startDate,
+				this.$store.state.dateRange.endDate
+			);
 		}
 	},
 	created () {
 		let self = this;
+		this.$store.dispatch('resetDatePicker');
 		(async () => {
 			let labs = await LabsService.get();
 			self.labs = labs.data;
