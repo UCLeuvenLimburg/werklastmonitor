@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
 const server = require('../src/index');
 let assert = require('assert');
@@ -76,7 +76,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -136,7 +136,6 @@ describe('Lab tests', () => {
 
 			done();
 		});
-*/
 		it('should return 1 error message for a lab with an courseId', (done) => {
 			let lab = {
 				name: 'fff',
@@ -376,3 +375,4 @@ describe('Lab tests', () => {
 		});
 	});
 });
+*/
