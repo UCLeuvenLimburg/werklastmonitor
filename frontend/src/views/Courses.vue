@@ -118,10 +118,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-	ul li:nth-child(odd) {
-		background: #f9f9f9;
+	ul li:nth-child(even) {
+		background: #e9f3f8;
 	}
-	ul li:nth-child(odd).checked {
+	ul li:nth-child(even).checked {
 		background: #888;
 	}
 	.checked::before {
@@ -146,7 +146,6 @@ export default {
 		position: relative;
 		padding: 12px 8px 12px 40px;
 		list-style-type: none;
-		background: #eee;
 		transition: 0.2s;
 
 		/* make the list items unselectable */
