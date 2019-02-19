@@ -16,6 +16,8 @@
 				router-link(to="/addsession") Toevoegen
 			li
 				router-link(to="/upload") Upload
+			li
+				router-link(to="/registration") Inschrijvingen
 			li.right
 				router-link.highlight(to="/login") Aanmelden
 

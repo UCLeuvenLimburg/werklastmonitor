@@ -19,8 +19,8 @@
 					.month-button.next(@click="nextMonth")
 						mdi-chevron-right-icon
 
-				table
-					tr
+				table(:class="{ 'type-month': pickerType === 0 }", @mouseout="leaveTable")
+					tr(@mouseout="leaveTable")
 						th Ma
 						th Di
 						th Wo
@@ -28,8 +28,11 @@
 						th Vr
 						th Za
 						th Zo
-					tr.dates(v-for="week, weekKey of weeks")
-						td(v-for="day, dayKey of week", :class="{ selectable: !((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)) }", @click="selectDate(weekKey, dayKey)")
+					tr.dates(v-for="week, weekKey of weeks", :class="{ 'type-week': pickerType === 1 }")
+						td(v-for="day, dayKey of week",
+							:class="{ selectable: !((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)), 'month-hover': hoveringTable }",
+							@click="selectDate(weekKey, dayKey)",
+							@mouseover="enterTable(!((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)))")
 							.table-cell {{ day }}
 </template>
 
@@ -53,7 +56,8 @@ export default {
 			month: moment().date(1),
 			weeks: [],
 			startDate: null,
-			endDate: null
+			endDate: null,
+			hoveringTable: false
 		};
 	},
 	methods: {
@@ -140,6 +144,12 @@ export default {
 				}
 				this.hide();
 			}
+		},
+		enterTable (shouldHover) {
+			this.hoveringTable = shouldHover;
+		},
+		leaveTable () {
+			this.hoveringTable = false;
 		}
 	},
 	created () {
@@ -160,6 +170,7 @@ export default {
 	height: 100%;
 	background: rgba(0, 0, 0, .5);
 	display: table;
+	user-select: none;
 
 	.date-range-picker-wrapper {
 		display: table-cell;
@@ -270,6 +281,7 @@ export default {
 					transform: translateY(-50%);
 					transition: .2s ease;
 					border-radius: 50%;
+					cursor: pointer;
 
 					svg {
 						fill: $color-fg;
@@ -296,13 +308,42 @@ export default {
 				width: 100%;
 				table-layout: fixed;
 
+				&.type-month .selectable.month-hover {
+					background: $color-accent !important;
+
+					.table-cell {
+						background: transparent !important;
+						color: $color-content-bg !important;
+					}
+				}
+
 				tr {
+					transition: .2s ease;
+
+					&.type-week {
+						cursor: pointer;
+
+						td .table-cell {
+							background: transparent !important;
+						}
+
+						&:hover {
+							background: $color-accent;
+
+							td .table-cell {
+								color: $color-content-bg !important;
+								background: transparent;
+							}
+						}
+					}
+
 					td {
 						text-align: center;
 						border: 1px solid rgba(0, 0, 0, .10);
 						padding: 10px;
 
 						.table-cell {
+							color: $color-fg;
 							display: block;
 							height: 48px;
 							width: 48px;
@@ -312,13 +353,18 @@ export default {
 							transition: .2s ease;
 						}
 
-						&:not(.selectable) {
-							color: darken($color-content-bg, 35%);
+						&.selectable {
+							transition: background .2s ease;
+							cursor: pointer;
+
+							&:hover .table-cell {
+								background-color: $color-accent;
+								color: $color-content-bg;
+							}
 						}
 
-						&.selectable:hover .table-cell {
-							background-color: $color-accent;
-							color: $color-content-bg;
+						&:not(.selectable) .table-cell {
+							color: darken($color-content-bg, 35%);
 						}
 					}
 

@@ -24,6 +24,8 @@
 					a.button(:href="'/addsession?id='+ selectedEvent.id") Aanpassen
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
+					h3 Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
+					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. De docent schat een gemiddelde van {{ getLab(id).hourEstimate }} uren.
 					h3 Milestones
 					ul
 					li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index")
@@ -62,8 +64,8 @@ export default {
 			labs: [{
 				id: 1,
 				name: 'Schrijfopdracht',
-				startDate: new Date(2019, 1, 2),
-				endDate: new Date(2019, 1, 3),
+				startDate: new Date(2019, 1, 1),
+				endDate: new Date(2019, 1, 12),
 				hourEstimate: 50,
 				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
 				milestones: [{ id: 1, name: 'Eerste pagina', duration: 30, isDone: true }, { id: 2, name: 'Tweede pagina', duration: 30, isDone: false }]
@@ -71,7 +73,7 @@ export default {
 				name: 'Leesopdracht',
 				startDate: new Date(2019, 1, 10),
 				endDate: new Date(2019, 1, 10),
-				hourEstimate: 50,
+				hourEstimate: 40,
 				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
 				milestones: [{ id: 1, name: 'Gelezen', duration: 30, isDone: false }]
 			}, { id: 3,
@@ -86,12 +88,14 @@ export default {
 				id: 1,
 				startDate: new Date(2019, 1, 1),
 				endDate: new Date(2019, 1, 2),
-				lab: { name: 'Werkstukje' }
+				lab: { id: 1, name: 'Schrijven' },
+				workdays: [{ day: new Date(2019, 1, 1), workhours: 5 }, { day: new Date(2019, 1, 2), workhours: 6 }]
 			}, {
 				id: 2,
-				startDate: new Date(2019, 1, 10),
-				endDate: new Date(2019, 1, 12),
-				lab: { name: 'Programmeren' }
+				startDate: new Date(2019, 1, 9),
+				endDate: new Date(2019, 1, 11),
+				lab: { id: 1, name: 'Schrijven' },
+				workdays: [{ day: new Date(2019, 1, 9), workhours: 5 }, { day: new Date(2019, 1, 10), workhours: 2 }, { day: new Date(2019, 1, 11), workhours: 5 }]
 			}],
 			events: [],
 			selectedEvent: {
@@ -207,6 +211,33 @@ export default {
 					});
 				}
 			});
+		},
+		getPercentage (lab) {
+			let estimatedHours = lab.hourEstimate;
+			let workedHours = this.getWorkedHours(lab);
+			let percentage = workedHours / estimatedHours;
+			percentage *= 100;
+			return percentage;
+		},
+		getWorkedHours (lab) {
+			let workedHours = 0;
+			this.worksessions.forEach(worksession => {
+				if (worksession.lab.id === lab.id) {
+					worksession.workdays.forEach(workday => {
+						workedHours += workday.workhours;
+					});
+				}
+			});
+			return workedHours;
+		},
+		getLab (id) {
+			let chosenLab;
+			this.labs.forEach(lab => {
+				if ('lab' + lab.id === this.selectedEvent.id) {
+					chosenLab = lab;
+				}
+			});
+			return chosenLab;
 		}
 	},
 	mounted () {
