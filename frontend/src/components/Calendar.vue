@@ -18,6 +18,9 @@
 					th Vr
 					th Za
 					th Zo
+				tr(v-for="week in weeks" v-if="weekview")
+					td(v-for="days in week") {{days}}
+
 
 </template>
 
@@ -29,7 +32,8 @@ export default {
 		return {
 			months: [ { name: 'Januari', value: '1' } , { name: 'Februari', value: '2' }, { name: 'Maart', value: '3' }, { name: 'April', value: '4' }, { name: 'Mei', value: '5' }, { name: 'Juni', value: '6' }, { name: 'Juli', value: '7' }, { name: 'Augustus', value: '8' }, { name: 'September', value: '9' }, { name: 'Oktober', value: '10' }, { name: 'November', value: '11' }, { name: 'December', value: '12' }],
 			monthview: false,
-			month: moment().format('MMMM'),
+			weekview: false,
+			month: moment().add(-1, 'months').format('MMMM'),
 			daysInMonth: moment().daysInMonth(),
 			days: [],
 			weeks: []
@@ -44,45 +48,54 @@ export default {
 			}
 		},
 		showWeeks () {
-			let count = moment().daysInMonth(this.month);
-			this.days = [];
-			let week = [];
-			for (let i = 1; i < count + 1; i++) {
-				let dag = moment().month(this.month).date(i);
-				this.days.push(moment().month(this.month).date(i).format('DD'));
-				// console.log(moment().month(this.month).date(i));
-				console.log(dag.format('DD'));
-				if (dag.format('DD') === '01') {
-					week = [];
-					console.log(dag.day());
-					let start = this.lelijk(dag.day());
-					console.log('start' + start);
-					for (let j = start; j > 0; j--) {
-						// console.log(dag.add(-1, 'days').format('dddd - DD'));
-						week.push(moment(dag).add(-j, 'days').format('dddd - DD'));
-					}
-					week.push(dag.format('dddd - DD'));
-				}
-				else if (dag.day() === 1) {
-					this.weeks.push(week);
-					week = [];
-					week.push(dag.format('dddd - DD'));
-				}
-				else if (dag.format('DD') == count) {
-					week.push(dag.format('dddd - DD'));
-					let size = week.length;
-					console.log(size);
-					for ( let k = size; k < 7; k++)
-					{
-						week.push(dag.add(1, 'days').format('dddd - DD'));
-					}
-					this.weeks.push(week);
-				}
-				else {
-					week.push(dag.format('dddd - DD'));
-				}
+			if(this.weekview) {
+				this.weekview = false;
 			}
-			console.log(this.weeks);
+			else {
+				this.weekview = true;
+				if(this.days.length == 0 && this.weekview) {
+					let count = moment().daysInMonth(this.month);
+					this.days = [];
+					let week = [];
+					for (let i = 1; i < count + 1; i++) {
+						let dag = moment().month(this.month).date(i);
+						this.days.push(moment().month(this.month).date(i).format('DD'));
+						// console.log(moment().month(this.month).date(i));
+						console.log(dag.format('DD'));
+						if (dag.format('DD') === '01') {
+							week = [];
+							console.log(dag.day());
+							let start = this.lelijk(dag.day());
+							console.log('start' + start);
+							for (let j = start; j > 0; j--) {
+								// console.log(dag.add(-1, 'days').format('dddd - DD'));
+								week.push(moment(dag).add(-j, 'days').format('DD'));
+							}
+							week.push(dag.format('DD'));
+						}
+						else if (dag.day() === 1) {
+							this.weeks.push(week);
+							week = [];
+							week.push(dag.format('DD'));
+						}
+						else if (dag.format('DD') == count) {
+							week.push(dag.format('DD'));
+							let size = week.length;
+							console.log(size);
+							for ( let k = size; k < 7; k++)
+							{
+								week.push(dag.add(1, 'days').format('DD'));
+							}
+							this.weeks.push(week);
+						}
+						else {
+							week.push(dag.format('DD'));
+						}
+					}
+					console.log(this.weeks);
+			}
+			}
+
 		},
 		lelijk (e) {
 			switch(e) {
