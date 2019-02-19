@@ -1,4 +1,4 @@
-/*const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const secrets = require('../src/secrets');
 const server = require('../src/index');
 let assert = require('assert');
@@ -27,7 +27,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -41,6 +41,10 @@ describe('Lab tests', () => {
 				.post('/labs')
 				.send(lab)
 				.end((err, res) => {
+					if(err) {
+						console.error(err);
+					}
+					console.log(res.body);
 					res.body.name.should.eql('testLab4d4d4');
 					res.body.startDate.should.eql('2019-01-05T00:00:00.000Z');
 					res.body.endDate.should.eql('2019-05-22T00:00:00.000Z');
@@ -59,7 +63,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -87,7 +91,7 @@ describe('Lab tests', () => {
 				startDate: '',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -104,18 +108,18 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
-/* End date cannot be tested yet
+		/* End date cannot be tested yet */
 		it('should return 1 error message for a lab with an empty endDate', (done) => {
 			let lab = {
 				name: 'fkfkfk',
 				startDate: '2019-01-05',
 				endDate: '',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -132,7 +136,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -142,7 +146,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '',
+				course: '',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -159,7 +163,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -170,7 +174,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -192,7 +196,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -203,7 +207,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -225,7 +229,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -236,7 +240,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -258,7 +262,7 @@ describe('Lab tests', () => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
 					res.body.errors.length.should.be.eql(1);
-			});
+				});
 
 			done();
 		});
@@ -271,7 +275,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -293,7 +297,7 @@ describe('Lab tests', () => {
 				startDate: '2019-02-15',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -325,7 +329,7 @@ describe('Lab tests', () => {
 				startDate: '2019-01-05',
 				endDate: '2019-05-22',
 				hourEstimate: 14,
-				courseId: '5555',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: 'testMilestone1',
@@ -347,7 +351,7 @@ describe('Lab tests', () => {
 				startDate: '2019-02-15',
 				endDate: '2019-05-22',
 				hourEstimate: 'ff',
-				courseId: '',
+				course: '5c6bc68ccdd0aa2de0d50dd6',
 				milestones: [
 					{
 						name: '',
@@ -368,11 +372,11 @@ describe('Lab tests', () => {
 				.end((err, res) => {
 					res.should.have.status(422);
 					res.body.should.have.property('errors');
-					res.body.errors.length.should.be.eql(6);
+					res.body.errors.length.should.be.eql(5);
 				});
 
 			done();
 		});
 	});
 });
-*/
+
