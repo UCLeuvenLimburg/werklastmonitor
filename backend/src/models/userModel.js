@@ -6,10 +6,11 @@ const jwt = require('jsonwebtoken');
 
 const UserSchema = new Schema({
 	_id: { type: String },
-	courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
+	courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+	milestones: [{ type: Schema.Types.ObjectId, ref: 'Milestone' }]
 });
 
-UserSchema.methods.generateJWT = () => {
+UserSchema.methods.generateJWT = function () {
 	const today = new Date();
 	const expirationDate = new Date(today);
 	expirationDate.setDate(today.getDate + 60);
@@ -20,7 +21,7 @@ UserSchema.methods.generateJWT = () => {
 	}, config.secret);
 };
 
-UserSchema.methods.toAuthJSON = () => {
+UserSchema.methods.toAuthJSON = function () {
 	return {
 		_id: this._id,
 		token: this.generateJWT()

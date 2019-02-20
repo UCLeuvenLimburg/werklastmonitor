@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+	"start": "pm2 start src/index.js --name 'ucll-werklastmonitor-backend'",
+	"stop": "pm2 stop ucll-werklastmonitor-backend",
+	"delete": "pm2 delete ucll-werklastmonitor-backend",
     "dev": "node ./node_modules/nodemon/bin/nodemon.js src/index.js --exec \"npm run lint && node\"",
     "lint": "eslint \"src/**/*.js\"",
     "test": "mocha",

@@ -1,7 +1,9 @@
 <template lang="pug">
 	.page.workload
 		h1 Werklast
-		button(@click="showDateRangePicker") Kies periode
+		button(@click="showDateRangePicker")
+			mdi-calendar-icon
+			p Kies periode
 		app-date-range-picker(ref="dateRangePicker")
 		graph-stackbar(
 			:height="400",
@@ -17,6 +19,7 @@
 </template>
 
 <script>
+import 'mdi-vue/CalendarIcon';
 import AppDateRangePicker from '@/components/AppDateRangePicker';
 
 import LabsService from '@/api/LabsService';
@@ -56,14 +59,14 @@ export default {
 
 			case 1:
 				while (time.isBefore(end)) {
-					labs.tags.push(`${time.format('DD/MM/YYYY')} - ${moment(time).add(6, 'days').format('DD/MM/YYYY')}`);
+					labs.tags.push(`${time.format('DD/MM')} - ${moment(time).add(6, 'days').format('DD/MM')}`);
 					time.add(1, 'week');
 				}
 				break;
 
 			case 2:
 				while (time.isSameOrBefore(end)) {
-					labs.tags.push(time.format('DD/MM/YYYY'));
+					labs.tags.push(time.format('DD/MM'));
 					time.add(1, 'day');
 				}
 				break;
@@ -164,3 +167,46 @@ export default {
 	}
 };
 </script>
+
+<style lang="scss" scoped>
+@import '../assets/css/definitions';
+
+.page {
+	position: relative;
+	h1 {
+		display: inline;
+	}
+
+	button {
+		position: absolute;
+		right: 0;
+		margin-top: 4px;
+		color: $color-content-bg;
+		background: $color-accent;
+		display: inline-flex;
+		flex-direction: row;
+		padding: 8px;
+		cursor: pointer;
+		transition: .2s ease;
+		border: 0;
+
+		&:hover {
+			background: $color-fg;
+		}
+
+		svg {
+			fill: $color-content-bg;
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+
+		p {
+			padding: 0 8px;
+			font: 1rem $font;
+			line-height: 1.5rem;
+			font-weight: bold;
+		}
+	}
+}
+
+</style>
