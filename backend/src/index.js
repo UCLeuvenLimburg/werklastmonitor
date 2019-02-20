@@ -1,7 +1,5 @@
 const config = require('./config');
 
-const database = require('./database');
-
 const express = require('express');
 const app = express();
 const expressValidator = require('express-validator');
@@ -9,25 +7,11 @@ const expressValidator = require('express-validator');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const passport = require('passport');
-
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 app.use(expressValidator());
-
-// Authentication middlewares
-app.use(session({
-	secret: config.secret,
-	store: new MongoStore({
-		mongooseConnection: database.connection
-	})
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/labs', require('./routes/labRoutes'));
 app.use('/worksessions', require('./routes/worksessionRoutes'));
