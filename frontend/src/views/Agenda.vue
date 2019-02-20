@@ -8,7 +8,8 @@
 			@click-event="showEvent",
 		@drop-on-date="dropDate",
 		enableDragDrop=true,
-			locale="nl")
+			locale="nl",
+		:key="cal")
 			calendar-view-header(
 				slot="header",
 				slot-scope="t",
@@ -24,8 +25,8 @@
 					a.button(:href="'/addsession?id='+ selectedEvent.id") Aanpassen
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
-					h3 Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
-					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(id).hourEstimate }} uren.
+					h3(v-if='milestonable') Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
+					p(v-if='milestonable') {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(selectedEvent.id).hourEstimate }} uren.
 					h3 Milestones
 					ul
 						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}
@@ -44,6 +45,9 @@
 <script>
 import AppModal from '@/components/AppModal';
 import moment from 'moment';
+import LabsService from '@/api/LabsService';
+import WorksessionService from '@/api/WorksessionService';
+
 import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar';
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
 // you should just create <link> elements for these. Both are optional, you can create your own theme if you prefer.
@@ -59,42 +63,8 @@ export default {
 	data () {
 		return {
 			showDate: new Date(),
-			labs: [{
-				id: 1,
-				name: 'Schrijfopdracht',
-				startDate: new Date(2019, 1, 1),
-				endDate: new Date(2019, 1, 12),
-				hourEstimate: 50,
-				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
-				milestones: [{ id: 1, name: 'Eerste pagina', duration: 30, isDone: true }, { id: 2, name: 'Tweede pagina', duration: 30, isDone: false }]
-			}, { id: 2,
-				name: 'Leesopdracht',
-				startDate: new Date(2019, 1, 10),
-				endDate: new Date(2019, 1, 10),
-				hourEstimate: 40,
-				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
-				milestones: [{ id: 1, name: 'Gelezen', duration: 30, isDone: false }]
-			}, { id: 3,
-				name: 'Rudymoppen verzinnen',
-				startDate: new Date(2019, 1, 3),
-				endDate: new Date(2019, 1, 7),
-				hourEstimate: 50,
-				course: { name: 'Netwerken', fase: 1, courseCode: 'RUDY' },
-				milestones: [{ id: 1, name: 'Flauwe mop googlen', duration: 30, isDone: false }]
-			}],
-			worksessions: [{
-				id: 1,
-				startDate: new Date(2019, 1, 1),
-				endDate: new Date(2019, 1, 2),
-				lab: { id: 1, name: 'Schrijven' },
-				workdays: [{ day: new Date(2019, 1, 1), workhours: 5 }, { day: new Date(2019, 1, 2), workhours: 6 }]
-			}, {
-				id: 2,
-				startDate: new Date(2019, 1, 9),
-				endDate: new Date(2019, 1, 11),
-				lab: { id: 1, name: 'Schrijven' },
-				workdays: [{ day: new Date(2019, 1, 9), workhours: 5 }, { day: new Date(2019, 1, 10), workhours: 2 }, { day: new Date(2019, 1, 11), workhours: 5 }]
-			}],
+			labs: [],
+			worksessions: [],
 			events: [],
 			selectedEvent: {
 				id: 0,
@@ -106,7 +76,8 @@ export default {
 			milestonable: false,
 			confirm: false,
 			newStart: '',
-			newDate: ''
+			newDate: '',
+			cal: 0
 		};
 	},
 	methods: {
@@ -114,7 +85,9 @@ export default {
 			this.showDate = d;
 		},
 		showEvent (e) {
+			this.selectedEvent = e;
 			this.milestonable = false;
+			this.editable = false;
 			if (!e.classes.includes('purple')) {
 				this.editable = true;
 			} else {
@@ -143,37 +116,44 @@ export default {
 			}
 		},
 		confirmTrue () {
+			let worksession;
 			for (var i = 0; i < this.worksessions.length; i++) {
-				if (this.worksessions[i].id === this.selectedEvent.id) {
-					this.worksessions[i].startDate = this.newStart;
-					this.worksessions[i].endDate = this.newEnd;
+				if (this.worksessions[i]._id === this.selectedEvent.id) {
+					worksession = this.worksessions[i];
+					worksession.startDate = this.newStart;
+					worksession.endDate = this.newEnd;
 				}
 			}
-			this.redraw();
-			this.$refs.showConfirmModal.hide();
+			(async () => {
+				// let workString = JSON.stringify(worksession);
+				await WorksessionService.put(worksession);
+				this.$refs.showConfirmModal.hide();
+				this.showAll();
+			})();
+			// test
 		},
 		confirmFalse () {
 			this.$refs.showConfirmModal.hide();
 		},
 		deleteEvent () {
-			console.log(this.selectedEvent.id);
-			console.log(this.worksessions);
-			for (var b = 0; b < this.worksessions.length; b++) {
-				console.log(this.worksessions[b].id);
-				if (this.worksessions[b].id === this.selectedEvent.id) {
-					this.worksessions.splice(b, 1);
+			(async () => {
+				let deletedEvent;
+				for (var b = 0; b < this.worksessions.length; b++) {
+					if (this.worksessions[b]._id === this.selectedEvent.id) {
+						deletedEvent = this.worksessions[b];
+					}
 				}
-			}
-			console.log(this.worksessions);
-			this.redraw();
-			console.log(this.selectedEvent.title + ' is nu weg!');
-			this.$refs.showEventModal.hide();
+				await WorksessionService.delete(deletedEvent);
+				this.$refs.showConfirmModal.hide();
+				this.showAll();
+				this.$refs.showEventModal.hide();
+			})();
 		},
 		getMilestones (l) {
 			let milestones = [];
 			if (this.$refs.showEventModal) {
 				this.labs.forEach(lab => {
-					if ('lab' + lab.id === this.selectedEvent.id) {
+					if (lab._id === this.selectedEvent.id) {
 						milestones = lab.milestones;
 					}
 				});
@@ -181,23 +161,7 @@ export default {
 			return milestones;
 		},
 		redraw () {
-			this.events = [];
-			this.labs.forEach(lab => {
-				let event = {};
-				event.id = lab.name + '/' + lab.course.courseCode;
-				event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
-				event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
-				event.classes = 'purple';
-				this.events.push(event);
-			});
-			this.worksessions.forEach(worksession => {
-				let event = {};
-				event.id = worksession.id;
-				event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
-				event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-				event.title = worksession.lab.name;
-				this.events.push(event);
-			});
+			this.cal += 1;
 		},
 		isChecked (milestone) {
 			if (milestone.isDone) {
@@ -214,12 +178,12 @@ export default {
 			let workedHours = this.getWorkedHours(lab);
 			let percentage = workedHours / estimatedHours;
 			percentage *= 100;
-			return percentage;
+			return Math.round(percentage);
 		},
 		getWorkedHours (lab) {
 			let workedHours = 0;
 			this.worksessions.forEach(worksession => {
-				if (worksession.lab.id === lab.id) {
+				if (worksession.lab === lab._id) {
 					worksession.workdays.forEach(workday => {
 						workedHours += workday.workhours;
 					});
@@ -228,32 +192,57 @@ export default {
 			return workedHours;
 		},
 		getLab (id) {
-			let chosenLab;
+			let chosenLab = [{
+				_id: 0,
+				name: '',
+				startDate: new Date(),
+				endDate: new Date(),
+				hourEstimate: 0,
+				course: { name: '', fase: 0, courseCode: '' },
+				milestones: [{ _id: 0, name: '', duration: 0, isDone: false }]
+			}];
 			this.labs.forEach(lab => {
-				if ('lab' + lab.id === this.selectedEvent.id) {
+				if (lab._id === id) {
 					chosenLab = lab;
 				}
 			});
 			return chosenLab;
+		},
+		showAll () {
+			(async () => {
+				this.events = [];
+				let labs = await LabsService.get();
+				this.labs = labs.data;
+				this.labs.forEach(lab => {
+					let event = {};
+					event.id = lab._id;
+					event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
+					event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
+					event.classes = 'purple';
+					this.events.push(event);
+				});
+				let worksessions = await WorksessionService.get();
+				this.worksessions = worksessions.data;
+				this.worksessions.forEach(worksession => {
+					let event = {};
+					event.id = worksession._id;
+					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
+					event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
+					/*
+					this.labs.forEach(lab => {
+						if (lab._id === worksession.lab) {
+							event.title = lab.name;
+						}
+					});
+					*/
+					event.title = this.getLab(worksession.lab).name;
+					this.events.push(event);
+				});
+			})();
 		}
 	},
 	mounted () {
-		this.labs.forEach(lab => {
-			let event = {};
-			event.id = 'lab' + lab.id;
-			event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
-			event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
-			event.classes = 'purple';
-			this.events.push(event);
-		});
-		this.worksessions.forEach(worksession => {
-			let event = {};
-			event.id = worksession.id;
-			event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
-			event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-			event.title = worksession.lab.name;
-			this.events.push(event);
-		});
+		this.showAll();
 	}
 };
 </script>
