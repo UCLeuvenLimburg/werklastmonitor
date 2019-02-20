@@ -1,12 +1,7 @@
 const config = require('../config');
-const app = require('../index');
-const database = require('../database');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const LdapAuth = require('ldapauth-fork');
 
 const User = require('../models/userModel');
@@ -65,17 +60,6 @@ passport.deserializeUser((username, done) => {
 		done(err, user);
 	});
 });
-
-app.use(session({
-	secret: config.secret,
-	store: new MongoStore({
-		mongooseConnection: database.connection
-	}),
-	resave: false,
-	saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 authRouter.route('/')
 	.post([

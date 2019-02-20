@@ -8,10 +8,26 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
+const database = require('./database');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const passport = require('passport');
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 app.use(expressValidator());
+
+app.use(session({
+	secret: config.secret,
+	store: new MongoStore({
+		mongooseConnection: database.connection
+	}),
+	resave: false,
+	saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/labs', require('./routes/labRoutes'));
 app.use('/worksessions', require('./routes/worksessionRoutes'));
