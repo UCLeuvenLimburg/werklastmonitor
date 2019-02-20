@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import api from './api';
+import userservice from '../api/UsersService.js';
+import courseservice from '../api/CoursesService.js';
 
 export default {
 	name: 'Registration',
@@ -56,7 +57,7 @@ export default {
 	methods: {
 		fetchCourses () {
 			let self = this;
-			api.get('/courses')
+			courseservice.get()
 				.then((result) => {
 					self.allCourses = result.data;
 					self.processLayout(result.data);
@@ -110,19 +111,17 @@ export default {
 			}
 		},
 		fetchUsercourses () {
-			api.get('/users/r000')
+			userservice.get('r000')
 				.then((result) => {
 					let user = result.data;
 					this.userCourses = user.courses;
 				});
 		},
-		toJson (e) {
-			return '{ "courses": ' + JSON.stringify(e) + '}';
-		},
 		save () {
-			api.put('/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
-				.then(res => console.log(res))
-				.catch(e => console.log(e));
+			userservice.put('r000', {
+				courses: this.userCourses
+			}).then(res => console.log(res))
+			.catch(e => console.log(e));
 		}
 	},
 	beforeMount () {
@@ -130,8 +129,9 @@ export default {
 		this.fetchCourses();
 	},
 	beforeDestroy () {
-		api.put('/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
-			.then(res => console.log(res))
+		userservice.put('r000', {
+				courses: this.userCourses
+			}).then(res => console.log(res))
 			.catch(e => console.log(e));
 	}
 };
