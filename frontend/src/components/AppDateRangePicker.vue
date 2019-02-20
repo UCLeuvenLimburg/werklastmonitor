@@ -30,7 +30,7 @@
 						th Zo
 					tr.dates(v-for="week, weekKey of weeks", :class="{ 'type-week': pickerType === 1 }")
 						td(v-for="day, dayKey of week",
-							:class="{ selectable: !((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)), 'month-hover': hoveringTable }",
+							:class="{ selectable: !((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)), 'month-hover': hoveringTable, 'active-cell': isCellActive(week, day) }",
 							@click="selectDate(weekKey, dayKey)",
 							@mouseover="enterTable(!((weekKey === 0 && day > 7) || (weekKey > 1 && day < 8)))")
 							.table-cell {{ day }}
@@ -153,6 +153,27 @@ export default {
 		},
 		leaveTable () {
 			this.hoveringTable = false;
+		},
+		isCellActive (week, day) {
+			if (this.startDate !== null && this.startDate.month() === this.month.month()) {
+				switch (this.pickerType) {
+				case 0:
+					return true;
+				case 1:
+					if (this.startDate.date() <= day && this.startDate.date() + 6 >= day) {
+						return true;
+					} else {
+						return false;
+					}
+				case 2:
+					if (this.startDate.date() === day) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+				return false;
+			}
 		}
 	},
 	created () {
@@ -354,6 +375,11 @@ export default {
 							margin: 0 auto;
 							line-height: 48px;
 							transition: .2s ease;
+						}
+
+						&.active-cell {
+							background-color: $color-accent;
+							color: $color-content-bg;
 						}
 
 						&.selectable {
