@@ -30,10 +30,13 @@ export default {
 	},
 	methods: {
 		async onSubmit () {
-			// Temporary (testing some stuff)
-			console.log(this.username);
-			console.log(this.password);
-			console.log(await AuthenticationService.post(this.username, this.password));
+			try {
+				let response = await AuthenticationService.post(this.username, this.password);
+				localStorage.setItem('jwtToken', response.data.token);
+			} catch (err) {
+				// TODO: Handle error in form
+				console.log(err);
+			}
 		}
 	}
 };
