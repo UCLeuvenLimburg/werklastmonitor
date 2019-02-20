@@ -1,37 +1,43 @@
 <template lang="pug">
 	.page.login
 		h1 Selecteer de vakken die je opneemt
+		input(type='submit' value='Opslaan' v-on:click='save')#savebutton
 		div.courses
-			ul(v-if='semester1.length !== 0').sem Semester1
-				li(v-for='(course) in semester1')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
-					label {{course.name}}
-			ul(v-if='semester2.length !== 0').sem Semester2
-				li(v-for='(course) in semester2')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
-					label {{course.name}}
-			ul(v-if='semester3.length !== 0').sem Semester3
-				li(v-for='(course) in semester3')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
-					label {{course.name}}
-			ul(v-if='semester4.length !== 0').sem Semester4
-				li(v-for='(course) in semester4')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
-					label {{course.name}}
-			ul(v-if='semester5.length !== 0').sem Semester5
-				li(v-for='(course) in semester5')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)' )
-					label {{course.name}}
-			ul(v-if='semester6.length !== 0').sem Semester6
-				li(v-for='(course) in semester6')
-					input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
-					label {{course.name}}
-			input(type='submit' value='Opslaan' v-on:click='save')
+			section.year#left(v-if='semester1.length !== 0 && semester2.length !== 0')
+				h2 Eerste jaar
+				ul(v-if='semester1.length !== 0').sem Semester1
+					li(v-for='(course) in semester1')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
+						label {{course.name}}
+				ul(v-if='semester2.length !== 0').sem Semester2
+					li(v-for='(course) in semester2')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
+						label {{course.name}}
+			section.year#middle(v-if='semester3.length !== 0 && semester4.length !== 0')
+				h2 Tweede jaar
+				ul(v-if='semester3.length !== 0').sem Semester3
+					li(v-for='(course) in semester3')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
+						label {{course.name}}
+				ul(v-if='semester4.length !== 0').sem Semester4
+					li(v-for='(course) in semester4')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
+						label {{course.name}}
+			section.year#right(v-if='semester5.length !== 0 && semester6.length !== 0')
+				h2 Derde jaar
+				ul(v-if='semester5.length !== 0').sem Semester5
+					li(v-for='(course) in semester5')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)' )
+						label {{course.name}}
+				ul(v-if='semester6.length !== 0').sem Semester6
+					li(v-for='(course) in semester6')
+						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
+						label {{course.name}}
 
 </template>
 
 <script>
-import axios from 'axios';
+import api from './api';
 
 export default {
 	name: 'Registration',
@@ -50,7 +56,7 @@ export default {
 	methods: {
 		fetchCourses () {
 			let self = this;
-			axios.get('http://localhost:3001/courses')
+			api.get('/courses')
 				.then((result) => {
 					self.allCourses = result.data;
 					self.processLayout(result.data);
@@ -104,7 +110,7 @@ export default {
 			}
 		},
 		fetchUsercourses () {
-			axios.get('http://localhost:3001/users/r000')
+			api.get('/users/r000')
 				.then((result) => {
 					let user = result.data;
 					this.userCourses = user.courses;
@@ -114,17 +120,17 @@ export default {
 			return '{ "courses": ' + JSON.stringify(e) + '}';
 		},
 		save () {
-			axios.put('http://localhost:3001/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
+			api.put('/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
 				.then(res => console.log(res))
 				.catch(e => console.log(e));
 		}
 	},
-	mounted () {
+	beforeMount () {
 		this.fetchUsercourses();
 		this.fetchCourses();
 	},
 	beforeDestroy () {
-		axios.put('http://localhost:3001/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
+		api.put('/users/r000', this.toJson(this.userCourses), { headers: { 'Content-Type': 'application/json' } })
 			.then(res => console.log(res))
 			.catch(e => console.log(e));
 	}
@@ -147,6 +153,48 @@ export default {
 			margin-left: 1%;
 			padding: 5px;
 		}
+}
+
+h1 {
+	display: inline;
+}
+
+.courses {
+	margin-top: 10px;
+	display: grid;
+	grid-template-columns: 33% 33% 33%;
+}
+
+#left {
+	grid-column: 1;
+	// height: 100%;
+}
+
+#middle {
+	display: -ms-inline-grid;
+	grid-column: 2;
+	// height: 100%;
+}
+
+#right {
+	display: -ms-inline-grid;
+	grid-column: 3;
+	// height: 100%;
+}
+
+#savebutton {
+	float: right;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	color: $color-content-bg;
+	background: $color-accent;
+
+	&:hover{
+		background: $color-fg;
+		cursor: pointer;
+	}
 }
 
 </style>
