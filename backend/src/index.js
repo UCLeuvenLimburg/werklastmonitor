@@ -1,7 +1,5 @@
 const config = require('./config');
 
-require('./database');
-
 const express = require('express');
 const app = express();
 const expressValidator = require('express-validator');
@@ -9,20 +7,24 @@ const expressValidator = require('express-validator');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+
+const database = require('./database');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 
 app.use(cors());
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('combined'));
 app.use(expressValidator());
 
-// Authentication middlewares
-app.use(require('cookie-parser')());
-app.use(require('express-session')({
+app.use(session({
 	secret: config.secret,
-	saveUninitialized: true,
-	resave: false
+	store: new MongoStore({
+		mongooseConnection: database.connection
+	}),
+	resave: false,
+	saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -34,6 +36,7 @@ app.use('/milestones', require('./routes/milestoneRoutes'));
 app.use('/courses', require('./routes/courseRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/users', require('./routes/userRoutes'));
+app.use('/programs', require('./routes/programRoutes'));
 
 app.listen(config.port, () => {
 	console.log(`API running on port ${config.port}`);

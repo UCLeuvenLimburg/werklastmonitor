@@ -45,14 +45,10 @@ import moment from 'moment';
 
 export default {
 	name: 'AppDateRangePicker',
-	props: [
-		'type',
-		'range'
-	],
 	data () {
 		return {
 			visible: false,
-			pickerType: this.type,
+			pickerType: 1,
 			month: moment().date(1),
 			weeks: [],
 			startDate: null,
@@ -66,6 +62,7 @@ export default {
 			this.month = moment().date(1);
 			this.startDate = null;
 			this.endDate = null;
+			this.hoveringTable = false;
 			this.updateCalendar();
 			this.visible = true;
 		},
@@ -142,6 +139,12 @@ export default {
 					this.endDate = moment(this.month).add(selection - 1, 'days');
 					break;
 				}
+
+				this.$store.dispatch('updateDateRange', {
+					type: this.pickerType,
+					startDate: this.startDate,
+					endDate: this.endDate
+				});
 				this.hide();
 			}
 		},

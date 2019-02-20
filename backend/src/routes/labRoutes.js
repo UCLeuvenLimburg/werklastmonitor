@@ -45,7 +45,7 @@ labRouter.route('/')
 			}
 		});
 	})
-	.post(getValidationChecks() ,async (req, res) => {
+	.post(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
 
 		if(!errors.isEmpty()) {

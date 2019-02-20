@@ -25,12 +25,10 @@
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
 					h3 Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
-					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. De docent schat een gemiddelde van {{ getLab(id).hourEstimate }} uren.
+					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(id).hourEstimate }} uren.
 					h3 Milestones
 					ul
-					li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index")
-						p.unchecked(v-on:click="check(milestone, true)", v-if="!milestone.isDone") {{ milestone.name }}
-						p.checked(v-on:click="check(milestone, false)", v-if="milestone.isDone") {{ milestone.name }}
+						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}
 		app-modal(ref="showWarningModal")
 			span(slot="title") Waarschuwing
 			div
@@ -201,16 +199,15 @@ export default {
 				this.events.push(event);
 			});
 		},
-		check (m, b) {
-			this.labs.forEach(lab => {
-				if ('lab' + lab.id === this.selectedEvent.id) {
-					lab.milestones.forEach(milestone => {
-						if (milestone.id === m.id) {
-							milestone.isDone = b;
-						}
-					});
-				}
-			});
+		isChecked (milestone) {
+			if (milestone.isDone) {
+				return 'checked';
+			} else {
+				return 'unchecked';
+			};
+		},
+		check (m) {
+			m.isDone = !m.isDone;
 		},
 		getPercentage (lab) {
 			let estimatedHours = lab.hourEstimate;
@@ -289,12 +286,45 @@ export default {
 	a.button:hover {
 		background-color: #003469;
 	}
+	ul li:nth-child(even) {
+		background: #e9f3f8;
+	}
+	ul li:nth-child(even).checked {
+		background: #888;
+	}
+	.checked::before {
+		content: '';
+		position: absolute;
+		border-color: #fff;
+		border-style: solid;
+		border-width: 0 2px 2px 0;
+		top: 10px;
+		left: 16px;
+		transform: rotate(45deg);
+		height: 15px;
+		width: 7px;
+	}
 	.checked {
+		background: #888;
+		color: #fff;
 		text-decoration: line-through;
 	}
-	li {
-		margin-left: 1rem;
+	ul li {
 		cursor: pointer;
+		position: relative;
+		padding: 12px 8px 12px 40px;
+		list-style-type: none;
+		transition: 0.2s;
+
+		/* make the list items unselectable */
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	ul li:hover {
+		background: #ddd;
 	}
 }
 </style>
