@@ -16,6 +16,10 @@ export default {
 	components: {
 		AppHeader,
 		AppFooter
+	},
+	created () {
+		// TODO: Verify session
+		// this.$store.dispatch('clearUsername');
 	}
 };
 </script>

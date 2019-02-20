@@ -12,7 +12,8 @@ export default new Vuex.Store({
 			type: 1,
 			startDate: moment().startOf('week'),
 			endDate: moment().add(1, 'week').endOf('week')
-		}
+		},
+		username: null
 	},
 	mutations: {
 		updateDateRange (state, range) {
@@ -24,6 +25,12 @@ export default new Vuex.Store({
 				startDate: moment().startOf('week'),
 				endDate: moment().add(1, 'week').endOf('week')
 			};
+		},
+		setUsername (state, username) {
+			state.username = username;
+		},
+		clearUsername (state) {
+			state.username = null;
 		}
 	},
 	actions: {
@@ -32,6 +39,12 @@ export default new Vuex.Store({
 		},
 		resetDateRange (context) {
 			context.commit('resetDateRange');
+		},
+		setUsername (context, username) {
+			context.commit('setUsername', username);
+		},
+		clearUsername (context) {
+			context.commit('clearUsername');
 		}
 	}
 });

@@ -159,7 +159,7 @@ export default {
 	},
 	created () {
 		let self = this;
-		this.$store.dispatch('resetDatePicker');
+		this.$store.dispatch('resetDateRange');
 		(async () => {
 			let labs = await LabsService.get();
 			self.labs = labs.data;

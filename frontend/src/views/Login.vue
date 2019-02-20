@@ -36,6 +36,7 @@ export default {
 			try {
 				let response = await AuthenticationService.post(this.username, this.password);
 				localStorage.setItem('jwtToken', response.data.token);
+				this.$store.dispatch('setUsername', this.username);
 				this.$router.push('/');
 			} catch (err) {
 				this.error = 'De gegevens die je hebt ingegeven zijn onjuist, of er is iets fout gegaan.';
