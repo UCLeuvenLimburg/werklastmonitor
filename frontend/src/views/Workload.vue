@@ -82,8 +82,10 @@ export default {
 					let hoursPerDay = lab.hourEstimate / days;
 					let hours = 0;
 
-					day = moment(start);
-					while (day.isSameOrBefore(end)) {
+					if (day.isBefore(start)) {
+						day = moment(start);
+					}
+					while (day.isSameOrBefore(end) && day.isSameOrBefore(endDay)) {
 						switch (type) {
 						case 0:
 							hours += hoursPerDay;
