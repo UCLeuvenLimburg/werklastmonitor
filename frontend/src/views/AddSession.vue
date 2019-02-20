@@ -22,6 +22,7 @@
 
 <script>
 import moment from 'moment';
+import WorksessionService from '@/api/WorksessionService';
 export default {
 	name: 'addsession',
 	data () {
@@ -38,7 +39,8 @@ export default {
 			selectedCourse: 'BOP',
 			workHours: [],
 			message: '',
-			startFromId: false
+			startFromId: false,
+			id: ''
 		};
 	},
 	methods: {
@@ -83,8 +85,9 @@ export default {
 				let worksession = {};
 				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
 				worksession.endDate = moment(this.endDate).add(2, 'hours').toDate();
-				worksession.studentNumber = 'r0178471';
-				worksession.lab = this.selectedCourse;
+				worksession.studentNumber = 'r000';
+				// worksession.lab = this.selectedCourse;
+				worksession.lab = '5c6d176c2fc06717e0a6e39c';
 				let workdays = [];
 				for (let i = 0; i < this.days.length; i++) {
 					let day = {};
@@ -94,32 +97,45 @@ export default {
 				}
 				worksession.workdays = workdays;
 				if (!this.startFromId) {
-					console.log('Create');
-					console.log(worksession);
+					(async () => {
+						await WorksessionService.post(worksession);
+					})();
 				} else {
-					console.log('Update');
-					console.log(worksession);
+					worksession._id = this.id;
+					(async () => {
+						await WorksessionService.put(worksession);
+					})();
 				}
+				this.beginDate = new Date(2000, 1, 1);
+				this.endDate = new Date(2000, 1, 1);
+				this.showDays();
+				this.message = 'Ontvangen!';
 			}
 		}
 	},
 	beforeMount () {
-		console.log('Ok');
 		let uri = window.location.search.substring(1);
 		let params = new URLSearchParams(uri);
-		console.log(params.get('id'));
-		let id = params.get('id');
-		if (id) {
-			this.startFromId = true;
-			this.beginDate = new Date(2019, 2, 23);
-			this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
-			this.endDate = new Date(2019, 2, 25);
-			this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
-			this.selectedCourse = 'Netwerken';
-			let filteredCourses = this.courses.filter(e => e !== this.selectedCourse);
-			this.courses = filteredCourses;
-			this.workHours = [1, 4, 5];
-			this.showDays();
+		this.id = params.get('id');
+		if (this.id) {
+			(async () => {
+				let worksessionrequest = await WorksessionService.getId(this.id);
+				let worksession = worksessionrequest.data;
+				this.startFromId = true;
+				this.beginDate = moment(worksession.startDate).toDate();
+				this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
+				this.endDate = moment(worksession.endDate).toDate();
+				this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
+				this.selectedCourse = 'Netwerken';
+				let filteredCourses = this.courses.filter(e => e !== this.selectedCourse);
+				this.courses = filteredCourses;
+				this.workHours = [];
+				worksession.workdays.forEach(workday => {
+					// this.workHours.push(workday.workhours);
+					this.workHours.push(2);
+				});
+				this.showDays();
+			})();
 		}
 	}
 };
