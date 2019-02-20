@@ -119,7 +119,7 @@ export default {
 				});
 		},
 		save () {
-			userservice.put('r000', {
+			userservice.put(this.username, {
 				courses: this.userCourses
 			}).then(res => console.log(res))
 				.catch(e => console.log(e));
@@ -130,7 +130,7 @@ export default {
 		this.fetchCourses();
 	},
 	beforeDestroy () {
-		userservice.put('r000', {
+		userservice.put(this.username, {
 			courses: this.userCourses
 		}).then(res => console.log(res))
 			.catch(e => console.log(e));
