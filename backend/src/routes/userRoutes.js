@@ -28,6 +28,7 @@ userRouter.route('/')
 		}
 		let user = new User();
 		user._id = req.body._id;
+		user.milestones = req.body.milestones;
 
 		let courses = req.body.courses;
 		if(courses.length > 0) {
@@ -63,6 +64,7 @@ userRouter.route('/:user_id')
 			return res.status('422').json({ errors: errors.array() });
 		}
 		let courses = req.body.courses;
+		req.user.milestones = req.body.milestones;
 		if(courses.length > 0) {
 			if(courses[0].constructor === String) {
 				req.user.courses = await Course.find( { _id: { $in: courses} } );

@@ -2,14 +2,14 @@
 	.page.courses
 		h1 Vakken
 		div(v-for="(course, index) in courses" :key="course")
-			h2 {{ course }}
-			div(v-for="(lab, index) in assignments(course)" :key="lab.name")
-				h3 {{ lab.name }}
+			h2.course-name {{ course }}
+			div.labs(v-for="(lab, index) in assignments(course)" :key="lab.name")
+				h3.lab-name {{ lab.name }}
 				#progress
 					#bar(v-bind:style="getBarStyle(lab)")
 						p {{ getPercentage(lab) }}%
 				p Je hebt {{ getWorkedHours(lab) }} uren gewerkt. De lector schat een gemiddelde van {{ lab.hourEstimate }} uren.
-				h4 Milestones
+				h4.milestones Milestones
 				ul
 					li(v-for="(milestone, index) in lab.milestones" :key="milestone.name" v-on:click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
 </template>
@@ -95,12 +95,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '../assets/css/definitions';
+
 	ul li:nth-child(even) {
 		background: #e9f3f8;
 	}
 	ul li:nth-child(even).checked {
 		background: #888;
 	}
+	.labs {
+		margin-bottom: 40px;
+		.lab-name {
+			margin-top: 20px;
+		}
+		.milestones {
+			margin-top: 20px;
+		}
+	}
+
 	.checked::before {
 		content: '';
 		position: absolute;
