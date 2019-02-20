@@ -1,29 +1,9 @@
-//const config = require('../config');
+const config = require('../config');
+
+const LdapAuth = require('ldapauth-fork');
 
 const express = require('express');
 const {check, validationResult} = require('express-validator/check');
-
-const passport = require('passport');
-const LdapStrategy = require('passport-ldapauth');
-
-// LDAP
-const getLDAPConfiguration = (req, callback) => {
-	process.nextTick(() => {
-		callback(null, {
-			server: {
-				url: 'ldap://ad.ucll.be:389',
-				bindDN: `${req.body.username}@ucll.be`,
-				bindCredentials: req.body.password,
-				searchBase: 'OU=Users,OU=Root,DC=int,DC=ucll,DC=be',
-				searchFilter: `(cn=*${req.body.username}*)`
-			}
-		});
-	});
-};
-passport.use(new LdapStrategy(getLDAPConfiguration, (user, done) => {
-	console.log(user);
-	return done(null, user);
-}));
 
 let authRouter = express.Router();
 
@@ -37,18 +17,20 @@ authRouter.route('/')
 			return res.status(422).json({ errors: errors.array() });
 		}
 
-		passport.authenticate('ldapauth', (err, user, info) => {
+		let ldap = new LdapAuth({
+			url: `ldap://${config.ldap.host}:${config.ldap.port}`,
+			bindDN: `${req.body.username}@ucll.be`,
+			bindCredentials: req.body.password,
+			searchBase: 'ou=Users,ou=Root,dc=int,dc=ucll,dc=be',
+			searchFilter: `(cn=*${req.body.username}*)`
+		});
+		ldap.authenticate(req.body.username, req.body.password, (err, user) => {
 			if (err) {
 				console.log(err);
 			}
-
 			console.log(user);
-			console.log(info);
-
-			res.send({
-				user,
-				info
-			});
+			req.user = user;
+			res.json(user);
 		});
 	});
 
