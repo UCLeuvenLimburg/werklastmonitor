@@ -111,7 +111,8 @@ export default {
 			}
 		},
 		fetchUsercourses () {
-			userservice.get('r000')
+			console.log(this.username);
+			userservice.get(this.username)
 				.then((result) => {
 					let user = result.data;
 					this.userCourses = user.courses;
@@ -133,6 +134,11 @@ export default {
 			courses: this.userCourses
 		}).then(res => console.log(res))
 			.catch(e => console.log(e));
+	},
+	computed: {
+		username () {
+			return this.$store.state.username;
+		}
 	}
 };
 </script>
