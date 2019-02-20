@@ -45,6 +45,7 @@ passport.use(new LocalStrategy((username, password, done) => {
 				let user = new User();
 				user._id = username;
 				user.courses = [];
+				user.milestones = [];
 				user.save();
 				return done(null, user);
 			}
