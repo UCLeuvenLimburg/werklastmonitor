@@ -56,14 +56,14 @@ export default {
 
 			case 1:
 				while (time.isBefore(end)) {
-					labs.tags.push(`${time.format('DD/MM/YYYY')} - ${moment(time).add(6, 'days').format('DD/MM/YYYY')}`);
+					labs.tags.push(`${time.format('DD/MM')} - ${moment(time).add(6, 'days').format('DD/MM')}`);
 					time.add(1, 'week');
 				}
 				break;
 
 			case 2:
 				while (time.isSameOrBefore(end)) {
-					labs.tags.push(time.format('DD/MM/YYYY'));
+					labs.tags.push(time.format('DD/MM'));
 					time.add(1, 'day');
 				}
 				break;
