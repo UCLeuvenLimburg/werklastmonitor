@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 
 const UserSchema = new Schema({
 	_id: { type: String },
-	courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
+	courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+	milestones: [{ type: Schema.Types.ObjectId, ref: 'Milestone' }]
 });
 
 UserSchema.methods.generateJWT = () => {
