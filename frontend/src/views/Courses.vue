@@ -15,46 +15,14 @@
 </template>
 
 <script>
+import LabsService from '@/api/LabsService';
+import WorksessionService from '@/api/WorksessionService';
 export default {
 	name: 'courses',
 	data () {
 		return {
-			labs: [{
-				id: 1,
-				name: 'Schrijfopdracht',
-				startDate: new Date(2019, 1, 1),
-				endDate: new Date(2019, 1, 12),
-				hourEstimate: 50,
-				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
-				milestones: [{ id: 1, name: 'Eerste pagina', duration: 30, isDone: true }, { id: 2, name: 'Tweede pagina', duration: 30, isDone: false }]
-			}, { id: 2,
-				name: 'Leesopdracht',
-				startDate: new Date(2019, 1, 10),
-				endDate: new Date(2019, 1, 10),
-				hourEstimate: 40,
-				course: { name: 'Computersystemen', fase: 1, courseCode: 'ABBA' },
-				milestones: [{ id: 1, name: 'Gelezen', duration: 30, isDone: false }]
-			}, { id: 3,
-				name: 'Rudymoppen verzinnen',
-				startDate: new Date(2019, 1, 3),
-				endDate: new Date(2019, 1, 7),
-				hourEstimate: 50,
-				course: { name: 'Netwerken', fase: 1, courseCode: 'RUDY' },
-				milestones: [{ id: 1, name: 'Flauwe mop googlen', duration: 30, isDone: false }]
-			}],
-			worksessions: [{
-				id: 1,
-				startDate: new Date(2019, 1, 1),
-				endDate: new Date(2019, 1, 2),
-				lab: { id: 1, name: 'Schrijven' },
-				workdays: [{ day: new Date(2019, 1, 1), workhours: 5 }, { day: new Date(2019, 1, 2), workhours: 6 }]
-			}, {
-				id: 2,
-				startDate: new Date(2019, 1, 9),
-				endDate: new Date(2019, 1, 11),
-				lab: { id: 1, name: 'Schrijven' },
-				workdays: [{ day: new Date(2019, 1, 9), workhours: 5 }, { day: new Date(2019, 1, 10), workhours: 2 }, { day: new Date(2019, 1, 11), workhours: 5 }]
-			}],
+			labs: [],
+			worksessions: [],
 			bar: { width: '1%' }
 		};
 	},
@@ -85,12 +53,12 @@ export default {
 			let workedHours = this.getWorkedHours(lab);
 			let percentage = workedHours / estimatedHours;
 			percentage *= 100;
-			return percentage;
+			return Math.round(percentage);
 		},
 		getWorkedHours (lab) {
 			let workedHours = 0;
 			this.worksessions.forEach(worksession => {
-				if (worksession.lab.id === lab.id) {
+				if (worksession.lab === lab._id) {
 					worksession.workdays.forEach(workday => {
 						workedHours += workday.workhours;
 					});
@@ -114,6 +82,15 @@ export default {
 				return 'unchecked';
 			};
 		}
+	},
+	mounted () {
+		(async () => {
+			this.events = [];
+			let labs = await LabsService.get();
+			this.labs = labs.data;
+			let worksessions = await WorksessionService.get();
+			this.worksessions = worksessions.data;
+		})();
 	}
 };
 </script>
