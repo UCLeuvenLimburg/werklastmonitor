@@ -121,7 +121,7 @@ export default {
 			userservice.put('r000', {
 				courses: this.userCourses
 			}).then(res => console.log(res))
-			.catch(e => console.log(e));
+				.catch(e => console.log(e));
 		}
 	},
 	beforeMount () {
@@ -130,8 +130,8 @@ export default {
 	},
 	beforeDestroy () {
 		userservice.put('r000', {
-				courses: this.userCourses
-			}).then(res => console.log(res))
+			courses: this.userCourses
+		}).then(res => console.log(res))
 			.catch(e => console.log(e));
 	}
 };
