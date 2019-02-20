@@ -8,11 +8,14 @@ const worksessionRouter = express.Router();
 
 worksessionRouter.route('/')
 	.get((req, res) => {
-		Worksession.find({}, (err, worksessions) => {
+		Worksession.find({}, async (err, worksessions) => {
 			if (err) {
 				res.status('500').send(err);
 			}
 			else {
+				for (let i = 0; i < worksessions.length; ++i) {
+					worksessions[i].workdays = await Workday.find({ _id: { $in: worksessions[i].workdays } });
+				}
 				res.status('200').send(worksessions);
 			}
 		})
