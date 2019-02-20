@@ -9,7 +9,7 @@ const UserSchema = new Schema({
 	courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
 });
 
-UserSchema.methods.generateJWT = () => {
+UserSchema.methods.generateJWT = function () {
 	const today = new Date();
 	const expirationDate = new Date(today);
 	expirationDate.setDate(today.getDate + 60);
@@ -20,7 +20,7 @@ UserSchema.methods.generateJWT = () => {
 	}, config.secret);
 };
 
-UserSchema.methods.toAuthJSON = () => {
+UserSchema.methods.toAuthJSON = function () {
 	return {
 		_id: this._id,
 		token: this.generateJWT()
