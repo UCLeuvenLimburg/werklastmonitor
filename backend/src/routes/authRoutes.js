@@ -1,5 +1,6 @@
 const config = require('../config');
 
+const auth = require('../auth');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const LdapAuth = require('ldapauth-fork');
@@ -12,7 +13,7 @@ const {check, validationResult} = require('express-validator/check');
 let authRouter = express.Router();
 
 passport.use(new LocalStrategy((username, password, done) => {
-	if (username.trim().isEmpty() || password.trim().isEmpty()) {
+	if (username.trim() === '' || password.trim() === '') {
 		return done(null, false, {
 			message: 'Login gegevens zijn ongeldig.'
 		});
@@ -65,23 +66,25 @@ authRouter.route('/')
 	.post([
 		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
 		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
-	], (req, res, next) => {
+	], auth.optional, (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
-		return passport.authenticate('local', (err, user, info) => {
+		return passport.authenticate('local', (err, passportUser) => {
 			if (err) {
-				next(err);
+				return next(err);
 			}
+			if (passportUser) {
+				const user = passportUser;
+				user.token = passportUser.generateJWT();
 
-			console.log(user);
-			console.log(info);
-
-			return res.json({
-				user
-			});
+				return res.json({
+					user: user.toAuthJSON()
+				});
+			}
+			return res.status(400).info;
 		})(req, res, next);
 	});
 
