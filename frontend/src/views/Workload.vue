@@ -9,7 +9,9 @@
 			:full-mode="false",
 			:show-text="true",
 			:names="filteredLabs.names",
-			:values="filteredLabs.hours")
+			:values="filteredLabs.hours",
+			:colors="colors",
+			:key="graph")
 			legends(:names="filteredLabs.names", :filter="true")
 			tooltip(:names="filteredLabs.names", position="right")
 </template>
@@ -27,7 +29,8 @@ export default {
 	},
 	data () {
 		return {
-			labs: []
+			labs: [],
+			graph: 0
 		};
 	},
 	methods: {
@@ -120,6 +123,17 @@ export default {
 				color += ('00' + value.toString(16)).substr(-2);
 			}
 			return color;
+		},
+		colorNames (names) {
+			let colorList = [];
+			names.forEach(name => {
+				console.log(this.toColor(name));
+				colorList.push('' + this.toColor(name).toUpperCase());
+			});
+			return colorList;
+		},
+		reRender () {
+			this.graph += 1;
 		}
 	},
 	computed: {
@@ -129,6 +143,15 @@ export default {
 				this.$store.state.dateRange.startDate,
 				this.$store.state.dateRange.endDate
 			);
+		},
+		colors () {
+			let colorList = [];
+			this.filteredLabs.names.forEach(name => {
+				colorList.push(this.toColor(name).toUpperCase());
+			});
+			// Belangrijk want kleuren updaten niet dynamisch
+			this.reRender();
+			return colorList;
 		}
 	},
 	created () {
