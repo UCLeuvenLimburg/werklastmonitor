@@ -1,5 +1,5 @@
 module.exports = {
 	backend: {
-		baseURL: 'http://localhost:3001'
+		baseURL: 'http://193.191.177.167/api'
 	}
 };
