@@ -5,7 +5,7 @@
 		form(@submit.prevent="onSubmit")
 			h2 Meld je aan met je R-nummer.
 
-			p(v-if="error") {{ error }}
+			p.error(v-if="error") {{ error }}
 
 			p
 				label(for="username") R-nummer:
@@ -60,6 +60,15 @@ export default {
 			text-align: center;
 			font-weight: bold;
 			font-size: 1.1rem;
+		}
+
+		.error {
+			text-align: center;
+			color: red;
+			border-style: solid;
+			border-width: 2px;
+			border-color: red;
+			margin-bottom: 15px;
 		}
 
 		p {
