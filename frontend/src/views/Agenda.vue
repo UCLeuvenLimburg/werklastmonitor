@@ -25,7 +25,7 @@
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
 					h3 Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
-					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. De docent schat een gemiddelde van {{ getLab(id).hourEstimate }} uren.
+					p {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(id).hourEstimate }} uren.
 					h3 Milestones
 					ul
 						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}

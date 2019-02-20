@@ -8,7 +8,7 @@
 				#progress
 					#bar(v-bind:style="getBarStyle(lab)")
 						p {{ getPercentage(lab) }}%
-				p Je hebt {{ getWorkedHours(lab) }} uren gewerkt. De docent schat een gemiddelde van {{ lab.hourEstimate }} uren.
+				p Je hebt {{ getWorkedHours(lab) }} uren gewerkt. De lector schat een gemiddelde van {{ lab.hourEstimate }} uren.
 				h4 Milestones
 				ul
 					li(v-for="(milestone, index) in lab.milestones" :key="milestone.name" v-on:click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
