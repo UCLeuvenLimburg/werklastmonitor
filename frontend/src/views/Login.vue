@@ -5,6 +5,8 @@
 		form(@submit.prevent="onSubmit")
 			h2 Meld je aan met je R-nummer.
 
+			p(v-if="error") {{ error }}
+
 			p
 				label(for="username") R-nummer:
 				input(type="text", name="username", id="username", v-model="username", placeholder="R-nummer")
@@ -25,7 +27,8 @@ export default {
 	data () {
 		return {
 			username: null,
-			password: null
+			password: null,
+			error: null
 		};
 	},
 	methods: {
@@ -33,9 +36,10 @@ export default {
 			try {
 				let response = await AuthenticationService.post(this.username, this.password);
 				localStorage.setItem('jwtToken', response.data.token);
+				this.$router.push('/');
 			} catch (err) {
-				// TODO: Handle error in form
-				console.log(err);
+				this.error = 'De gegevens die je hebt ingegeven zijn onjuist, of er is iets fout gegaan.';
+				this.password = null;
 			}
 		}
 	}
