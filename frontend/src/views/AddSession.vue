@@ -36,7 +36,7 @@ export default {
 			endDate: new Date(2000, 1, 1),
 			beginDateFormatted: '',
 			endDateFormatted: '',
-			labs: ['BOP', 'Netwerken'],
+			labs: [],
 			minDate: moment(new Date((new Date()).getFullYear(), 0, 1)).format('YYYY-MM-DD'),
 			maxDate: moment(new Date((new Date()).getFullYear(), 11, 31)).format('YYYY-MM-DD'),
 			submitVisible: false,
@@ -95,7 +95,6 @@ export default {
 				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
 				worksession.endDate = moment(this.endDate).add(2, 'hours').toDate();
 				worksession.studentNumber = this.username;
-				// worksession.lab = this.selectedCourse;
 				worksession.lab = this.selectedLab;
 				let workdays = [];
 				for (let i = 0; i < this.days.length; i++) {
@@ -151,7 +150,6 @@ export default {
 				this.selectedLab = worksession.lab;
 				this.workHours = [];
 				worksession.workdays.forEach(workday => {
-					// this.workHours.push(workday.workhours);
 					this.workHours.push(2);
 				});
 				this.showDays();

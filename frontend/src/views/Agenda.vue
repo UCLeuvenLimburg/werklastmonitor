@@ -6,10 +6,10 @@
 			:events="events",
 			:startingDayOfWeek=1,
 			@click-event="showEvent",
-		@drop-on-date="dropDate",
-		enableDragDrop=true,
+			@drop-on-date="dropDate",
+			enableDragDrop=true,
 			locale="nl",
-		:key="cal")
+			:key="cal")
 			calendar-view-header(
 				slot="header",
 				slot-scope="t",
@@ -116,7 +116,6 @@ export default {
 				this.confirm = false;
 				this.$refs.showConfirmModal.show();
 			} else {
-				// alert('Je kunt deadlines niet verplaatsen.');
 				this.$refs.showWarningModal.show();
 			}
 		},
@@ -135,7 +134,6 @@ export default {
 				this.$refs.showConfirmModal.hide();
 				this.showAll();
 			})();
-			// test
 		},
 		confirmFalse () {
 			this.$refs.showConfirmModal.hide();
@@ -239,13 +237,6 @@ export default {
 					event.id = worksession._id;
 					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
 					event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-					/*
-					this.labs.forEach(lab => {
-						if (lab._id === worksession.lab) {
-							event.title = lab.name;
-						}
-					});
-					*/
 					event.title = this.getLab(worksession.lab).name;
 					this.events.push(event);
 				});
