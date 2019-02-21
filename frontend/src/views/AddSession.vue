@@ -12,7 +12,7 @@
 		fieldset(v-if="!startFromId")
 			label(for="lab"  v-if="!startFromId") Opdracht
 			select#lab(required="" @change='setLab' v-if="!startFromId")
-				option(v-for="lab in labs" :key="lab" :value="lab._id") {{ lab.name }} ({{ lab.course.name }})
+				option(v-for="lab in labs" :key="lab._id" :value="lab._id") {{ lab.name }} ({{ lab.course.name }})
 		ul#daylist
 			li(v-for="(day, index) in days" :key="day")
 				label(:for="day") Aantal uur op dag {{ index + 1 }}
