@@ -29,7 +29,7 @@
 					p(v-if='milestonable') {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(selectedEvent.id).hourEstimate }} uren.
 					h3 Milestones
 					ul
-						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone.name + index" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}
+						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone._id" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}
 		app-modal(ref="showWarningModal")
 			span(slot="title") Waarschuwing
 			div
@@ -122,19 +122,23 @@ export default {
 			}
 		},
 		confirmTrue () {
-			let worksession;
-			for (var i = 0; i < this.worksessions.length; i++) {
-				if (this.worksessions[i]._id === this.selectedEvent.id) {
-					worksession = this.worksessions[i];
-					worksession.startDate = this.newStart;
-					worksession.endDate = this.newEnd;
-				}
-			}
 			(async () => {
-				// let workString = JSON.stringify(worksession);
-				await WorksessionService.put(worksession);
+				let worksession;
+				let oldStart;
+				for (var i = 0; i < this.worksessions.length; i++) {
+					if (this.worksessions[i]._id === this.selectedEvent.id) {
+						worksession = this.worksessions[i];
+						oldStart = worksession.startDate;
+						worksession.startDate = this.newStart;
+						worksession.endDate = this.newEnd;
+					}
+				}
+				let days = moment(worksession.startDate).diff(moment(oldStart), 'days');
+				worksession.workdays.forEach(workday => {
+					workday.day = moment(workday.day).add(days, 'days').toDate();
+				});
+				// await WorksessionService.put(worksession).then(this.showAll());
 				this.$refs.showConfirmModal.hide();
-				this.showAll();
 			})();
 		},
 		confirmFalse () {
