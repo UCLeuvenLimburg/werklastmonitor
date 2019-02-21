@@ -138,7 +138,6 @@ export default {
 					workday.day = moment(workday.day).add(days, 'days').toDate();
 					delete workday._id;
 				});
-				console.log(worksession);
 				await WorksessionService.put(worksession);
 				this.showAll();
 				this.$refs.showConfirmModal.hide();
