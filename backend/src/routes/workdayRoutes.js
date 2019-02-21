@@ -23,6 +23,15 @@ workdayRouter.route('/')
 		workday.workhours = req.body.workhours;
 		workday.save();
 		res.status('201').send(workday);
+	})
+	.delete((req, res) => {
+		Workday.deleteMany((err) => {
+			if (err) {
+				res.status('500').send(err);
+			} else {
+				res.status('204').send(err);
+			}
+		})
 	});
 
 workdayRouter.use('/:workday_Id', (req, res, next) => {
