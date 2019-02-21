@@ -27,6 +27,7 @@ import moment from 'moment';
 import LabsService from '@/api/LabsService';
 import UserService from '../api/UsersService.js';
 import WorksessionService from '@/api/WorksessionService';
+import WorkdaysService from '@/api/WorkdaysService.js';
 export default {
 	name: 'addsession',
 	data () {
@@ -142,6 +143,8 @@ export default {
 			if (this.id) {
 				let worksessionrequest = await WorksessionService.getId(this.id);
 				let worksession = worksessionrequest.data;
+				let workdayrequest = await WorkdaysService.get();
+				let workdays = workdayrequest.data;
 				this.startFromId = true;
 				this.beginDate = moment(worksession.startDate).toDate();
 				this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
@@ -150,7 +153,8 @@ export default {
 				this.selectedLab = worksession.lab;
 				this.workHours = [];
 				worksession.workdays.forEach(workday => {
-					this.workHours.push(2);
+					let workdayGrab = workdays.find(item => item._id === workday);
+					this.workHours.push(workdayGrab.workhours);
 				});
 				this.showDays();
 			}
