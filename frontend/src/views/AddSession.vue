@@ -9,10 +9,10 @@
 			label(for="endDate") Einddatum
 			input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" :value="endDateFormatted" @change="handleEndChange")
 		fieldset
-			label(for="course") Vak
-			select#course(required="" @change='setCourse')
-				option(v-if="startFromId" :value="selectedCourse" selected) {{ selectedCourse }}
-				option(v-for="course in courses" :key="course" :value="course") {{ course }}
+			label(for="lab") Opdracht
+			select#lab(required="" @change='setLab')
+				option(v-if="startFromId" :value="selectedLab._id" selected) {{ selectedLab.name }} ({{ selectedLab.course.name }})
+				option(v-for="lab in labs" :key="lab" :value="lab._id") {{ lab.name }} ({{ lab.course.name }})
 		ul#daylist
 			li(v-for="(day, index) in days" :key="day")
 				label(:for="day") Aantal uur op dag {{ index + 1 }}
@@ -22,6 +22,8 @@
 
 <script>
 import moment from 'moment';
+import LabsService from '@/api/LabsService';
+import UserService from '../api/UsersService.js';
 import WorksessionService from '@/api/WorksessionService';
 export default {
 	name: 'addsession',
@@ -32,16 +34,22 @@ export default {
 			endDate: new Date(2000, 1, 1),
 			beginDateFormatted: '',
 			endDateFormatted: '',
-			courses: ['BOP', 'Netwerken'],
+			labs: ['BOP', 'Netwerken'],
 			minDate: moment(new Date((new Date()).getFullYear(), 0, 1)).format('YYYY-MM-DD'),
 			maxDate: moment(new Date((new Date()).getFullYear(), 11, 31)).format('YYYY-MM-DD'),
 			submitVisible: false,
-			selectedCourse: 'BOP',
+			selectedLab: 'BOP',
+			chosenLab: '',
 			workHours: [],
 			message: '',
 			startFromId: false,
 			id: ''
 		};
+	},
+	computed: {
+		username () {
+			return this.$store.state.username;
+		}
 	},
 	methods: {
 		handleBeginChange (e) {
@@ -69,8 +77,8 @@ export default {
 				this.submitVisible = false;
 			}
 		},
-		setCourse (e) {
-			this.selectedCourse = e.target.options[e.target.options.selectedIndex].valueOf().value;
+		setLab (e) {
+			this.chosenLab = e.target.options[e.target.options.selectedIndex].valueOf().value;
 		},
 		submitForm () {
 			let numeric = true;
@@ -85,9 +93,9 @@ export default {
 				let worksession = {};
 				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
 				worksession.endDate = moment(this.endDate).add(2, 'hours').toDate();
-				worksession.studentNumber = 'r000';
+				worksession.studentNumber = this.username;
 				// worksession.lab = this.selectedCourse;
-				worksession.lab = '5c6d176c2fc06717e0a6e39c';
+				worksession.lab = this.chosenLab;
 				let workdays = [];
 				for (let i = 0; i < this.days.length; i++) {
 					let day = {};
@@ -114,6 +122,21 @@ export default {
 		}
 	},
 	beforeMount () {
+		(async () => {
+			UserService.get(this.username)
+				.then((result) => {
+					let user = result.data;
+					this.userCourses = user.courses;
+				});
+			this.labs = [];
+			let labs = await LabsService.get();
+			let unfilteredLabs = labs.data;
+			unfilteredLabs.forEach(lab => {
+				if (this.userCourses.includes(lab.course._id)) {
+					this.labs.push(lab);
+				}
+			});
+		})();
 		let uri = window.location.search.substring(1);
 		let params = new URLSearchParams(uri);
 		this.id = params.get('id');
@@ -126,9 +149,9 @@ export default {
 				this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
 				this.endDate = moment(worksession.endDate).toDate();
 				this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
-				this.selectedCourse = 'Netwerken';
-				let filteredCourses = this.courses.filter(e => e !== this.selectedCourse);
-				this.courses = filteredCourses;
+				this.selectedLab = 'Netwerken';
+				let filteredLabs = this.labs.filter(e => e !== this.selectedLab);
+				this.labs = filteredLabs;
 				this.workHours = [];
 				worksession.workdays.forEach(workday => {
 					// this.workHours.push(workday.workhours);
