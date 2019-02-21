@@ -22,7 +22,7 @@
 				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
 				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
 				div(v-if='editable')
-					a.button(:href="'/addsession?id='+ selectedEvent.id") Aanpassen
+					router-link.button(:to="'/addsession?id='+ selectedEvent.id") Aanpassen
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
 					h3(v-if='milestonable') Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
