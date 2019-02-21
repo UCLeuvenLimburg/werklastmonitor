@@ -41,6 +41,15 @@ userRouter.route('/')
 		user.save();
 		res.status('201').send(user);
 	})
+	.delete((req, res) => {
+		User.deleteMany((err) => {
+			if(err) {
+				res.status('500').send(err);
+			} else {
+				res.status('204').send('removed all');
+			}
+		});
+	});
 
 userRouter.use('/:user_id', (req, res, next) => {
 	User.findById(req.params.user_id, (err, user) => {

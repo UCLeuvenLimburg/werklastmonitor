@@ -22,7 +22,7 @@ worksessionRouter.route('/')
 	})
 
 	.post( [
-		body('startDate').isISO8601().custom((value) => moment(value) >= moment()).withMessage('Please enter a valid date'),
+		body('startDate').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
 		body('endDate').isISO8601().custom((value, { req }) => value >= req.body.startDate).withMessage('Your enddate needs to be valid and after your startdate!'),
 		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),
@@ -51,6 +51,16 @@ worksessionRouter.route('/')
 		worksession.save();
 		res.status('201').send(worksession);
 	})
+
+	.delete((req, res) => {
+		Worksession.deleteMany((err) => {
+			if(err) {
+				res.status('500').send(err);
+			} else {
+				res.status('204').send('removed all');
+			}
+		});
+	});
 
 worksessionRouter.use('/:worksession_Id', (req,res, next) => {
 	Worksession.findById(req.params.worksession_Id, (err, worksession) => {
