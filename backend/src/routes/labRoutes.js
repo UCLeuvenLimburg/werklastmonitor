@@ -66,6 +66,11 @@ labRouter.route('/')
 
 		lab.save();
 		res.json(lab);
+	})
+	.delete((req, res) => {
+		Lab.remove({}, (err) => {
+			res.send(err);
+		});
 	});
 
 labRouter.use('/:labId', (req, res, next) => {

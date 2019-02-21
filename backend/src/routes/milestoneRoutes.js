@@ -32,6 +32,11 @@ milestoneRouter.route('/')
 
 		milestone.save();
 		res.json(milestone);
+	})
+	.delete((req, res) => {
+		Milestone.remove({}, (err) => {
+			res.send(err);
+		});
 	});
 
 milestoneRouter.use('/:milestoneId', (req, res, next) => {
