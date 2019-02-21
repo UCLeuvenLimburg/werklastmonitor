@@ -3,7 +3,7 @@
 		h1 Vakken
 		div(v-for="(course, index) in courses" :key="course")
 			h2.course-name {{ course }}
-			div.labs(v-for="(lab, index) in assignments(course)" :key="lab.name")
+			div.labs(v-for="(lab, index) in assignments(course)" :key="lab._id")
 				h3.lab-name {{ lab.name }}
 				#progress
 					#bar(v-bind:style="getBarStyle(lab)")
@@ -11,7 +11,7 @@
 				p Je hebt {{ getWorkedHours(lab) }} uren gewerkt. De lector schat een gemiddelde van {{ lab.hourEstimate }} uren.
 				h4.milestones Milestones
 				ul
-					li(v-for="(milestone, index) in lab.milestones" :key="milestone.name" v-on:click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
+					li(v-for="(milestone, index) in lab.milestones" :key="milestone._id" v-on:click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
 </template>
 
 <script>
