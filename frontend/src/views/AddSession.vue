@@ -137,6 +137,7 @@ export default {
 					this.labs.push(lab);
 				}
 			});
+			this.selectedLab = this.labs[0];
 			let uri = window.location.search.substring(1);
 			let params = new URLSearchParams(uri);
 			this.id = params.get('id');
