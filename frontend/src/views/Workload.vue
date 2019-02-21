@@ -7,15 +7,15 @@
 		app-date-range-picker(ref="dateRangePicker")
 		graph-stackbar(
 			:height="400",
-			:labels="filteredLabs.tags",
+			:labels="filteredCourses.tags",
 			:full-mode="false",
 			:show-text="true",
-			:names="filteredLabs.names",
-			:values="filteredLabs.hours",
+			:names="filteredCourses.names",
+			:values="filteredCourses.hours",
 			:colors="colors",
 			:key="graph")
-			legends(:names="filteredLabs.names", :filter="true")
-			tooltip(:names="filteredLabs.names", position="right")
+			legends(:names="filteredCourses.names", :filter="true")
+			tooltip(:names="filteredCourses.names", position="right")
 </template>
 
 <script>
@@ -40,9 +40,9 @@ export default {
 		showDateRangePicker () {
 			this.$refs.dateRangePicker.show();
 		},
-		getLabsForPeriod (type, start, end) {
+		getCoursesForPeriod (type, start, end) {
 			let self = this;
-			let labs = {
+			let courses = {
 				names: [],
 				hours: [],
 				tags: []
@@ -52,21 +52,21 @@ export default {
 			switch (type) {
 			case 0:
 				while (time.isBefore(end)) {
-					labs.tags.push(time.format('MMMM, YYYY'));
+					courses.tags.push(time.format('MMMM, YYYY'));
 					time.add(1, 'month');
 				}
 				break;
 
 			case 1:
 				while (time.isBefore(end)) {
-					labs.tags.push(`${time.format('DD/MM')} - ${moment(time).add(6, 'days').format('DD/MM')}`);
+					courses.tags.push(`${time.format('DD/MM')} - ${moment(time).add(6, 'days').format('DD/MM')}`);
 					time.add(1, 'week');
 				}
 				break;
 
 			case 2:
 				while (time.isSameOrBefore(end)) {
-					labs.tags.push(time.format('DD/MM'));
+					courses.tags.push(time.format('DD/MM'));
 					time.add(1, 'day');
 				}
 				break;
@@ -111,11 +111,21 @@ export default {
 					}
 				}
 
-				labs.names.push(lab.name);
-				labs.hours.push(labHours);
+				let foundMatch = false;
+				for (let i = 0; i < courses.names.length; ++i) {
+					if (lab.name === courses.names[i]) {
+						courses.hours[i] += labHours;
+						foundMatch = true;
+					}
+				}
+
+				if (!foundMatch) {
+					courses.names.push(lab.course.name);
+					courses.hours.push(labHours);
+				}
 			});
 
-			return labs;
+			return courses;
 		},
 		toColor (id) {
 			var hash = 0;
@@ -142,8 +152,8 @@ export default {
 		}
 	},
 	computed: {
-		filteredLabs () {
-			return this.getLabsForPeriod(
+		filteredCourses () {
+			return this.getCoursesForPeriod(
 				this.$store.state.dateRange.type,
 				this.$store.state.dateRange.startDate,
 				this.$store.state.dateRange.endDate
@@ -151,7 +161,7 @@ export default {
 		},
 		colors () {
 			let colorList = [];
-			this.filteredLabs.names.forEach(name => {
+			this.filteredCourses.names.forEach(name => {
 				colorList.push(this.toColor(name).toUpperCase());
 			});
 			// Belangrijk want kleuren updaten niet dynamisch
