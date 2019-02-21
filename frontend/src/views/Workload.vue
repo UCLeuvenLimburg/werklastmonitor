@@ -113,18 +113,34 @@ export default {
 
 				let foundMatch = false;
 				for (let i = 0; i < courses.names.length; ++i) {
-					if (lab.name === courses.names[i]) {
-						courses.hours[i] += labHours;
+					if (lab.course.name === courses.names[i]) {
+						if (!courses.hours[i]) {
+							courses.hours.push(labHours);
+						} else {
+							let longestArrayLength = (courses.hours[i].length > labHours.length ? courses.hours[i].length : labHours.length);
+
+							for (let j = 0; j < longestArrayLength; ++j) {
+								console.log('i: ' + i + ' | j: ' + j);
+								console.log('courses.hours[i]: ' + courses.hours[i]);
+								console.log('labHours[j]: ' + labHours[j]);
+								if (courses.hours[i][j] === null) {
+									courses.hours[i].push(labHours[j]);
+								} else {
+									if (labHours[j] !== null) {
+										courses.hours[i][j] += labHours[j];
+									}
+								}
+							}
+						}
 						foundMatch = true;
 					}
 				}
 
 				if (!foundMatch) {
 					courses.names.push(lab.course.name);
-					courses.hours.push(labHours);
+					courses.hours.push(lab.labHours);
 				}
 			});
-
 			return courses;
 		},
 		toColor (id) {
