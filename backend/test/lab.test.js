@@ -21,9 +21,7 @@ describe('Lab tests', () => {
 	});
 
 	after((done) => {
-		Lab.remove({}, (err) => {
-
-		});
+		chai.request(server).delete('/labs').send();
 		done();
 	});
 
