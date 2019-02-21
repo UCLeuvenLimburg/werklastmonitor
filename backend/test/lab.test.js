@@ -20,6 +20,13 @@ describe('Lab tests', () => {
 		});
 	});
 
+	after((done) => {
+		Lab.remove({}, (err) => {
+
+		});
+		done();
+	});
+
 	describe('/POST labs', () => {
 		it('should create a lab', (done) => {
 			let lab = {

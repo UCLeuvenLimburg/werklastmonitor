@@ -21,10 +21,6 @@ describe('User tests', () => {
 			done();
 		});
 	});
-	after((done) => {
-		chai.request(server).delete('/users').send();
-		done();
-	});
 
 	describe('/POST user', () => {
 		it('Post a valid user', (done) => {
