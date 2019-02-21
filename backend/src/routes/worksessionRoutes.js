@@ -77,7 +77,7 @@ worksessionRouter.route('/:worksession_Id')
 		res.status('200').send(req.worksession);
 	})
 	.put([
-		body('startDate').isISO8601().withMessage('Please enter a valid date'),
+		body('startDate').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
 		body('endDate').isISO8601().custom((value, { req }) => value >= req.body.startDate).withMessage('Your enddate needs to be valid and after your startdate!'),
 		body('studentNumber').trim().not().isEmpty().withMessage('studentnumber is required'),
 		body('lab').trim().not().isEmpty().withMessage('Please select a lab!'),

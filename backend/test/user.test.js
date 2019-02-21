@@ -22,7 +22,11 @@ describe('User tests', () => {
 		});
 	});
 	after((done) => {
-		chai.request(server).delete('/users').send();
+		User.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
 		done();
 	});
 

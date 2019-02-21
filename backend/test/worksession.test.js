@@ -23,7 +23,21 @@ describe('Worksession tests',() => {
 		});
 	});
 	after((done) => {
-		chai.request(server).delete('/worksessions').send();
+		Worksession.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		Workday.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		Lab.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
 		done();
 	});
 

@@ -20,7 +20,11 @@ describe('Workday tests', () => {
 		});
 	});
 	after((done) => {
-		chai.request(server).delete('/workdays').send();
+		Workday.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
 		done();
 	});
 
