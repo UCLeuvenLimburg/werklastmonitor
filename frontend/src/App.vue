@@ -11,6 +11,8 @@
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 
+import AuthenticationService from '@/api/AuthenticationService';
+
 export default {
 	name: 'App',
 	components: {
@@ -18,8 +20,14 @@ export default {
 		AppFooter
 	},
 	created () {
-		// TODO: Verify session
-		// this.$store.dispatch('clearUsername');
+		AuthenticationService.get()
+			.then((res) => {
+				this.$store.dispatch('setUser', res._id);
+			})
+			.catch((err) => {
+				localStorage.removeItem('jwtToken');
+				this.$store.dispatch('clearUser');
+			});
 	}
 };
 </script>

@@ -37,7 +37,7 @@ export default {
 			return Array.from(new Set(courseList));
 		},
 		username () {
-			return this.$store.state.username;
+			return this.$store.state.user._id;
 		}
 	},
 	methods: {

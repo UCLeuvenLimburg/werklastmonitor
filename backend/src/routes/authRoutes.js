@@ -68,7 +68,7 @@ authRouter.route('/')
 	.post([
 		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
 		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
-	], auth.optional, (req, res, next) => {
+	], (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
@@ -86,6 +86,15 @@ authRouter.route('/')
 			}
 			return res.status(400).info;
 		})(req, res, next);
+	})
+	.get(auth.required, async (req, res) => {
+		let user = await User.findById(req.user._id);
+		if (!user) {
+			return res.status(400);
+		}
+		return res.json({
+			user: user.toAuthJSON()
+		});
 	});
 
 module.exports = authRouter;

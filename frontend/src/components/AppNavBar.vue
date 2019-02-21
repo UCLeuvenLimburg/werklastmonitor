@@ -21,13 +21,15 @@
 			li.right(v-if='!isIngelogd')
 				router-link.highlight(to="/login") Aanmelden
 			li.right(v-if='isIngelogd')
-				a.highlight() Uitloggen
+				a.highlight(href="#", @click.prevent="logout") Afmelden
 
 		.mobile-menu-close(v-if="isMobileMenuOpen", @click="isMobileMenuOpen = false")
 </template>
 
 <script>
 import 'mdi-vue/MenuIcon';
+
+import AuthenticationService from '@/api/AuthenticationService';
 
 export default {
 	name: 'AppNavBar',
@@ -37,23 +39,27 @@ export default {
 		};
 	},
 	computed: {
-		username () {
-			return this.$store.state.username;
+		user () {
+			return this.$store.state.user;
 		},
 		isStudent () {
-			if (this.username) {
-				return (this.username.charAt(0) === 'r');
+			if (this.user && this.user._id) {
+				return (this.user._id.charAt(0) === 'r');
 			} else {
 				return false;
 			}
 		},
 		isIngelogd () {
-			return (this.username);
+			return (this.user);
 		}
 	},
 	methods: {
 		toggleMenu () {
 			this.isMobileMenuOpen = !this.isMobileMenuOpen;
+		},
+		logout () {
+			localStorage.removeItem('jwtToken');
+			this.$store.dispatch('clearUser');
 		}
 	}
 };
