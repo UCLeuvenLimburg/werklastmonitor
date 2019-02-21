@@ -6,13 +6,19 @@
 		label(for="file")
 			mdi-upload-icon
 			p Kies een bestand...
+		label(for="template" v-on:click="download")
+			mdi-download-icon
+			p Download template
 </template>
 
 <script>
 import 'mdi-vue/UploadIcon';
+import 'mdi-vue/DownloadIcon';
 
 import XLSX from 'xlsx';
 import LabsService from '@/api/LabsService';
+import fileservice from '../api/FileService.js';
+import FileDownload from 'js-file-download';
 
 export default {
 	name: 'upload',
@@ -22,6 +28,12 @@ export default {
 		};
 	},
 	methods: {
+		download () {
+			fileservice.get('template.xlsx')
+				.then((response) => {
+					FileDownload(response.data, 'Template.xlsx');
+				});
+		},
 		onFileChange (e) {
 			let files = e.target.files || e.dataTransfer.files;
 			if (!files.length) {
@@ -131,6 +143,7 @@ input {
 
 label {
 	margin-top: 4px;
+	margin: 5px;
 	font-weight: bold;
 	color: $color-content-bg;
 	background: $color-accent;
