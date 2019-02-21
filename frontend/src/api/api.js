@@ -6,9 +6,6 @@ export default () => {
 		baseURL: config.backend.baseURL,
 		headers: {
 			'Authorization': `Token ${localStorage.getItem('jwtToken')}`
-		},
-		data: {
-			user: localStorage.vuex.user
 		}
 	});
 };

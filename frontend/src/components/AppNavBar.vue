@@ -37,18 +37,18 @@ export default {
 		};
 	},
 	computed: {
-		user () {
-			return this.$store.state.user;
+		username () {
+			return this.$store.state.username;
 		},
 		isStudent () {
-			if (this.user && this.user._id) {
-				return (this.user._id.charAt(0) === 'r');
+			if (this.username) {
+				return (this.username.charAt(0) === 'r');
 			} else {
 				return false;
 			}
 		},
 		isIngelogd () {
-			return (this.user);
+			return (this.username);
 		}
 	},
 	methods: {
@@ -57,7 +57,7 @@ export default {
 		},
 		logout () {
 			localStorage.removeItem('jwtToken');
-			this.$store.dispatch('clearUser');
+			this.$store.dispatch('clearUsername');
 		}
 	}
 };

@@ -22,11 +22,11 @@ export default {
 	created () {
 		AuthenticationService.get()
 			.then((res) => {
-				this.$store.dispatch('setUser', res._id);
+				this.$store.dispatch('setUsername', res.data.user._id);
 			})
 			.catch(() => {
 				localStorage.removeItem('jwtToken');
-				this.$store.dispatch('clearUser');
+				this.$store.dispatch('clearUsername');
 			});
 	}
 };

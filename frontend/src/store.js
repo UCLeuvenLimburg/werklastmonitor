@@ -18,7 +18,7 @@ export default new Vuex.Store({
 			startDate: moment().startOf('week'),
 			endDate: moment().add(1, 'week').endOf('week')
 		},
-		user: null
+		username: null
 	},
 	mutations: {
 		updateDateRange (state, range) {
@@ -31,11 +31,11 @@ export default new Vuex.Store({
 				endDate: moment().add(1, 'week').endOf('week')
 			};
 		},
-		setUser (state, user) {
-			state.user = user;
+		setUsername (state, username) {
+			state.username = username;
 		},
-		clearUser (state) {
-			state.user = null;
+		clearUsername (state) {
+			state.username = null;
 		}
 	},
 	actions: {
@@ -45,11 +45,11 @@ export default new Vuex.Store({
 		resetDateRange (context) {
 			context.commit('resetDateRange');
 		},
-		setUser (context, user) {
-			context.commit('setUser', user);
+		setUsername (context, username) {
+			context.commit('setUsername', username);
 		},
-		clearUser (context) {
-			context.commit('clearUser');
+		clearUsername (context) {
+			context.commit('clearUsername');
 		}
 	},
 	plugins: [vuexLocalStorace.plugin]
