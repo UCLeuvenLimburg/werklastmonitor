@@ -44,6 +44,7 @@ export default {
 			let self = this;
 			let courses = {
 				names: [],
+				codes: [], // Purely here for ease of development
 				hours: [],
 				tags: []
 			};
@@ -73,72 +74,57 @@ export default {
 			}
 
 			self.labs.forEach((lab) => {
-				let day = moment(lab.startDate);
-				let endDay = moment(lab.endDate);
+				let labStartDate = moment(lab.startDate);
+				let labEndDate = moment(lab.endDate);
 				let labHours = [];
 
-				if (day.isSameOrBefore(end) && endDay.isSameOrAfter(start)) {
-					let days = endDay.diff(day, 'days');
-					let hoursPerDay = lab.hourEstimate / days;
-					let hours = 0;
+				let days = labEndDate.diff(labStartDate, 'days');
+				let hoursPerDay = lab.hourEstimate / days;
+				let hours = 0;
 
-					if (day.isBefore(start)) {
-						day = moment(start);
-					}
-					while (day.isSameOrBefore(end) && day.isSameOrBefore(endDay)) {
-						switch (type) {
-						case 0:
+				let day = moment(start);
+				while (day.isSameOrBefore(end)) {
+					switch (type) {
+					case 0:
+						if (day.isSameOrAfter(labStartDate) && day.isSameOrBefore(labEndDate)) {
 							hours += hoursPerDay;
-							if (day.date() === day.daysInMonth()) {
-								labHours.push(hours);
-								hours = 0;
-							}
-							break;
+						}
+						if (day.date() === day.daysInMonth()) {
+							labHours.push(hours);
+							hours = 0;
+						}
+						break;
 
-						case 1:
+					case 1:
+						if (day.isSameOrAfter(labStartDate) && day.isSameOrBefore(labEndDate)) {
 							hours += hoursPerDay;
-							if (day.isoWeekday() === 7) {
-								labHours.push(hours);
-								hours = 0;
-							}
-							break;
+						}
+						if (day.isoWeekday() === 7) {
+							labHours.push(hours);
+							hours = 0;
+						}
+						break;
 
-						case 2:
+					case 2:
+						if (day.isSameOrAfter(labStartDate) && day.isSameOrBefore(labEndDate)) {
 							labHours.push(hoursPerDay);
-							break;
-						}
-						day.add(1, 'day');
-					}
-				}
-
-				let foundMatch = false;
-				for (let i = 0; i < courses.names.length; ++i) {
-					if (lab.course.name === courses.names[i]) {
-						if (!courses.hours[i]) {
-							courses.hours.push(labHours);
 						} else {
-							let longestArrayLength = (courses.hours[i].length > labHours.length ? courses.hours[i].length : labHours.length);
-
-							for (let j = 0; j < longestArrayLength; ++j) {
-								console.log('i: ' + i + ' | j: ' + j);
-								console.log('courses.hours[i]: ' + courses.hours[i]);
-								console.log('labHours[j]: ' + labHours[j]);
-								if (courses.hours[i][j] === null) {
-									courses.hours[i].push(labHours[j]);
-								} else {
-									if (labHours[j] !== null) {
-										courses.hours[i][j] += labHours[j];
-									}
-								}
-							}
+							labHours.push(0);
 						}
-						foundMatch = true;
+						break;
 					}
+					day.add(1, 'day');
 				}
 
-				if (!foundMatch) {
+				let index = courses.codes.indexOf(lab.course.courseCode);
+				if (index < 0) {
 					courses.names.push(lab.course.name);
-					courses.hours.push(lab.labHours);
+					courses.codes.push(lab.course.courseCode);
+					courses.hours.push(labHours);
+				} else {
+					for (let i = 0; i < labHours.length; ++i) {
+						courses.hours[index][i] += labHours[i];
+					}
 				}
 			});
 			return courses;
@@ -158,7 +144,7 @@ export default {
 		colorNames (names) {
 			let colorList = [];
 			names.forEach(name => {
-				console.log(this.toColor(name));
+				// console.log(this.toColor(name));
 				colorList.push('' + this.toColor(name).toUpperCase());
 			});
 			return colorList;
