@@ -80,6 +80,11 @@ export default {
 			cal: 0
 		};
 	},
+	computed: {
+		username () {
+			return this.$store.state.username;
+		}
+	},
 	methods: {
 		setShowDate (d) {
 			this.showDate = d;
@@ -222,7 +227,13 @@ export default {
 					this.events.push(event);
 				});
 				let worksessions = await WorksessionService.get();
-				this.worksessions = worksessions.data;
+				let unfilteredWorksessions = worksessions.data;
+				this.worksessions = [];
+				unfilteredWorksessions.forEach(worksession => {
+					if (worksession.studentNumber === this.username) {
+						this.worksessions.push(worksession);
+					}
+				});
 				this.worksessions.forEach(worksession => {
 					let event = {};
 					event.id = worksession._id;
