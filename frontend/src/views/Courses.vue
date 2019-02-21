@@ -17,10 +17,12 @@
 <script>
 import LabsService from '@/api/LabsService';
 import WorksessionService from '@/api/WorksessionService';
+import UserService from '../api/UsersService.js';
 export default {
 	name: 'courses',
 	data () {
 		return {
+			userCourses: [],
 			labs: [],
 			worksessions: [],
 			bar: { width: '1%' }
@@ -33,6 +35,9 @@ export default {
 				courseList.push(lab.course.name);
 			});
 			return Array.from(new Set(courseList));
+		},
+		username () {
+			return this.$store.state.username;
 		}
 	},
 	methods: {
@@ -83,13 +88,30 @@ export default {
 			};
 		}
 	},
-	mounted () {
+	created () {
 		(async () => {
+			UserService.get(this.username)
+				.then((result) => {
+					let user = result.data;
+					this.userCourses = user.courses;
+				});
 			this.events = [];
+			this.labs = [];
 			let labs = await LabsService.get();
-			this.labs = labs.data;
+			let unfilteredLabs = labs.data;
+			unfilteredLabs.forEach(lab => {
+				if (this.userCourses.includes(lab.course._id)) {
+					this.labs.push(lab);
+				}
+			});
 			let worksessions = await WorksessionService.get();
-			this.worksessions = worksessions.data;
+			let unfilteredWorksessions = worksessions.data;
+			this.worksessions = [];
+			unfilteredWorksessions.forEach(worksession => {
+				if (worksession.studentNumber === this.username) {
+					this.worksessions.push(worksession);
+				}
+			});
 		})();
 	}
 };
