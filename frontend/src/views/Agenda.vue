@@ -47,6 +47,7 @@ import AppModal from '@/components/AppModal';
 import moment from 'moment';
 import LabsService from '@/api/LabsService';
 import WorksessionService from '@/api/WorksessionService';
+import UserService from '../api/UsersService.js';
 
 import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar';
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
@@ -77,7 +78,8 @@ export default {
 			confirm: false,
 			newStart: '',
 			newDate: '',
-			cal: 0
+			cal: 0,
+			userCourses: []
 		};
 	},
 	computed: {
@@ -213,16 +215,23 @@ export default {
 		},
 		showAll () {
 			(async () => {
+				UserService.get(this.username)
+					.then((result) => {
+						let user = result.data;
+						this.userCourses = user.courses;
+					});
 				this.events = [];
 				let labs = await LabsService.get();
 				this.labs = labs.data;
 				this.labs.forEach(lab => {
-					let event = {};
-					event.id = lab._id;
-					event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
-					event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
-					event.classes = 'purple';
-					this.events.push(event);
+					if (this.userCourses.includes(lab.course._id)) {
+						let event = {};
+						event.id = lab._id;
+						event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
+						event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
+						event.classes = 'purple';
+						this.events.push(event);
+					}
 				});
 				let worksessions = await WorksessionService.get();
 				let unfilteredWorksessions = worksessions.data;
