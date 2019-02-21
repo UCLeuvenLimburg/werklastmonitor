@@ -29,8 +29,6 @@
 <script>
 import 'mdi-vue/MenuIcon';
 
-import AuthenticationService from '@/api/AuthenticationService';
-
 export default {
 	name: 'AppNavBar',
 	data () {

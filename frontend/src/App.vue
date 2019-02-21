@@ -24,7 +24,7 @@ export default {
 			.then((res) => {
 				this.$store.dispatch('setUser', res._id);
 			})
-			.catch((err) => {
+			.catch(() => {
 				localStorage.removeItem('jwtToken');
 				this.$store.dispatch('clearUser');
 			});
