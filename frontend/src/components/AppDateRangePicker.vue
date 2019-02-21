@@ -377,11 +377,6 @@ export default {
 							transition: .2s ease;
 						}
 
-						&.active-cell {
-							background-color: $color-accent;
-							color: $color-content-bg;
-						}
-
 						&.selectable {
 							transition: background .2s ease;
 							cursor: pointer;
@@ -389,6 +384,14 @@ export default {
 							&:hover .table-cell {
 								background-color: $color-accent;
 								color: $color-content-bg;
+							}
+
+							&.active-cell {
+								background-color: $color-accent;
+
+								.table-cell {
+									color: $color-content-bg !important;
+								}
 							}
 						}
 
