@@ -6,9 +6,9 @@
 					span(v-if="!startDate") Kies begin datum
 					span(v-else) Kies eind datum
 					.date-range-picker-types
-						button(@click="setType(0)", :class="{ active: pickerType === 0 }") Maand
-						button(@click="setType(1)", :class="{ active: pickerType === 1 }") Week
-						button(@click="setType(2)", :class="{ active: pickerType === 2 }") Dag
+						button(@click="setType(0); startDate = null", :class="{ active: pickerType === 0 }") Maand
+						button(@click="setType(1); startDate = null", :class="{ active: pickerType === 1 }") Week
+						button(@click="setType(2); startDate = null", :class="{ active: pickerType === 2 }") Dag
 					.date-range-picker-close-button(@click="hide")
 						mdi-window-close-icon
 
