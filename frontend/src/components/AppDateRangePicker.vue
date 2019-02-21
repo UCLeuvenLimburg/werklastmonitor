@@ -173,11 +173,7 @@ export default {
 					return week[0] === this.startDate.date() && week[6] === moment(this.startDate).endOf('week').date();
 
 				case 2:
-					if (this.startDate.month() === this.month.month() && this.startDate.date() === day) {
-						return true;
-					} else {
-						return false;
-					}
+					return this.startDate.month() === this.month.month() && this.startDate.date() === day;
 				}
 			}
 			return false;
