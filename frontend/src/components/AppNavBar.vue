@@ -6,20 +6,22 @@
 		ul(:class="{ mobile: isMobileMenuOpen }", @click="isMobileMenuOpen = false")
 			li
 				router-link(to="/") Home
-			li
+			li(v-if='isStudent')
 				router-link(to="/courses") Vakken
 			li
 				router-link(to="/workload") Werklast
-			li
+			li(v-if='isStudent')
 				router-link(to="/agenda") Agenda
-			li
+			li(v-if='isStudent')
 				router-link(to="/addsession") Toevoegen
 			li
 				router-link(to="/upload") Upload
-			li
+			li(v-if='isStudent')
 				router-link(to="/registration") Inschrijvingen
-			li.right
+			li.right(v-if='!isIngelogd')
 				router-link.highlight(to="/login") Aanmelden
+			li.right(v-if='isIngelogd')
+				a.highlight() Uitloggen
 
 		.mobile-menu-close(v-if="isMobileMenuOpen", @click="isMobileMenuOpen = false")
 </template>
@@ -33,6 +35,21 @@ export default {
 		return {
 			isMobileMenuOpen: false
 		};
+	},
+	computed: {
+		username () {
+			return this.$store.state.username;
+		},
+		isStudent () {
+			if (this.username) {
+				return (this.username.charAt(0) === 'r');
+			} else {
+				return false;
+			}
+		},
+		isIngelogd () {
+			return (this.username);
+		}
 	},
 	methods: {
 		toggleMenu () {
