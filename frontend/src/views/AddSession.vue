@@ -56,13 +56,13 @@ export default {
 	methods: {
 		handleBeginChange (e) {
 			let selection = e.target.valueOf().value;
-			this.beginDate = moment(selection).toDate();
+			this.beginDate = moment(selection).add(2, 'hours').toDate();
 			this.showDays();
 			this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
 		},
 		handleEndChange (e) {
 			let selection = e.target.valueOf().value;
-			this.endDate = moment(selection).toDate();
+			this.endDate = moment(selection).add(2, 'hours').toDate();
 			this.showDays();
 			this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
 		},
