@@ -1,6 +1,7 @@
 <template lang="pug">
 	.page.addsession
-		h1 Voeg een werksessie toe
+		h1(v-if='!startFromId') Voeg een werksessie toe
+		h1(v-else='') Pas een werksessie aan
 		div
 			p {{ message }}
 		fieldset
@@ -16,7 +17,9 @@
 			li(v-for="(day, index) in days" :key="day")
 				label(:for="day") Aantal uur op dag {{ index + 1 }}
 				input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
-		button(v-if="submitVisible" v-on:click="submitForm") Toevoegen
+		button(v-if="submitVisible" v-on:click="submitForm")
+			span(v-if='!startFromId') Toevoegen
+			span(v-else='') Aanpassen
 </template>
 
 <script>
