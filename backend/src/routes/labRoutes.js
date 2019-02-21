@@ -25,8 +25,7 @@ const getValidationChecks = () => {
 		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
 		check('course').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
 		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
-		check('milestones.*.isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
+		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer')
 	];
 };
 
@@ -68,9 +67,13 @@ labRouter.route('/')
 		res.json(lab);
 	})
 	.delete((req, res) => {
-		Lab.remove({}, (err) => {
-			res.send(err);
-		});
+		Lab.deleteMany((err) => {
+			if (err) {
+				res.status('500').send(err);
+			} else {
+				res.status('204').send(err);
+			}
+		})
 	});
 
 labRouter.use('/:labId', (req, res, next) => {

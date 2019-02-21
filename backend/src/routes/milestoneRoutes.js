@@ -7,8 +7,7 @@ let milestoneRouter = express.Router();
 const getValidationChecks = () => {
 	return [
 		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer'),
-		check('isDone').isBoolean().withMessage('Milestone isDone must be a boolean')
+		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer')
 	];
 };
 
@@ -28,7 +27,6 @@ milestoneRouter.route('/')
 		let milestone = new Milestone();
 		milestone.name = req.body.name;
 		milestone.duration = req.body.duration;
-		milestone.isDone = req.body.isDone;
 
 		milestone.save();
 		res.json(milestone);
@@ -72,7 +70,6 @@ milestoneRouter.route('/:milestoneId')
 
 		req.milestone.name = req.body.name;
 		req.milestone.duration = req.body.duration;
-		req.milestone.isDone = req.body.isDone;
 
 		req.milestone.save();
 		res.json(req.milestone);

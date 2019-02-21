@@ -15,7 +15,6 @@ courseRouter.route('/')
 			}
 		})
 	})
-
 	.post([
 		body('name').trim().not().isEmpty().withMessage('Name of the course cant be empty.'),
 		body('semester').isInt({min: 1, max: 6}).withMessage('Semesters can only be from 1-6'),
@@ -32,6 +31,15 @@ courseRouter.route('/')
 		course.save();
 		res.status('201').send(course);
 	})
+	.delete((req, res) => {
+		Course.deleteMany((err) => {
+			if (err) {
+				res.status('500').send(err);
+			} else {
+				res.status('204').send(err);
+			}
+		})
+	});
 
 courseRouter.use('/:course_Id', (req,res,next) => {
 	Course.findById(req.params.course_Id, (err, course) => {
