@@ -22,6 +22,24 @@ describe('Worksession tests',() => {
 			done();
 		});
 	});
+	after((done) => {
+		Worksession.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		Workday.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		Lab.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		done();
+	});
 
 	describe('/GET worksession', () => {
 		it('get with id gives the right object', (done) => {
@@ -31,7 +49,11 @@ describe('Worksession tests',() => {
 				endDate: '2020-05-22',
 				hourEstimate: 14,
 				courseId: '5c66e78eccc05c1fecc95022',
-				milestones: []
+				milestones: [{
+					name: 'testmilestone',
+					duration: 4,
+					isDone: false
+				}]
 			});
 			testLab.save();
 			let testWorksession = new Worksession({
@@ -216,6 +238,110 @@ describe('Worksession tests',() => {
 	});
 
 	describe('/PUT worksession', () => {
+		it('Workdays do get updated when worksessionsdays change.', async () => {
+			let testlab = new Lab({
+				name: 'testLab4d4d4',
+				startDate: '2020-01-05',
+				endDate: '2020-05-22',
+				hourEstimate: 14,
+				courseId: '5c66e78eccc05c1fecc95022',
+				milestones: [
+					{
+						name: 'testMilestone1',
+						duration: 7,
+						isDone: false
+					}
+				]
+			});
+			await testlab.save();
+			let firstworkday = new Workday({
+				day: moment().add(1, 'days'),
+				workhours: 5
+			});
+			let secondworkday = new Workday({
+				day: moment().add(2, 'days'),
+				workhours: 2
+			});
+			let worksessiontest = new Worksession({
+				startDate: moment().add(1, 'days'),
+				endDate: moment().add(2, 'days'),
+				studentNumber: 'r000',
+				lab: testlab._id,
+				workdays: [firstworkday, secondworkday]
+			});
+			await worksessiontest.save();
+			firstworkday.day = moment().add(3, 'days');
+			firstworkday.workhours = 3;
+			secondworkday.day = moment().add(4, 'days');
+			secondworkday.workhours = 4;
+			let updateworksession = new Worksession({
+				startDate: moment().add(3, 'days'),
+				endDate: moment().add(4, 'days'),
+				studentNumber: 'r000',
+				lab: testlab._id,
+				workdays: [firstworkday, secondworkday]
+			});
+			let res = await chai.request(server)
+				.put('/worksessions/' + worksessiontest._id)
+				.send(updateworksession);
+			expect(res).to.have.status(200);
+			expect(res.body.workdays[0].workhours).to.be.eql(firstworkday.workhours);
+			expect(res.body.workdays[1].workhours).to.be.eql(secondworkday.workhours);
+		});
+		it('Workdays do get updated and there is added a new workday', async () => {
+			let testlab = new Lab({
+				name: 'testLab4d4d4',
+				startDate: '2020-01-05',
+				endDate: '2020-05-22',
+				hourEstimate: 14,
+				courseId: '5c66e78eccc05c1fecc95022',
+				milestones: [
+					{
+						name: 'testMilestone1',
+						duration: 7,
+						isDone: false
+					}
+				]
+			});
+			await testlab.save();
+			let firstworkday = new Workday({
+				day: moment().add(1, 'days'),
+				workhours: 5
+			});
+			let secondworkday = new Workday({
+				day: moment().add(2, 'days'),
+				workhours: 2
+			});
+			let worksessiontest = new Worksession({
+				startDate: moment().add(1, 'days'),
+				endDate: moment().add(2, 'days'),
+				studentNumber: 'r000',
+				lab: testlab._id,
+				workdays: [firstworkday, secondworkday]
+			});
+			await worksessiontest.save();
+			firstworkday.day = moment().add(3, 'days');
+			firstworkday.workhours = 3;
+			secondworkday.day = moment().add(4, 'days');
+			secondworkday.workhours = 4;
+			let thirdworkday = new Workday({
+				day: moment().add(5, 'days'),
+				workhours: 10
+			});
+			let updateworksession = new Worksession({
+				startDate: moment().add(3, 'days'),
+				endDate: moment().add(4, 'days'),
+				studentNumber: 'r000',
+				lab: testlab._id,
+				workdays: [firstworkday, secondworkday, thirdworkday]
+			});
+			let res = await chai.request(server)
+				.put('/worksessions/' + worksessiontest._id)
+				.send(updateworksession);
+			expect(res).to.have.status(200);
+			expect(res.body.workdays[0].workhours).to.be.eql(firstworkday.workhours);
+			expect(res.body.workdays[1].workhours).to.be.eql(secondworkday.workhours);
+		});
 		it('updates successfully with valid params', async () => {
 			let testLab = new Lab({
 				name: 'testLab4d4d4',

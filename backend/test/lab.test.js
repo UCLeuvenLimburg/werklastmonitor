@@ -20,6 +20,11 @@ describe('Lab tests', () => {
 		});
 	});
 
+	after((done) => {
+		chai.request(server).delete('/labs').send();
+		done();
+	});
+
 	describe('/POST labs', () => {
 		it('should create a lab', (done) => {
 			let lab = {

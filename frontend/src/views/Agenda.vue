@@ -136,8 +136,10 @@ export default {
 				let days = moment(worksession.startDate).diff(moment(oldStart), 'days');
 				worksession.workdays.forEach(workday => {
 					workday.day = moment(workday.day).add(days, 'days').toDate();
+					delete workday._id;
 				});
-				// await WorksessionService.put(worksession).then(this.showAll());
+				await WorksessionService.put(worksession);
+				this.showAll();
 				this.$refs.showConfirmModal.hide();
 			})();
 		},

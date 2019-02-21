@@ -19,6 +19,14 @@ describe('Workday tests', () => {
 			done();
 		});
 	});
+	after((done) => {
+		Workday.deleteMany({}, (err) => {
+			if (err) {
+				console.error(err);
+			}
+		})
+		done();
+	});
 
 	describe('/GET workday', () => {
 		it('get with id gives the right object', (done) => {
