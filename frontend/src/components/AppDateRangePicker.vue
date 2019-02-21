@@ -107,7 +107,7 @@ export default {
 		},
 		selectDate (week, day) {
 			let selection = this.weeks[week][day];
-			if ((week === 0 && selection > 7) || (week > 1 && selection < 8)) {
+			if (this.pickerType !== 1 && ((week === 0 && selection > 7) || (week > 1 && selection < 8))) {
 				return;
 			}
 
@@ -155,25 +155,32 @@ export default {
 			this.hoveringTable = false;
 		},
 		isCellActive (week, day) {
-			if (this.startDate !== null && this.startDate.month() === this.month.month()) {
+			if (this.startDate !== null) {
 				switch (this.pickerType) {
 				case 0:
-					return true;
+					return this.startDate.month() === this.month.month();
+
 				case 1:
-					if (this.startDate.date() <= day && this.startDate.date() + 6 >= day) {
-						return true;
+					if (this.weeks[0].indexOf(day) > -1 && JSON.stringify(this.weeks[0]) === JSON.stringify(week)) {
+						if (moment(this.startDate).add(1, 'month').month() !== this.month.month()) {
+							return false;
+						}
 					} else {
-						return false;
+						if (this.startDate.month() !== this.month.month()) {
+							return false;
+						}
 					}
+					return week[0] === this.startDate.date() && week[6] === moment(this.startDate).endOf('week').date();
+
 				case 2:
-					if (this.startDate.date() === day) {
+					if (this.startDate.month() === this.month.month() && this.startDate.date() === day) {
 						return true;
 					} else {
 						return false;
 					}
 				}
-				return false;
 			}
+			return false;
 		}
 	},
 	created () {
@@ -187,7 +194,7 @@ export default {
 
 .date-range-picker-mask {
 	position: fixed;
-	z-index: 998;
+	z-index: 9998;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -201,7 +208,8 @@ export default {
 		vertical-align: middle;
 
 		.date-range-picker-container {
-			width: 640px;
+			width: 98%;
+			max-width: 640px;
 			margin: 0 auto;
 			background: $color-content-bg;
 			border-radius: 4px;
@@ -347,8 +355,18 @@ export default {
 					&.type-week {
 						cursor: pointer;
 
-						td .table-cell {
-							background: transparent !important;
+						td {
+							.table-cell {
+								background: transparent !important;
+							}
+
+							&.active-cell {
+								background-color: $color-accent;
+
+								.table-cell {
+									color: $color-content-bg !important;
+								}
+							}
 						}
 
 						&:hover {
@@ -375,6 +393,12 @@ export default {
 							margin: 0 auto;
 							line-height: 48px;
 							transition: .2s ease;
+
+							@media screen and (max-width: 680px) {
+								height: 32px;
+								width: 32px;
+								line-height: 32px;
+							}
 						}
 
 						&.selectable {
