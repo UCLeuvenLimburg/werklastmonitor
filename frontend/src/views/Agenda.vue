@@ -6,10 +6,10 @@
 			:events="events",
 			:startingDayOfWeek=1,
 			@click-event="showEvent",
-		@drop-on-date="dropDate",
-		enableDragDrop=true,
+			@drop-on-date="dropDate",
+			enableDragDrop=true,
 			locale="nl",
-		:key="cal")
+			:key="cal")
 			calendar-view-header(
 				slot="header",
 				slot-scope="t",
@@ -22,7 +22,7 @@
 				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
 				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
 				div(v-if='editable')
-					a.button(:href="'/addsession?id='+ selectedEvent.id") Aanpassen
+					router-link.button(:to="'/addsession?id='+ selectedEvent.id") Aanpassen
 					a.button(v-on:click="deleteEvent") Verwijderen
 				div(v-if='milestonable')
 					h3(v-if='milestonable') Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
@@ -80,6 +80,11 @@ export default {
 			cal: 0
 		};
 	},
+	computed: {
+		username () {
+			return this.$store.state.username;
+		}
+	},
 	methods: {
 		setShowDate (d) {
 			this.showDate = d;
@@ -111,7 +116,6 @@ export default {
 				this.confirm = false;
 				this.$refs.showConfirmModal.show();
 			} else {
-				// alert('Je kunt deadlines niet verplaatsen.');
 				this.$refs.showWarningModal.show();
 			}
 		},
@@ -130,7 +134,6 @@ export default {
 				this.$refs.showConfirmModal.hide();
 				this.showAll();
 			})();
-			// test
 		},
 		confirmFalse () {
 			this.$refs.showConfirmModal.hide();
@@ -222,19 +225,18 @@ export default {
 					this.events.push(event);
 				});
 				let worksessions = await WorksessionService.get();
-				this.worksessions = worksessions.data;
+				let unfilteredWorksessions = worksessions.data;
+				this.worksessions = [];
+				unfilteredWorksessions.forEach(worksession => {
+					if (worksession.studentNumber === this.username) {
+						this.worksessions.push(worksession);
+					}
+				});
 				this.worksessions.forEach(worksession => {
 					let event = {};
 					event.id = worksession._id;
 					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
 					event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-					/*
-					this.labs.forEach(lab => {
-						if (lab._id === worksession.lab) {
-							event.title = lab.name;
-						}
-					});
-					*/
 					event.title = this.getLab(worksession.lab).name;
 					this.events.push(event);
 				});

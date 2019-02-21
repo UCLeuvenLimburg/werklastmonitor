@@ -26,7 +26,7 @@ describe('User tests', () => {
 		it('Post a valid user', (done) => {
 			let user = new User({
 				_id: 'r000' + moment().format('YYYYMMDDx'),
-				courses: [ '5c6bc68ccdd0aa2de0d50dd6', '5c6bc6a7cdd0aa2de0d50dd7' ]
+				courses: [ '5c6c09267df9a63af0444dab', '5c6c09337df9a63af0444dac' ]
 			});
 
 			chai.request(server)
@@ -50,7 +50,7 @@ describe('User tests', () => {
 		it('Post a valid teacher', (done) => {
 			let user = new User({
 				_id: 'u1235' + moment().format('YYYYMMDDx'),
-				courses: [ '5c6bc68ccdd0aa2de0d50dd6', '5c6bc6a7cdd0aa2de0d50dd7' ]
+				courses: [ '5c6c09267df9a63af0444dab', '5c6c09337df9a63af0444dac' ]
 			});
 
 			chai.request(server)
@@ -74,7 +74,7 @@ describe('User tests', () => {
 		it('Post regex error username', () => {
 			let user = new User({
 				_id: '123u5446',
-				courses: [ '5c6bc68ccdd0aa2de0d50dd6', '5c6bc6a7cdd0aa2de0d50dd7' ]
+				courses: [ '5c6c09267df9a63af0444dab', '5c6c09337df9a63af0444dac' ]
 			});
 
 			chai.request(server)
@@ -122,7 +122,7 @@ describe('User tests', () => {
 				courses: ['5c6bc68ccdd0aa2de0d50dd6']
 			});
 			let update = new User({
-				courses: ['5c6bc68ccdd0aa2de0d50dd6', '5c6bc6a7cdd0aa2de0d50dd7']
+				courses: ['5c6c09267df9a63af0444dab', '5c6c09337df9a63af0444dac']
 			});
 			await user.save();
 			let res = await chai.request(server)
