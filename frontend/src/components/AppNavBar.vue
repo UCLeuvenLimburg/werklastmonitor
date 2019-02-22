@@ -8,7 +8,7 @@
 				router-link(to="/") Home
 			li(v-if='isStudent')
 				router-link(to="/courses") Vakken
-			li
+			li(v-if='isIngelogd')
 				router-link(to="/workload") Werklast
 			li(v-if='isStudent')
 				router-link(to="/agenda") Agenda
