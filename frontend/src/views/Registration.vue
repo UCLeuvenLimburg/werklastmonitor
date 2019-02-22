@@ -196,6 +196,7 @@ h1 {
 	padding-bottom: 10px;
 	color: $color-content-bg;
 	background: $color-accent;
+	border: 0;
 
 	&:hover{
 		background: $color-fg;
