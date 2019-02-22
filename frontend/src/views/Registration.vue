@@ -41,8 +41,8 @@
 <script>
 import 'mdi-vue/ContentSaveIcon';
 
-import userservice from '../api/UsersService.js';
-import courseservice from '../api/CoursesService.js';
+import userService from '../api/UsersService.js';
+import courseService from '../api/CoursesService.js';
 
 export default {
 	name: 'Registration',
@@ -59,17 +59,14 @@ export default {
 		};
 	},
 	methods: {
-		fetchCourses () {
-			let self = this;
-			courseservice.get()
-				.then((result) => {
-					self.allCourses = result.data;
-					self.processLayout(result.data);
-				});
+		async fetchCourses () {
+			let result = await courseService.get();
+			this.allCourses = result.data;
 		},
-		processLayout (d) {
+		processLayout (courses) {
 			let self = this;
-			d.forEach(function (course) {
+
+			courses.forEach(function (course) {
 				if (self.userCourses.includes(course._id)) {
 					course.select = true;
 				} else {
@@ -114,30 +111,32 @@ export default {
 				}
 			}
 		},
-		fetchUsercourses () {
-			console.log(this.username);
-			userservice.get(this.username)
-				.then((result) => {
-					let user = result.data;
-					this.userCourses = user.courses;
-				});
+		async fetchUsercourses () {
+			let result = await userService.get(this.username);
+			this.userCourses = result.data.courses;
 		},
 		save () {
-			userservice.put(this.username, {
+			userService.put(this.username, {
 				courses: this.userCourses
-			}).then(res => console.log(res))
-				.catch(e => console.log(e));
+			});
 		}
 	},
-	beforeMount () {
-		this.fetchUsercourses();
-		this.fetchCourses();
+	async created () {
+		await this.fetchUsercourses();
+		await this.fetchCourses();
+		this.processLayout(this.allCourses);
 	},
 	beforeDestroy () {
-		userservice.put(this.username, {
+		userService.put(this.username, {
 			courses: this.userCourses
 		}).then(res => console.log(res))
 			.catch(e => console.log(e));
+	},
+	watch: {
+		$route (to, from) {
+			console.log(to);
+			console.log(from);
+		}
 	},
 	computed: {
 		username () {
