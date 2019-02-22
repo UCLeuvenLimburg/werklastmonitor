@@ -64,7 +64,7 @@ labRouter.route('/')
 		lab.milestones = await getMilestones(req.body.milestones);
 
 		if(!lab.course) {
-			res.status(422).json({ errors: ['Ongeldige vak ID']});
+			res.status(422).json({ errors: [{'msg':`${req.body.course} is geen geldige vakcode. Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.`, 'param': 'courseId'}]});
 		} else {
 			lab.save();
 		}
