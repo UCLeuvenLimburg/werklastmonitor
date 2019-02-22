@@ -17,7 +17,7 @@
 			:key="graph")
 			legends(:names="filteredCourses.names", :filter="true")
 			tooltip(:names="filteredCourses.names", position="right")
-		.toggler
+		.toggler(v-if='isStudent')
 			label.switch(@change="toggleChange")
 				input(type='checkbox')
 				span.slider
@@ -340,6 +340,13 @@ export default {
 		},
 		username () {
 			return this.$store.state.username;
+		},
+		isStudent () {
+			if (this.username) {
+				return (this.username.charAt(0) === 'r');
+			} else {
+				return false;
+			}
 		}
 	},
 	created () {
