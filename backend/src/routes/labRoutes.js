@@ -19,13 +19,13 @@ const getMilestones = async (milestones) => {
 
 const getValidationChecks = () => {
 	return [
-		check('name').trim().not().isEmpty().withMessage('Lab name cannot be empty'),
-		check('startDate').isISO8601().withMessage('Valid start date is required for lab'),
-		check('endDate').custom((value, { req }) => value >= req.body.startDate),
-		check('hourEstimate').isFloat().withMessage('Hour estimation must be a positive number'),
-		check('course').trim().not().isEmpty().withMessage('Course ID cannot me empty'),
-		check('milestones.*.name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer')
+		check('name').trim().not().isEmpty().withMessage('De naam van het lab mag niet leeg zijn.'),
+		check('startDate').isISO8601().withMessage('Gelieve een geldige startdatum te geven.'),
+		check('endDate').custom((value, { req }) => value >= req.body.startDate).withMessage('Gelieve een geldige einddatum te geven, deze mag niet voor de startdatum zijn.'),
+		check('hourEstimate').isFloat().withMessage('Gelieve een inschatting van de werkuren in te geven, dit moet een positief getal zijn.'),
+		check('course').trim().not().isEmpty().withMessage('Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.'),
+		check('milestones.*.name').trim().not().isEmpty().withMessage('De naam van de milestone mag niet leeg zijn.'),
+		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Gelieve een inschatting van de werkuren in te geven voor deze milestone.')
 	];
 };
 

@@ -70,6 +70,13 @@ export default {
 
 				let labs = [];
 
+				if (labsJSON.length === 0) {
+					let error = {};
+					error.param = 'Bestand';
+					error.msg = 'mag niet leeg zijn';
+					self.errors.push(error);
+				}
+
 				for (let i = 1; i < labsJSON.length; ++i) {
 					let labJSONTemplate = {
 						name: '',
@@ -106,7 +113,7 @@ export default {
 				}
 
 				labs.forEach(lab => {
-					if(lab.startDate && lab.endDate) {
+					if (lab.startDate && lab.endDate) {
 						lab.startDate.setHours(lab.startDate.getHours() + 1);
 						lab.endDate.setHours(lab.endDate.getHours() + 1);
 						lab.startDate = this.formatDate(lab.startDate);
@@ -120,7 +127,7 @@ export default {
 					await LabsService.post(lab)
 						.catch((err) => {
 							console.log('error:' + err.response.data.errors);
-							err.response.data.errors.forEach(function(error) {
+							err.response.data.errors.forEach(function (error) {
 								self.errors.push(error);
 							});
 							console.log(self.errors);
