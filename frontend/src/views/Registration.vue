@@ -130,8 +130,7 @@ export default {
 	beforeDestroy () {
 		userService.put(this.username, {
 			courses: this.userCourses
-		}).then(res => console.log(res))
-			.catch(e => console.log(e));
+		});
 	},
 	computed: {
 		username () {
