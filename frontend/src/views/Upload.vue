@@ -88,8 +88,7 @@ export default {
 				for (let i = 1; i < milestoneJSON.length; ++i) {
 					let milestoneJSONTemplate = {
 						name: '',
-						duration: '',
-						isDone: false
+						duration: ''
 					};
 
 					milestoneJSONTemplate.name = milestoneJSON[i][0];
