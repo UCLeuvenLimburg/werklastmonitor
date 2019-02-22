@@ -79,7 +79,8 @@ export default {
 			newStart: '',
 			newDate: '',
 			cal: 0,
-			userCourses: []
+			userCourses: [],
+			userMilestones: []
 		};
 	},
 	computed: {
@@ -175,15 +176,25 @@ export default {
 			this.cal += 1;
 		},
 		isChecked (milestone) {
-			if (milestone.isDone) {
-				return 'checked';
-			} else {
-				return 'unchecked';
-			};
+			for (let i = 0; i < this.userMilestones.length; ++i) {
+				if (this.userMilestones[i] === milestone._id) {
+					return 'checked';
+				}
+			}
+			return 'unchecked';
 		},
 		check (m) {
-			m.isDone = !m.isDone;
-		},
+			UserService.get(this.username)
+				.then((result) => {
+					let user = result.data;
+					user.milestones.push(m._id);
+					UserService.put(user._id, user)
+						.then((res) => {
+							this.userMilestones = user.milestones;
+							this.isChecked(m);
+						});
+				});
+			},
 		getPercentage (lab) {
 			let estimatedHours = lab.hourEstimate;
 			let workedHours = this.getWorkedHours(lab);
@@ -225,6 +236,7 @@ export default {
 					.then((result) => {
 						let user = result.data;
 						this.userCourses = user.courses;
+						this.userMilestones = user.milestones;
 					});
 				this.events = [];
 				let labs = await LabsService.get();

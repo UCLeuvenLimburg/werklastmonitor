@@ -78,8 +78,10 @@ userRouter.route('/:user_id')
 			if(courses[0].constructor === String) {
 				req.user.courses = await Course.find( { _id: { $in: courses} } );
 			} else {
-				req.user.courses = await Course.insertMany(req.body.courses);
+				req.user.courses = await Course.insertMany(courses);
 			}
+		} else {
+			req.user.courses = [];
 		}
 		req.user.save();
 		res.json(req.user);

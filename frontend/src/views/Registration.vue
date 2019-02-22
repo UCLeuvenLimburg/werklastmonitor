@@ -41,8 +41,8 @@
 <script>
 import 'mdi-vue/ContentSaveIcon';
 
-import userservice from '../api/UsersService.js';
-import courseservice from '../api/CoursesService.js';
+import userService from '../api/UsersService.js';
+import courseService from '../api/CoursesService.js';
 
 export default {
 	name: 'Registration',
@@ -59,17 +59,14 @@ export default {
 		};
 	},
 	methods: {
-		fetchCourses () {
-			let self = this;
-			courseservice.get()
-				.then((result) => {
-					self.allCourses = result.data;
-					self.processLayout(result.data);
-				});
+		async fetchCourses () {
+			let result = await courseService.get();
+			this.allCourses = result.data;
 		},
-		processLayout (d) {
+		processLayout (courses) {
 			let self = this;
-			d.forEach(function (course) {
+
+			courses.forEach(function (course) {
 				if (self.userCourses.includes(course._id)) {
 					course.select = true;
 				} else {
@@ -107,37 +104,33 @@ export default {
 			if (course.select === false) {
 				this.userCourses.push(course._id);
 			} else {
-				for (let i = 0; i < this.userCourses.length - 1; i++) {
+				for (let i = 0; i < this.userCourses.length; i++) {
 					if (this.userCourses[i] === course._id) {
 						this.userCourses.splice(i, 1);
+						break;
 					}
 				}
 			}
 		},
-		fetchUsercourses () {
-			console.log(this.username);
-			userservice.get(this.username)
-				.then((result) => {
-					let user = result.data;
-					this.userCourses = user.courses;
-				});
+		async fetchUsercourses () {
+			let result = await userService.get(this.username);
+			this.userCourses = result.data.courses;
 		},
 		save () {
-			userservice.put(this.username, {
+			userService.put(this.username, {
 				courses: this.userCourses
-			}).then(res => console.log(res))
-				.catch(e => console.log(e));
+			});
 		}
 	},
-	beforeMount () {
-		this.fetchUsercourses();
-		this.fetchCourses();
+	async created () {
+		await this.fetchUsercourses();
+		await this.fetchCourses();
+		this.processLayout(this.allCourses);
 	},
 	beforeDestroy () {
-		userservice.put(this.username, {
+		userService.put(this.username, {
 			courses: this.userCourses
-		}).then(res => console.log(res))
-			.catch(e => console.log(e));
+		});
 	},
 	computed: {
 		username () {
@@ -170,10 +163,6 @@ export default {
 		}
 }
 
-h1 {
-	display: inline;
-}
-
 .courses {
 	margin-top: 10px;
 	display: grid;
@@ -197,10 +186,18 @@ h1 {
 	// height: 100%;
 }
 
+@media only screen and (min-width: 600px) {
+	#savebutton {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	h1 {
+		display: inline;
+	}
+}
+
 #savebutton {
-	position: absolute;
-	top: 0;
-	right: 0;
 	color: $color-content-bg;
 	background: $color-accent;
 	display: inline-flex;

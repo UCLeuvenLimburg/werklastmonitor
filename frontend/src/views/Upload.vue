@@ -1,6 +1,8 @@
 <template lang="pug">
 	.page.upload
 		h1 Excel-bestand uploaden
+		ul(v-if="errors.length !== 0").errorlist
+			li(v-for="error in errors").error {{error.param}}: {{error.msg}}
 		p Selecteer een Office Excel, LibreOffice Calc, of een CSV-bestand.
 		input(name="file", id="file", type="file", accept=".xls,.xlsx,.ods,.csv" @change="onFileChange")
 		label(for="file")
@@ -24,7 +26,8 @@ export default {
 	name: 'upload',
 	data () {
 		return {
-			image: ''
+			image: '',
+			errors: []
 		};
 	},
 	methods: {
@@ -51,6 +54,7 @@ export default {
 			let reader = new FileReader();
 			let rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
 			reader.onload = (e) => {
+				let self = this;
 				let data = e.target.result;
 				if (!rABS) {
 					data = new Uint8Array(data);
@@ -102,16 +106,25 @@ export default {
 				}
 
 				labs.forEach(lab => {
-					lab.startDate.setHours(lab.startDate.getHours() + 1);
-					lab.endDate.setHours(lab.endDate.getHours() + 1);
-					lab.startDate = this.formatDate(lab.startDate);
-					lab.endDate = this.formatDate(lab.endDate);
+					if(lab.startDate && lab.endDate) {
+						lab.startDate.setHours(lab.startDate.getHours() + 1);
+						lab.endDate.setHours(lab.endDate.getHours() + 1);
+						lab.startDate = this.formatDate(lab.startDate);
+						lab.endDate = this.formatDate(lab.endDate);
+					}
 				});
 
 				console.log(labs);
 
 				labs.forEach(async (lab) => {
-					console.log(await LabsService.post(lab));
+					await LabsService.post(lab)
+						.catch((err) => {
+							console.log('error:' + err.response.data.errors);
+							err.response.data.errors.forEach(function(error) {
+								self.errors.push(error);
+							});
+							console.log(self.errors);
+						});
 				});
 			};
 			if (rABS) {
@@ -166,5 +179,16 @@ label {
 		padding: 0 8px;
 		line-height: 1.5rem;
 	}
+}
+.error {
+			color: red;
+			margin: 1%;
+		}
+
+.errorlist {
+	list-style: none;
+	border-style: solid;
+	border-width: 2px;
+	border-color: red;
 }
 </style>
