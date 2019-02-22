@@ -11,7 +11,7 @@ workdayRouter.route('/')
 		});
 	})
 	.post([
-		body('day').isAfter().withMessage('You cant undo your mistakes!'),
+		body('day').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
 		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
 	], (req, res) => {
 		const errors = validationResult(req);
@@ -50,7 +50,7 @@ workdayRouter.route('/:workday_Id')
 		res.json(req.workday);
 	})
 	.put([
-		body('day').isAfter().withMessage('You cant undo your mistakes!'),
+		body('day').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
 		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
 	],(req, res) => {
 		const errors = validationResult(req);
