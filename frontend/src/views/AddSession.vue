@@ -2,6 +2,8 @@
 	.page.addsession
 		h1(v-if='!startFromId') Voeg een werksessie toe
 		h1(v-else='') Pas een werksessie aan
+		ul(v-if="errors.length !== 0").errorlist
+			li(v-for="error in errors").error {{error.param}}: {{error.msg}}
 		div
 			p {{ message }}
 		fieldset
@@ -45,7 +47,8 @@ export default {
 			workHours: [],
 			message: '',
 			startFromId: false,
-			id: ''
+			id: '',
+			errors: []
 		};
 	},
 	computed: {
@@ -83,6 +86,8 @@ export default {
 			this.selectedLab = e.target.options[e.target.options.selectedIndex].valueOf().value;
 		},
 		submitForm () {
+			let self = this;
+			self.errors = [];
 			let numeric = true;
 			for (let i = 0; i < this.workHours.length; i++) {
 				if (isNaN(this.workHours[i]) || this.workHours[i] === '' || this.workHours[i] < 0 || this.workHours[i] > 8) {
@@ -90,7 +95,11 @@ export default {
 				}
 			}
 			if (this.workHours.length !== this.days.length || !numeric) {
-				this.message = 'Je dient voor elk dag een aantal werkuren tussen 0 en 8 in te vullen.';
+				let error = {};
+				error.param = 'Werkuren';
+				error.msg = 'Je dient voor elke dag een aantal werkuren tussen 0 en 8 in te vullen.';
+				self.errors.push(error);
+				// this.message = 'Je dient voor elk dag een aantal werkuren tussen 0 en 8 in te vullen.';
 			} else {
 				let worksession = {};
 				worksession.startDate = moment(this.beginDate).add(2, 'hours').toDate();
@@ -107,18 +116,32 @@ export default {
 				worksession.workdays = workdays;
 				if (!this.startFromId) {
 					(async () => {
-						await WorksessionService.post(worksession);
+						await WorksessionService.post(worksession)
+							.catch((err) => {
+								console.log('catched error');
+								err.response.data.errors.forEach(function (error) {
+									self.errors.push(error);
+								});
+							});
 					})();
 				} else {
 					worksession._id = this.id;
 					(async () => {
-						await WorksessionService.put(worksession);
+						await WorksessionService.put(worksession)
+							.catch((err) => {
+								console.log('catched error');
+								err.response.data.errors.forEach(function (error) {
+									self.errors.push(error);
+								});
+							});
 					})();
 				}
 				this.beginDate = new Date(2000, 1, 1);
 				this.endDate = new Date(2000, 1, 1);
 				this.showDays();
-				this.message = 'Ontvangen!';
+				if (this.errors.length === 0) {
+					this.message = 'Ontvangen!';
+				}
 			}
 		}
 	},
@@ -197,5 +220,17 @@ export default {
 
 	button:hover {
 		background-color: #003469;
+	}
+
+	.error {
+			color: red;
+			margin: 1%;
+		}
+
+	.errorlist {
+		list-style: none;
+		border-style: solid;
+		border-width: 2px;
+		border-color: red;
 	}
 </style>
