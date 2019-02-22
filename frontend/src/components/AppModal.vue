@@ -53,7 +53,7 @@ export default {
 
 .modal-mask {
 	position: fixed;
-	z-index: 998;
+	z-index: 9998;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -66,7 +66,8 @@ export default {
 		vertical-align: middle;
 
 		.modal-container {
-			width: 480px;
+			width: 98%;
+			max-width: 480px;
 			margin: 0 auto;
 			background: $color-content-bg;
 			border-radius: 4px;
