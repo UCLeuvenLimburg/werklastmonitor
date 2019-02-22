@@ -25,7 +25,7 @@
 					|  (Milestones)
 					br
 					strong Opgelet:
-					| de &quot;labnaam&quot; in het blad Milestones moet overeenkomen met een van de labnamen.
+					|  de &quot;labnaam&quot; in het blad Milestones moet overeenkomen met een van de labnamen.
 			h3 Voorbeeld
 			.table
 				table(v-if='!tab')
