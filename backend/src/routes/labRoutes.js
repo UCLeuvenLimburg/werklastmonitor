@@ -64,10 +64,11 @@ labRouter.route('/')
 		lab.milestones = await getMilestones(req.body.milestones);
 
 		if(!lab.course) {
-			res.status(422).send('The given course doesn\'t exist');
+			res.status(422).json({ errors: ['Ongeldige vak ID']});
+		} else {
+			lab.save();
 		}
 
-		lab.save();
 		res.json(lab);
 	})
 	.delete((req, res) => {
