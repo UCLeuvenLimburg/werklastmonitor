@@ -104,9 +104,10 @@ export default {
 			if (course.select === false) {
 				this.userCourses.push(course._id);
 			} else {
-				for (let i = 0; i < this.userCourses.length - 1; i++) {
+				for (let i = 0; i < this.userCourses.length; i++) {
 					if (this.userCourses[i] === course._id) {
 						this.userCourses.splice(i, 1);
+						break;
 					}
 				}
 			}
