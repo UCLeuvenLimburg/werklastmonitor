@@ -51,6 +51,7 @@ export default {
 			return (tempDate.getFullYear() + '-' + month + '-' + day);
 		},
 		parseSheet (file) {
+			this.errors = [];
 			let reader = new FileReader();
 			let rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
 			reader.onload = (e) => {
