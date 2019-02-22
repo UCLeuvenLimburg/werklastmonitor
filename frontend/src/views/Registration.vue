@@ -170,10 +170,6 @@ export default {
 		}
 }
 
-h1 {
-	display: inline;
-}
-
 .courses {
 	margin-top: 10px;
 	display: grid;
@@ -197,10 +193,18 @@ h1 {
 	// height: 100%;
 }
 
+@media only screen and (min-width: 600px) {
+	#savebutton {
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	h1 {
+		display: inline;
+	}
+}
+
 #savebutton {
-	position: absolute;
-	top: 0;
-	right: 0;
 	color: $color-content-bg;
 	background: $color-accent;
 	display: inline-flex;
