@@ -442,6 +442,7 @@ export default {
 
 	button {
 		position: absolute;
+		top: 0;
 		right: 0;
 		color: $color-content-bg;
 		background: $color-accent;
