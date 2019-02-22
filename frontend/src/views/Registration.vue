@@ -133,12 +133,6 @@ export default {
 		}).then(res => console.log(res))
 			.catch(e => console.log(e));
 	},
-	watch: {
-		$route (to, from) {
-			console.log(to);
-			console.log(from);
-		}
-	},
 	computed: {
 		username () {
 			return this.$store.state.username;
