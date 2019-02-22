@@ -11,6 +11,71 @@
 		label(for="template" v-on:click="download")
 			mdi-download-icon
 			p Download template
+		.instructions
+			h2 Instructies
+			ol
+				li Download de lege template
+				li Vul de gewenste labs in
+				table
+					tr
+						th naam
+						th startdatum
+						th einddatum
+						th aantal werkuren
+						th vaknummer
+					tr
+						td 3D raytracer
+						td 4-3-2019
+						td 3-6-2019
+						td 15
+						td B-UCLL-MBI59A
+					tr
+						td VGO
+						td 24-11-2019
+						td 26-11-2019
+						td 10
+						td B-UCLL-MBI59A
+
+				li Vul de gewenste milestones in (opgelet! De "labnaam" in het milestones blad moet overeenkomen met een van de labnamen.)
+
+				table
+					tr
+						th naam
+						th werkuren
+						th labnaam
+					tr
+						td extensie 1
+						td 2
+						td 3D raytracer
+					tr
+						td extensie 2
+						td 4
+						td 3D raytracer
+					tr
+						td extensie 3
+						td 4
+						td 3D raytracer
+					tr
+						td extensie 4
+						td 6
+						td 3D raytracer
+					tr
+						td feature 1
+						td 8
+						td VGO
+					tr
+						td feature 2
+						td 5
+						td VGO
+					tr
+						td feature 3
+						td 6
+						td VGO
+					tr
+						td feature 4
+						td 6
+						td VGO
+
 </template>
 
 <script>
@@ -198,5 +263,40 @@ label {
 	border-style: solid;
 	border-width: 2px;
 	border-color: red;
+}
+
+.instructions {
+	margin-top: 20px;
+	img {
+		width: 90%;
+		margin: 10px;
+		align-content: center;
+	}
+	ol {
+		margin-left: 2%;
+		font-size: 15;
+		li {
+			padding: 5px;
+			font-weight: bold;
+		}
+	}
+
+	table {
+		border-collapse: collapse;
+		width: 80%;
+		margin-left: 5%;
+		margin-top: 2%;
+	}
+
+	td, th {
+		text-align: left;
+		padding: 10px;
+	}
+
+	th {
+		background-color: $color-accent;
+		color: $color-content-bg;
+	}
+
 }
 </style>
