@@ -136,69 +136,77 @@ export default {
 
 				let labs = [];
 
-				if (labsJSON.length === 0) {
-					let error = {};
-					error.param = 'Bestand';
-					error.msg = 'mag niet leeg zijn';
-					self.errors.push(error);
-				}
+				if(labsJSON[1].length) {
+						for (let i = 1; i < labsJSON.length; ++i) {
+							let labJSONTemplate = {
+								name: '',
+								startDate: '',
+								endDate: '',
+								hourEstimate: '',
+								course: '',
+								milestones: []
+							};
 
-				for (let i = 1; i < labsJSON.length; ++i) {
-					let labJSONTemplate = {
-						name: '',
-						startDate: '',
-						endDate: '',
-						hourEstimate: '',
-						course: '',
-						milestones: []
-					};
+							labJSONTemplate.name = labsJSON[i][0];
+							labJSONTemplate.startDate = labsJSON[i][1];
+							labJSONTemplate.endDate = labsJSON[i][2];
+							labJSONTemplate.hourEstimate = labsJSON[i][3];
+							labJSONTemplate.course = labsJSON[i][4];
 
-					labJSONTemplate.name = labsJSON[i][0];
-					labJSONTemplate.startDate = labsJSON[i][1];
-					labJSONTemplate.endDate = labsJSON[i][2];
-					labJSONTemplate.hourEstimate = labsJSON[i][3];
-					labJSONTemplate.course = labsJSON[i][4];
+							labs.push(labJSONTemplate);
+						}
 
-					labs.push(labJSONTemplate);
-				}
+						for (let i = 1; i < milestoneJSON.length; ++i) {
+							let milestoneJSONTemplate = {
+								name: '',
+								duration: ''
+							};
 
-				for (let i = 1; i < milestoneJSON.length; ++i) {
-					let milestoneJSONTemplate = {
-						name: '',
-						duration: ''
-					};
+							milestoneJSONTemplate.name = milestoneJSON[i][0];
+							milestoneJSONTemplate.duration = milestoneJSON[i][1];
 
-					milestoneJSONTemplate.name = milestoneJSON[i][0];
-					milestoneJSONTemplate.duration = milestoneJSON[i][1];
+							labs.forEach(lab => {
+								if (lab.name === milestoneJSON[i][2]) {
+									lab.milestones.push(milestoneJSONTemplate);
+								}
+							});
+						}
 
-					labs.forEach(lab => {
-						if (lab.name === milestoneJSON[i][2]) {
-							lab.milestones.push(milestoneJSONTemplate);
+						labs.forEach(lab => {
+							if (lab.startDate && lab.endDate) {
+								lab.startDate.setHours(lab.startDate.getHours() + 1);
+								lab.endDate.setHours(lab.endDate.getHours() + 1);
+								lab.startDate = this.formatDate(lab.startDate);
+								lab.endDate = this.formatDate(lab.endDate);
 						}
 					});
-				}
 
-				labs.forEach(lab => {
-					if (lab.startDate && lab.endDate) {
-						lab.startDate.setHours(lab.startDate.getHours() + 1);
-						lab.endDate.setHours(lab.endDate.getHours() + 1);
-						lab.startDate = this.formatDate(lab.startDate);
-						lab.endDate = this.formatDate(lab.endDate);
-					}
-				});
+					labs.forEach(lab => {
+						if (lab.startDate && lab.endDate) {
+							lab.startDate.setHours(lab.startDate.getHours() + 1);
+							lab.endDate.setHours(lab.endDate.getHours() + 1);
+							lab.startDate = this.formatDate(lab.startDate);
+							lab.endDate = this.formatDate(lab.endDate);
+						}
+					});
 
-				console.log(labs);
+					console.log(labs);
 
-				labs.forEach(async (lab) => {
-					await LabsService.post(lab)
-						.catch((err) => {
-							console.log('error:' + err.response.data.errors);
-							err.response.data.errors.forEach(function (error) {
-								self.errors.push(error);
+					labs.forEach(async (lab) => {
+						await LabsService.post(lab)
+							.catch((err) => {
+								console.log('error:' + err.response.data.errors);
+								err.response.data.errors.forEach(function (error) {
+									self.errors.push(error);
+								});
 							});
-							console.log(self.errors);
-						});
-				});
+					});
+				} else {
+					self.errors.push({
+						msg: 'mag niet leeg zijn',
+						param: 'bestand'
+					});
+				}
 			};
 			if (rABS) {
 				reader.readAsBinaryString(file);
