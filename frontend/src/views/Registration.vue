@@ -1,7 +1,9 @@
 <template lang="pug">
 	.page.login
 		h1 Selecteer de vakken die je opneemt
-		input(type='submit' value='Opslaan' v-on:click='save')#savebutton
+		button#savebutton(@click="save")
+			mdi-content-save-icon
+			p Opslaan
 		div.courses
 			section.year#left(v-if='semester1.length !== 0 && semester2.length !== 0')
 				h2 Eerste jaar
@@ -37,6 +39,8 @@
 </template>
 
 <script>
+import 'mdi-vue/ContentSaveIcon';
+
 import userservice from '../api/UsersService.js';
 import courseservice from '../api/CoursesService.js';
 
@@ -145,6 +149,11 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/css/definitions';
+
+.page.login {
+	position: relative;
+}
+
 .sem{
 		color: $color-fg;
 		font-size: large;
@@ -189,17 +198,33 @@ h1 {
 }
 
 #savebutton {
-	float: right;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	position: absolute;
+	top: 0;
+	right: 0;
 	color: $color-content-bg;
 	background: $color-accent;
+	display: inline-flex;
+	flex-direction: row;
+	padding: 8px;
+	cursor: pointer;
+	transition: .2s ease;
+	border: 0;
 
 	&:hover{
 		background: $color-fg;
-		cursor: pointer;
+	}
+
+	svg {
+		fill: $color-content-bg;
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
+	p {
+		padding: 0 8px;
+		font: 1rem $font;
+		line-height: 1.5rem;
+		font-weight: bold;
 	}
 }
 

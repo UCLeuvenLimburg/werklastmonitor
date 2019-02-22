@@ -442,6 +442,7 @@ export default {
 		button {
 			position: absolute;
 			right: 0;
+			top: 0;
 		}
 		h1 {
 			display: inline;
@@ -449,7 +450,6 @@ export default {
 	}
 
 	button {
-		margin-top: 4px;
 		color: $color-content-bg;
 		background: $color-accent;
 		display: inline-flex;
