@@ -56,13 +56,13 @@ export default {
 	methods: {
 		handleBeginChange (e) {
 			let selection = e.target.valueOf().value;
-			this.beginDate = moment(selection).toDate();
+			this.beginDate = moment(selection).add(2, 'hours').toDate();
 			this.showDays();
 			this.beginDateFormatted = moment(this.beginDate).format('YYYY-MM-DD');
 		},
 		handleEndChange (e) {
 			let selection = e.target.valueOf().value;
-			this.endDate = moment(selection).toDate();
+			this.endDate = moment(selection).add(2, 'hours').toDate();
 			this.showDays();
 			this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
 		},
@@ -137,6 +137,7 @@ export default {
 					this.labs.push(lab);
 				}
 			});
+			this.selectedLab = this.labs[0];
 			let uri = window.location.search.substring(1);
 			let params = new URLSearchParams(uri);
 			this.id = params.get('id');
