@@ -72,11 +72,11 @@ userRouter.route('/:user_id')
 		if(!errors.isEmpty()) {
 			return res.status('422').json({ errors: errors.array() });
 		}
-		let courses = req.body.courses;
+		req.user.courses = req.body.courses;
 		req.user.milestones = req.body.milestones;
-		if(courses.length > 0) {
-			if(courses[0].constructor === String) {
-				req.user.courses = await Course.find( { _id: { $in: courses} } );
+		if(req.user.courses.length > 0) {
+			if(req.user.courses[0].constructor === String) {
+				req.user.courses = await Course.find( { _id: { $in: req.body.courses} } );
 			} else {
 				req.user.courses = await Course.insertMany(req.body.courses);
 			}
