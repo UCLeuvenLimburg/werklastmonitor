@@ -63,6 +63,10 @@ labRouter.route('/')
 		}
 		lab.milestones = await getMilestones(req.body.milestones);
 
+		if(!lab.course) {
+			res.status(422).send('The given course doesn\'t exist');
+		}
+
 		lab.save();
 		res.json(lab);
 	})

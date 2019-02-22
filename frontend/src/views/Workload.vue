@@ -14,9 +14,11 @@
 			:names="filteredCourses.names",
 			:values="filteredCourses.hours",
 			:colors="colors",
-			:key="graph")
-			legends(:names="filteredCourses.names", :filter="true")
+			:key="graph",
+			id="graph",
+			:paddingBottom="padding")
 			tooltip(:names="filteredCourses.names", position="right")
+			legends(:names="filteredCourses.names", :filter="true")
 		.toggler(v-if='isStudent')
 			label.switch(@change="toggleChange")
 				input(type='checkbox')
@@ -49,7 +51,8 @@ export default {
 				[ 30, 30, 30, 30 ]
 			],
 			userCourses: [],
-			calculatedCourses: []
+			calculatedCourses: [],
+			padding: 70
 		};
 	},
 	methods: {
@@ -373,10 +376,6 @@ export default {
 
 .page {
 	position: relative;
-	h1 {
-		display: inline;
-	}
-
 	.switch {
 		position: relative;
 		display: inline-block;
@@ -390,7 +389,6 @@ export default {
 		height: 0;
 	}
 
-	/* The slider */
 	.slider {
 		position: absolute;
 		cursor: pointer;
@@ -440,10 +438,18 @@ export default {
 		margin-left: 1em;
 	}
 
+	@media only screen and (min-width: 600px) {
+		button {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+		h1 {
+			display: inline;
+		}
+	}
+
 	button {
-		position: absolute;
-		right: 0;
-		margin-top: 4px;
 		color: $color-content-bg;
 		background: $color-accent;
 		display: inline-flex;
