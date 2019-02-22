@@ -193,7 +193,8 @@ export default {
 							this.userMilestones = user.milestones;
 							this.isChecked(m);
 						});
-				});		},
+				});
+			},
 		getPercentage (lab) {
 			let estimatedHours = lab.hourEstimate;
 			let workedHours = this.getWorkedHours(lab);
