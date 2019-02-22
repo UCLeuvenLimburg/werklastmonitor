@@ -194,7 +194,7 @@ export default {
 							this.isChecked(m);
 						});
 				});
-			},
+		},
 		getPercentage (lab) {
 			let estimatedHours = lab.hourEstimate;
 			let workedHours = this.getWorkedHours(lab);

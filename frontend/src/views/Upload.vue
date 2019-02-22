@@ -8,15 +8,27 @@
 		label(for="file")
 			mdi-upload-icon
 			p Kies een bestand...
-		label(for="template" v-on:click="download")
+		label(v-on:click="download")
 			mdi-download-icon
-			p Download template
+			p Download sjabloon
 		.instructions
 			h2 Instructies
 			ol
-				li Download de lege template
-				li Vul de gewenste labs in
-				table
+				li Download het lege sjabloon
+				li
+					| Vul de gewenste labs of opdrachten in op het
+					strong  eerste blad
+					|  (Lab)
+				li
+					| Vul de gewenste milestones in op het
+					strong  tweede blad
+					|  (Milestones)
+					br
+					strong Opgelet:
+					| de &quot;labnaam&quot; in het blad Milestones moet overeenkomen met een van de labnamen.
+			h3 Voorbeeld
+			.table
+				table(v-if='!tab')
 					tr
 						th naam
 						th startdatum
@@ -27,18 +39,22 @@
 						td 3D raytracer
 						td 4-3-2019
 						td 3-6-2019
-						td 15
+						td 6
 						td B-UCLL-MBI59A
 					tr
 						td VGO
 						td 24-11-2019
 						td 26-11-2019
-						td 10
+						td 8
 						td B-UCLL-MBI59A
+					tr
+						td &nbsp;
+						td
+						td
+						td
+						td
 
-				li Vul de gewenste milestones in (opgelet! De "labnaam" in het milestones blad moet overeenkomen met een van de labnamen.)
-
-				table
+				table(v-if='tab')
 					tr
 						th naam
 						th werkuren
@@ -52,29 +68,13 @@
 						td 4
 						td 3D raytracer
 					tr
-						td extensie 3
-						td 4
-						td 3D raytracer
-					tr
-						td extensie 4
-						td 6
-						td 3D raytracer
-					tr
-						td feature 1
+						td feature
 						td 8
 						td VGO
-					tr
-						td feature 2
-						td 5
-						td VGO
-					tr
-						td feature 3
-						td 6
-						td VGO
-					tr
-						td feature 4
-						td 6
-						td VGO
+
+				ul.table
+					li.table(v-on:click="setTab(false)") Lab
+					li.table(v-on:click="setTab(true)") Milestones
 
 </template>
 
@@ -92,7 +92,8 @@ export default {
 	data () {
 		return {
 			image: '',
-			errors: []
+			errors: [],
+			tab: false
 		};
 	},
 	methods: {
@@ -101,6 +102,9 @@ export default {
 				.then((response) => {
 					FileDownload(response.data, 'Template.xlsx');
 				});
+		},
+		setTab (b) {
+			this.tab = b;
 		},
 		onFileChange (e) {
 			let files = e.target.files || e.dataTransfer.files;
@@ -136,48 +140,48 @@ export default {
 
 				let labs = [];
 
-				if(labsJSON[1].length) {
-						for (let i = 1; i < labsJSON.length; ++i) {
-							let labJSONTemplate = {
-								name: '',
-								startDate: '',
-								endDate: '',
-								hourEstimate: '',
-								course: '',
-								milestones: []
-							};
+				if (labsJSON[1].length) {
+					for (let i = 1; i < labsJSON.length; ++i) {
+						let labJSONTemplate = {
+							name: '',
+							startDate: '',
+							endDate: '',
+							hourEstimate: '',
+							course: '',
+							milestones: []
+						};
 
-							labJSONTemplate.name = labsJSON[i][0];
-							labJSONTemplate.startDate = labsJSON[i][1];
-							labJSONTemplate.endDate = labsJSON[i][2];
-							labJSONTemplate.hourEstimate = labsJSON[i][3];
-							labJSONTemplate.course = labsJSON[i][4];
+						labJSONTemplate.name = labsJSON[i][0];
+						labJSONTemplate.startDate = labsJSON[i][1];
+						labJSONTemplate.endDate = labsJSON[i][2];
+						labJSONTemplate.hourEstimate = labsJSON[i][3];
+						labJSONTemplate.course = labsJSON[i][4];
 
-							labs.push(labJSONTemplate);
-						}
+						labs.push(labJSONTemplate);
+					}
 
-						for (let i = 1; i < milestoneJSON.length; ++i) {
-							let milestoneJSONTemplate = {
-								name: '',
-								duration: ''
-							};
+					for (let i = 1; i < milestoneJSON.length; ++i) {
+						let milestoneJSONTemplate = {
+							name: '',
+							duration: ''
+						};
 
-							milestoneJSONTemplate.name = milestoneJSON[i][0];
-							milestoneJSONTemplate.duration = milestoneJSON[i][1];
-
-							labs.forEach(lab => {
-								if (lab.name === milestoneJSON[i][2]) {
-									lab.milestones.push(milestoneJSONTemplate);
-								}
-							});
-						}
+						milestoneJSONTemplate.name = milestoneJSON[i][0];
+						milestoneJSONTemplate.duration = milestoneJSON[i][1];
 
 						labs.forEach(lab => {
-							if (lab.startDate && lab.endDate) {
-								lab.startDate.setHours(lab.startDate.getHours() + 1);
-								lab.endDate.setHours(lab.endDate.getHours() + 1);
-								lab.startDate = this.formatDate(lab.startDate);
-								lab.endDate = this.formatDate(lab.endDate);
+							if (lab.name === milestoneJSON[i][2]) {
+								lab.milestones.push(milestoneJSONTemplate);
+							}
+						});
+					}
+
+					labs.forEach(lab => {
+						if (lab.startDate && lab.endDate) {
+							lab.startDate.setHours(lab.startDate.getHours() + 1);
+							lab.endDate.setHours(lab.endDate.getHours() + 1);
+							lab.startDate = this.formatDate(lab.startDate);
+							lab.endDate = this.formatDate(lab.endDate);
 						}
 					});
 
@@ -273,6 +277,54 @@ label {
 	border-color: red;
 }
 
+table, th, td {
+	border: 1px solid black;
+}
+
+div.table{
+	display: flex;
+	flex-direction: column;
+}
+
+ul.table{
+	width: 80%;
+	margin-left: 5%;
+	padding-top: 5px;
+	padding-bottom: 2px;
+	background-color: $color-fg;
+}
+
+li.table {
+	display: inline;
+	border: solid;
+	border-width: 1px 1px 0 1px;
+	padding: 5px;
+	color:white;
+	background-color: $color-accent;
+	cursor: pointer;
+}
+
+li.table:hover{
+	background: white;
+	color: $color-fg;
+}
+
+ul.table::after{
+	margin-left: 1em;
+	content: "Wissel tussen bladen";
+	color: white;
+}
+
+@media only screen and (max-width: 600px) {
+
+	div.table {
+		overflow-x: auto;
+	}
+	ul.table::after{
+		content: "";
+	}
+}
+
 .instructions {
 	margin-top: 20px;
 	img {
@@ -281,12 +333,11 @@ label {
 		align-content: center;
 	}
 	ol {
-		margin-left: 2%;
-		font-size: 15;
+		margin-left: 5%;
 		li {
 			padding: 5px;
-			font-weight: bold;
 		}
+		margin-bottom: 1em;
 	}
 
 	table {
