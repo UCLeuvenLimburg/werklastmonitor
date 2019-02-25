@@ -27,7 +27,7 @@ export default {
 	data () {
 		return {
 			username: null,
-			password: null,
+			// password: null,
 			error: null
 		};
 	},
@@ -36,12 +36,12 @@ export default {
 			try {
 				// let response = await AuthenticationService.post(this.username, this.password);
 				// localStorage.setItem('jwtToken', response.data.token);
-				let response = await AuthenticationService.post(this.username);
+				await AuthenticationService.post(this.username);
 				this.$store.dispatch('setUsername', this.username);
 				this.$router.push('/');
 			} catch (err) {
 				this.error = 'De gegevens die je hebt ingegeven zijn onjuist, of er is iets fout gegaan.';
-				this.password = null;
+				// this.password = null;
 			}
 		}
 	}
