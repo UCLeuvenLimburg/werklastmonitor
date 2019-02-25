@@ -73,3 +73,208 @@
 	"semester" : 2,
 	"courseCode": "B-UCLL-MBI13A"
 },
+{
+	"name": "Statistiek",
+	"semester": 3,
+	"courseCode" : "B-UCLL-MBI37X"
+},
+{
+	"name" : "Testing",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI88X"
+},
+{
+	"name" : "OO Ontwerpen",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI51X"
+},
+{
+	"name" : "Internetprogrammeren minor",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI39X"
+},
+{
+	"name" : "Internetprogrammeren major",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI29X"
+},
+{
+	"name" : "Programeren van visuele gebruikersomgevingen",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI50X"
+},
+{
+	"name" : "Webontwikkeling 3",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI87X"
+},
+{
+	"name" : "Webontwikkeling 4",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI64A"
+},
+{
+	"name" : "Besturingssystemen 2",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI68X"
+},
+{
+	"name" : "Routing and switching essentials",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI78X"
+},
+{
+	"name" : "Databanken 1",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI33X"
+},
+{
+	"name" : "Databanken 2",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI34X"
+},
+{
+	"name" : "Communicatie",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI09A"
+},
+{
+	"name" : "IT en management",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI55A"
+},
+{
+	"name" : "Object oriented system analysis",
+	"semester": 3,
+	"courseCode": "B-UCLL-MBI81X"
+},
+{
+	"name" : "Business analytics minor",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI59X"
+},
+{
+	"name" : "Business analytics major",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI36X"
+},
+{
+	"name" : "Enterprise architecture",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI15A"
+},
+{
+	"name" : "Programmeren voor multimedia",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI66A"
+},
+{
+	"name" : "Operationele analyse",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI58A"
+},
+{
+	"name" : "Scaling networks",
+	"semester": 4,
+	"courseCode": "B-UCLL-MBI77X"
+},
+{
+	"name" : "Mobiele toepassingen",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI20X"
+},
+{
+	"name" : "Systeembeheer minor",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI58X"
+},
+{
+	"name" : "Systeembeheer major",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI69X"
+},
+{
+	"name" : "Beveiliging",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI12A"
+},
+{
+	"name" : "Français pour le boulot en projectcoaching",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI95B"
+},
+{
+	"name" : "It en recht",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI33A"
+},
+{
+	"name" : "Beroepspraktijk en ethiek",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI16A"
+},
+{
+	"name" : "Service Oriented Architecture",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI44A"
+},
+{
+	"name" : "Enterprise Content Management",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI49A"
+},
+{
+	"name" : "Distributed applications",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI63A"
+},
+{
+	"name" : "3D Computer Graphics",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI62A"
+},
+{
+	"name" : "Connecting networks",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI57X"
+},
+{
+	"name" : "Basisbeginselen .NET Programmeren",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI34A"
+},
+{
+	"name" : ".NET Programmeren",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI80X"
+},
+{
+	"name" : "ICT-helpdesk",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI35X"
+},
+{
+	"name" : "ICT-helpdesk",
+	"semester": 6,
+	"courseCode": "B-UCLL-MBI35R"
+},
+{
+	"name" : "ITech O&D",
+	"semester": 5,
+	"courseCode": "B-UCLL-MBI45A"
+},
+{
+	"name" : "ITech O&D",
+	"semester": 6,
+	"courseCode": "B-UCLL-MBI45R"
+},
+{
+	"name" : "International Project",
+	"semester": 5,
+	"courseCode": "B-UCLL-MEX13T"
+},
+{
+	"name" : "International Project",
+	"semester": 6,
+	"courseCode": "B-UCLL-MEX14T"
+},
