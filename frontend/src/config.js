@@ -1,5 +1,5 @@
 export default {
 	backend: {
-		baseURL: 'http:/localhost:3001/'
+		baseURL: 'https://mario-aquino.sb.uclllabs.be/api'
 	}
 };
