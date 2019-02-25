@@ -1,5 +1,5 @@
-module.exports = {
+export default {
 	backend: {
-		baseURL: 'http://193.191.177.167/api'
+		baseURL: 'https://mario-aquino.sb.uclllabs.be/api'
 	}
 };
