@@ -11,14 +11,15 @@
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 
-import AuthenticationService from '@/api/AuthenticationService';
+// import AuthenticationService from '@/api/AuthenticationService';
 
 export default {
 	name: 'App',
 	components: {
 		AppHeader,
 		AppFooter
-	},
+	} // ,
+	/*
 	created () {
 		AuthenticationService.get()
 			.then((res) => {
@@ -29,6 +30,7 @@ export default {
 				this.$store.dispatch('clearUsername');
 			});
 	}
+	*/
 };
 </script>
 
