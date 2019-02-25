@@ -66,14 +66,26 @@ passport.deserializeUser((username, done) => {
 
 authRouter.route('/')
 	.post([
-		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
-		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
-	], (req, res, next) => {
+		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn') // ,
+		// check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
+	], async (req, res) => { // , next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
+		User.findById(req.body.username, (err, user) => {
+			if (!user) {
+				user = new User();
+				user._id = req.body.username;
+				user.courses = [];
+				user.milestones = [];
+				user.save();
+			}
+			return res.json(user);
+		});
+
+		/*
 		return passport.authenticate('local', (err, passportUser) => {
 			if (err) {
 				return next(err);
@@ -86,6 +98,7 @@ authRouter.route('/')
 			}
 			return res.status(400).info;
 		})(req, res, next);
+		*/
 	})
 	.get(auth.required, async (req, res) => {
 		let user = await User.findById(req.user._id);

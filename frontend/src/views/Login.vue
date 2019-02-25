@@ -11,7 +11,7 @@
 				label(for="username") R-nummer:
 				input(type="text", name="username", id="username", v-model="username", placeholder="R-nummer")
 
-			p
+			// p
 				label(for="password") Wachtwoord:
 				input(type="password", name="password", id="password", v-model="password", placeholder="Wachtwoord")
 
@@ -34,8 +34,9 @@ export default {
 	methods: {
 		async onSubmit () {
 			try {
-				let response = await AuthenticationService.post(this.username, this.password);
-				localStorage.setItem('jwtToken', response.data.token);
+				// let response = await AuthenticationService.post(this.username, this.password);
+				// localStorage.setItem('jwtToken', response.data.token);
+				let response = await AuthenticationService.post(this.username);
 				this.$store.dispatch('setUsername', this.username);
 				this.$router.push('/');
 			} catch (err) {
