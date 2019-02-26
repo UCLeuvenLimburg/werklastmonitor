@@ -55,12 +55,20 @@ export default {
 			UserService.get(this.username)
 				.then((result) => {
 					let user = result.data;
-					user.milestones.push(m._id);
+					let index = user.milestones.indexOf(m._id);
+					if (index === -1) {
+						user.milestones.push(m._id);
+					} else {
+						user.milestones.splice(index, 1);
+					}
 					UserService.put(user._id, user)
 						.then((res) => {
 							this.userMilestones = user.milestones;
 							this.isChecked(m);
 						});
+				})
+				.catch((err) => {
+					console.log(err);
 				});
 		},
 		getPercentage (lab) {
