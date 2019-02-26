@@ -25,7 +25,7 @@ const getValidationChecks = () => {
 		check('hourEstimate').isFloat().withMessage('Gelieve een inschatting van de werkuren in te geven, dit moet een positief getal zijn.'),
 		check('course').trim().not().isEmpty().withMessage('Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.'),
 		check('milestones.*.name').trim().not().isEmpty().withMessage('De naam van de milestone mag niet leeg zijn.'),
-		check('milestones.*.duration').isInt({ min: 0 }).withMessage('Gelieve een inschatting van de werkuren in te geven voor deze milestone.')
+		check('milestones.*.duration').isFloat({ min: 0 }).withMessage('Gelieve een inschatting van de werkuren in te geven voor deze milestone.')
 	];
 };
 

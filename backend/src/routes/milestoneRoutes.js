@@ -7,7 +7,7 @@ let milestoneRouter = express.Router();
 const getValidationChecks = () => {
 	return [
 		check('name').trim().not().isEmpty().withMessage('Milestone name cannot be empty'),
-		check('duration').isInt({ min: 0 }).withMessage('Milestone duration must be an integer')
+		check('duration').isFloat({ min: 0 }).withMessage('Milestone duration must be an integer')
 	];
 };
 
