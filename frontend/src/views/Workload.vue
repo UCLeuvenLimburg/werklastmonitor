@@ -108,6 +108,7 @@ export default {
 				tags: []
 			};
 			let time = moment(start);
+			end.endOf('day');
 
 			switch (type) {
 			case 0:
