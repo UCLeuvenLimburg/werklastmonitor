@@ -3,11 +3,9 @@ import config from '../config';
 
 export default () => {
 	return axios.create({
-		baseURL: config.backend.baseURL
-		/* ,
+		baseURL: config.backend.baseURL,
 		headers: {
 			'Authorization': `Token ${localStorage.getItem('jwtToken')}`
 		}
-		*/
 	});
 };

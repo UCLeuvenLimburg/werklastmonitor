@@ -34,9 +34,8 @@ export default {
 	methods: {
 		async onSubmit () {
 			try {
-				// let response = await AuthenticationService.post(this.username, this.password);
-				// localStorage.setItem('jwtToken', response.data.token);
-				await AuthenticationService.post(this.username);
+				let response = await AuthenticationService.post(this.username);
+				localStorage.setItem('jwtToken', response.data.token);
 				this.$store.dispatch('setUsername', this.username);
 				this.$router.push('/');
 			} catch (err) {
