@@ -5,15 +5,15 @@ export default {
 		return api().post('/workdays', workday);
 	},
 	put (workday) {
-		return api().put('/workdays/' + workday._id, workday);
+		return api().put(`/workdays/${workday._id}`, workday);
 	},
 	delete (workday) {
-		return api().delete('/workdays/' + workday._id);
+		return api().delete(`/workdays/${workday._id}`);
 	},
 	get () {
 		return api().get('/workdays');
 	},
 	getId (id) {
-		return api().get('/workdays/' + id);
+		return api().get(`/workdays/${id}`);
 	}
 };

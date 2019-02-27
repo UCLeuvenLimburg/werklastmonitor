@@ -12,7 +12,7 @@ export default {
 		return api().post('/users', user);
 	},
 	put (id, user) {
-		return api().put('/users/' + id, user);
+		return api().put(`/users/${id}`, user);
 	},
 	delete (user) {
 		return api().delete(`/users/${user._id}`);
