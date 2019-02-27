@@ -5,7 +5,7 @@ const LocalStrategy = require('passport-local');
 const User = require('../models/userModel');
 
 const express = require('express');
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let authRouter = express.Router();
 
@@ -58,8 +58,8 @@ authRouter.route('/')
 		});
 	})
 	.post([
-		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
-		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
+		check('username').trim().not().isEmpty().withMessage('Username cannot be empty'),
+		check('password').trim().not().isEmpty().withMessage('Password cannot be empty')
 	], async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {

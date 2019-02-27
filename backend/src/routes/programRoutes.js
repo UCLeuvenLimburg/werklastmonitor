@@ -1,7 +1,7 @@
 const express = require('express');
 const Program = require('../models/programModel');
 const Course = require('../models/courseModel')
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let programRouter = express.Router();
 /*
@@ -21,7 +21,7 @@ const getValidationChecks = () => {
 programRouter.route('/')
 	.get((req, res) => {
 		Program.find(async (err, programs) => {
-			if(err) {
+			if (err) {
 				res.status(500).send(err);
 			} else {
 				for (let i = 0; i < programs.length; ++i) {
@@ -44,7 +44,7 @@ programRouter.route('/')
 
 programRouter.use('/:programId', (req, res, next) => {
 	Program.findById(req.params.programId, (err, program) => {
-		if(err) {
+		if (err) {
 			res.status(500).send(err);
 		} else {
 			req.program = program;
@@ -60,7 +60,7 @@ programRouter.route('/:programId')
 	})
 	.delete((req, res) => {
 		req.program.remove((err) => {
-			if(err) {
+			if (err) {
 				res.status(500).send(err);
 			} else {
 				res.status(204).send('removed');
@@ -69,8 +69,7 @@ programRouter.route('/:programId')
 	})
 	.put(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 

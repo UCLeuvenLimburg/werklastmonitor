@@ -12,7 +12,7 @@ workdayRouter.route('/')
 		});
 	})
 	.post([
-		body('day').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
+		body('day').isISO8601().custom((value) => moment(value) >= moment().subtract(1, 'years')).withMessage('Please enter a valid date'),
 		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
 	], (req, res) => {
 		const errors = validationResult(req);
@@ -51,25 +51,27 @@ workdayRouter.route('/:workday_Id')
 		res.json(req.workday);
 	})
 	.put([
-		body('day').isISO8601().custom((value) => moment(value) >= moment().add(-1, 'years')).withMessage('Please enter a valid date'),
-		body('workhours').isFloat({min: 0, max: 24}).withMessage('Invalid ammount of hours')
-	],(req, res) => {
+		body('day').isISO8601().custom((value) => moment(value) >= moment().subtract(1, 'years')).withMessage('Please enter a valid date'),
+		body('workhours').isFloat({ min: 0, max: 24 }).withMessage('Invalid ammount of hours')
+	], (req, res) => {
 		const errors = validationResult(req);
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status('422').json({ errors: errors.array() });
 		}
+
 		req.workday.day = req.body.day;
 		req.workday.workhours = req.body.workhours;
 		req.workday.save();
 		res.json(req.workday);
 	})
 	.delete((req, res) => {
-		req.worksession.remove(err => {
-			if(err) res.status('500').send(err)
-			else {
+		req.worksession.remove((err) => {
+			if (err) {
+				res.status('500').send(err)
+			} else {
 				res.status('204').send('removed')
 			}
-		})
-	})
+		});
+	});
 
 module.exports = workdayRouter;

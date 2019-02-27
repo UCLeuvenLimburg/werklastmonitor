@@ -8,22 +8,19 @@ const userRouter = express.Router();
 userRouter.route('/')
 	.get((req, res) => {
 		User.find({}, (err, users) => {
-			if(err) {
+			if (err) {
 				res.status('500').send(err);
-			}
-			else {
+			} else {
 				res.status('200').send(users);
 			}
 		})
 	})
-
-	.post( [
+	.post([
 		body('_id').trim().not().isEmpty().withMessage('No valid studentnumber defined'),
 		body('_id').matches('^(r|u)[0-9]+').withMessage('No valid regex'),
-	], async (req,res) => {
+	], async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status('422').json({ errors: errors.array() });
 		}
 		let user = new User();
@@ -31,8 +28,8 @@ userRouter.route('/')
 		user.milestones = req.body.milestones;
 
 		let courses = req.body.courses;
-		if(courses.length > 0) {
-			if(courses[0].constructor === String) {
+		if (courses.length > 0) {
+			if (courses[0].constructor === String) {
 				user.courses = await Course.find({ _id: { $in: courses }})
 			} else {
 				user.courses = await Course.insertMany(req.body.courses);
@@ -43,7 +40,7 @@ userRouter.route('/')
 	})
 	.delete((req, res) => {
 		User.deleteMany((err) => {
-			if(err) {
+			if (err) {
 				res.status('500').send(err);
 			} else {
 				res.status('204').send('removed all');
@@ -53,15 +50,14 @@ userRouter.route('/')
 
 userRouter.use('/:user_id', (req, res, next) => {
 	User.findById(req.params.user_id, (err, user) => {
-		if(err) {
+		if (err) {
 			res.status('500').send(err);
-		}
-		else {
+		} else {
 			req.user = user;
 			next();
 		}
 	});
-})
+});
 
 userRouter.route('/:user_id')
 	.get((req, res) => {
@@ -69,13 +65,14 @@ userRouter.route('/:user_id')
 	})
 	.put([], async (req, res) => {
 		const errors = validationResult(req);
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status('422').json({ errors: errors.array() });
 		}
+
 		let courses = req.body.courses;
 		req.user.milestones = req.body.milestones;
-		if(courses.length > 0) {
-			if(courses[0].constructor === String) {
+		if (courses.length > 0) {
+			if (courses[0].constructor === String) {
 				req.user.courses = await Course.find( { _id: { $in: courses} } );
 			} else {
 				req.user.courses = await Course.insertMany(courses);
@@ -87,9 +84,10 @@ userRouter.route('/:user_id')
 		res.json(req.user);
 	})
 	.delete((req, res) => {
-		req.user.remove(err => {
-			if (err) res.status('500').send(err)
-			else {
+		req.user.remove((err) => {
+			if (err) {
+				res.status('500').send(err)
+			} else {
 				res.status('204').send('removed');
 			}
 		});
