@@ -19,7 +19,7 @@
 			li(v-if='isStudent')
 				router-link(to="/registration") Inschrijvingen
 			li.right(v-if='!isIngelogd')
-				router-link.highlight(to="/login") Aanmelden
+				a.highlight(v-on:click="auth") Aanmelden
 			li.right(v-if='isIngelogd')
 				a.highlight(href="#", @click.prevent="logout") Afmelden
 
@@ -28,6 +28,7 @@
 
 <script>
 import 'mdi-vue/MenuIcon';
+import autservice from '@/api/AutService';
 
 export default {
 	name: 'AppNavBar',
@@ -58,6 +59,13 @@ export default {
 		logout () {
 			localStorage.removeItem('jwtToken');
 			this.$store.dispatch('clearUsername');
+		},
+		auth () {
+			autservice.get()
+				.then((res) => {
+					console.log(res.data);
+					window.location = res.data;
+				});
 		}
 	}
 };
