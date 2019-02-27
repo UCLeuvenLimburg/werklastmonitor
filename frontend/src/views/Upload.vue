@@ -86,6 +86,7 @@ import XLSX from 'xlsx';
 import LabsService from '@/api/LabsService';
 import fileservice from '../api/FileService.js';
 import FileDownload from 'js-file-download';
+import moment from 'moment';
 
 export default {
 	name: 'upload',
@@ -177,15 +178,6 @@ export default {
 							}
 						});
 					}
-
-					labs.forEach(lab => {
-						if (lab.startDate && lab.endDate) {
-							lab.startDate.setHours(lab.startDate.getHours() + 1);
-							lab.endDate.setHours(lab.endDate.getHours() + 1);
-							lab.startDate = this.formatDate(lab.startDate);
-							lab.endDate = this.formatDate(lab.endDate);
-						}
-					});
 
 					labs.forEach(lab => {
 						if (lab.startDate && lab.endDate) {

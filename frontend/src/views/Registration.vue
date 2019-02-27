@@ -7,31 +7,37 @@
 		div.courses
 			section.year#left(v-if='semester1.length !== 0 && semester2.length !== 0')
 				h2 Eerste jaar
-				ul(v-if='semester1.length !== 0').sem Semester1
+				h3(v-if='semester1.length !== 0', @click="semester1Active = !semester1Active") Semester 1
+				ul(v-if='semester1.length !== 0', :class="{ active: semester1Active }").sem
 					li(v-for='(course) in semester1')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
 						label {{course.name}}
-				ul(v-if='semester2.length !== 0').sem Semester2
+				h3(v-if='semester2.length !== 0', @click="semester2Active = !semester2Active") Semester 2
+				ul(v-if='semester2.length !== 0', :class="{ active: semester2Active }").sem
 					li(v-for='(course) in semester2')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
 						label {{course.name}}
 			section.year#middle(v-if='semester3.length !== 0 && semester4.length !== 0')
 				h2 Tweede jaar
-				ul(v-if='semester3.length !== 0').sem Semester3
+				h3(v-if='semester3.length !== 0', @click="semester3Active = !semester3Active") Semester 3
+				ul(v-if='semester3.length !== 0', :class="{ active: semester3Active }").sem
 					li(v-for='(course) in semester3')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
 						label {{course.name}}
-				ul(v-if='semester4.length !== 0').sem Semester4
+				h3(v-if='semester4.length !== 0', @click="semester4Active = !semester4Active") Semester 4
+				ul(v-if='semester4.length !== 0', :class="{ active: semester4Active }").sem
 					li(v-for='(course) in semester4')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
 						label {{course.name}}
 			section.year#right(v-if='semester5.length !== 0 && semester6.length !== 0')
 				h2 Derde jaar
-				ul(v-if='semester5.length !== 0').sem Semester5
+				h3(v-if='semester5.length !== 0', @click="semester5Active = !semester5Active") Semester 5
+				ul(v-if='semester5.length !== 0', :class="{ active: semester5Active }").sem
 					li(v-for='(course) in semester5')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)' )
 						label {{course.name}}
-				ul(v-if='semester6.length !== 0').sem Semester6
+				h3(v-if='semester6.length !== 0', @click="semester6Active = !semester6Active") Semester 6
+				ul(v-if='semester6.length !== 0', :class="{ active: semester6Active }").sem
 					li(v-for='(course) in semester6')
 						input(type='checkbox' v-model='course.select' v-on:click='applyForCourse (course)')
 						label {{course.name}}
@@ -55,7 +61,13 @@ export default {
 			semester5: [],
 			semester6: [],
 			userCourses: [],
-			allCourses: []
+			allCourses: [],
+			semester1Active: false,
+			semester2Active: false,
+			semester3Active: false,
+			semester4Active: false,
+			semester5Active: false,
+			semester6Active: false
 		};
 	},
 	methods: {
@@ -143,6 +155,14 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/css/definitions';
 
+h2 {
+	padding-bottom: 3%;
+}
+
+h3:hover {
+	cursor: pointer;
+}
+
 .page.login {
 	position: relative;
 }
@@ -153,6 +173,13 @@ export default {
 		font-weight: bold;
 		margin: 10px;
 		list-style: none;
+		max-height: 0;
+		transition: 1s ease;
+		overflow: hidden;
+
+		&.active {
+			max-height: 493px;
+		}
 
 		li{
 			text-decoration: none;

@@ -14,7 +14,7 @@
 				router-link(to="/agenda") Agenda
 			li(v-if='isStudent')
 				router-link(to="/addsession") Toevoegen
-			li
+			li(v-if="!isStudent")
 				router-link(to="/upload") Upload
 			li(v-if='isStudent')
 				router-link(to="/registration") Inschrijvingen

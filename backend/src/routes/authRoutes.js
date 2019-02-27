@@ -1,9 +1,6 @@
-const config = require('../config');
-
 const auth = require('../auth');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-// const LdapAuth = require('ldapauth-fork');
 
 const User = require('../models/userModel');
 
@@ -13,7 +10,7 @@ const {check, validationResult} = require('express-validator/check');
 let authRouter = express.Router();
 
 passport.use(new LocalStrategy((username, password, done) => {
-	if (username.trim() === '' ) { // || password.trim() === '') {
+	if (username.trim() === '' || password.trim() === '') {
 		return done(null, false, {
 			message: 'Login gegevens zijn ongeldig.'
 		});
@@ -47,15 +44,14 @@ passport.deserializeUser((username, done) => {
 
 authRouter.route('/')
 	.post([
-		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn') // ,
-		// check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
+		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
+		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
 	], async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
-		req.body.password = config.secret; // Had to give passport some form off password
 		return passport.authenticate('local', (err, passportUser) => {
 			if (err) {
 				return next(err);
