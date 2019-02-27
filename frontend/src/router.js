@@ -31,12 +31,12 @@ export default new Router({
 		{
 			path: '/addsession/:id?',
 			name: 'addsession',
-			component: () => import(/* webpackChunkName: "workload" */ './views/AddSession.vue')
+			component: () => import(/* webpackChunkName: "addsession" */ './views/AddSession.vue')
 		},
 		{
 			path: '/courses',
 			name: 'courses',
-			component: () => import(/* webpackChunkName: "workload" */ './views/Courses.vue')
+			component: () => import(/* webpackChunkName: "courses" */ './views/Courses.vue')
 		},
 		{
 			path: '/registration',

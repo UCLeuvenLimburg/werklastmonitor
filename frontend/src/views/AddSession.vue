@@ -1,27 +1,31 @@
 <template lang="pug">
 	.page.addsession
-		h1(v-if='!startFromId') Voeg een werksessie toe
-		h1(v-else='') Pas een werksessie aan
+		h1(v-if="!startFromId") Voeg een werksessie toe
+		h1(v-else) Pas een werksessie aan
 		ul(v-if="errors.length !== 0").errorlist
 			li(v-for="error in errors").error {{error.param}}: {{error.msg}}
-		div
-			p {{ message }}
+
+		p {{ message }}
+
 		fieldset
 			label(for="beginDate") Begindatum
 			input#beginDate(type="date" name="beginDate" :min="minDate" :max="maxDate" :value="beginDateFormatted" @change="handleBeginChange")
 			label(for="endDate") Einddatum
 			input#endDate(type="date" name="endDate" :min="minDate" :max="maxDate" :value="endDateFormatted" @change="handleEndChange")
+
 		fieldset(v-if="!startFromId")
 			label(for="lab"  v-if="!startFromId") Opdracht
-			select#lab(required="" @change='setLab' v-if="!startFromId")
+			select#lab(required="" @change="setLab" v-if="!startFromId")
 				option(v-for="lab in labs" :key="lab._id" :value="lab._id") {{ lab.name }} ({{ lab.course.name }})
+
 		ul#daylist
 			li(v-for="(day, index) in days" :key="day")
 				label(:for="day") Aantal uur op dag {{ index + 1 }}
 				input(type="number" :id="day" min="0" max="8" value="0" v-model.number="workHours[index]" required)
+
 		button(v-if="submitVisible" v-on:click="submitForm")
-			span(v-if='!startFromId') Toevoegen
-			span(v-else='') Aanpassen
+			span(v-if="!startFromId") Toevoegen
+			span(v-else) Aanpassen
 </template>
 
 <script>
@@ -87,7 +91,7 @@ export default {
 		},
 		submitForm () {
 			let self = this;
-			self.errors = [];
+			this.errors = [];
 			let numeric = true;
 			for (let i = 0; i < this.workHours.length; i++) {
 				if (isNaN(this.workHours[i]) || this.workHours[i] === '' || this.workHours[i] < 0 || this.workHours[i] > 8) {
@@ -98,7 +102,7 @@ export default {
 				let error = {};
 				error.param = 'Werkuren';
 				error.msg = 'Je dient voor elke dag een aantal werkuren tussen 0 en 8 in te vullen.';
-				self.errors.push(error);
+				this.errors.push(error);
 				// this.message = 'Je dient voor elk dag een aantal werkuren tussen 0 en 8 in te vullen.';
 			} else {
 				let worksession = {};
@@ -118,9 +122,8 @@ export default {
 					(async () => {
 						await WorksessionService.post(worksession)
 							.catch((err) => {
-								console.log('catched error');
-								err.response.data.errors.forEach(function (error) {
-									self.errors.push(error);
+								err.response.data.errors.forEach((err) => {
+									self.errors.push(err);
 								});
 							});
 					})();
@@ -129,9 +132,8 @@ export default {
 					(async () => {
 						await WorksessionService.put(worksession)
 							.catch((err) => {
-								console.log('catched error');
-								err.response.data.errors.forEach(function (error) {
-									self.errors.push(error);
+								err.response.data.errors.forEach((err) => {
+									self.errors.push(err);
 								});
 							});
 					})();
@@ -155,7 +157,7 @@ export default {
 			this.labs = [];
 			let labs = await LabsService.get();
 			let unfilteredLabs = labs.data;
-			unfilteredLabs.forEach(lab => {
+			unfilteredLabs.forEach((lab) => {
 				if (this.userCourses.includes(lab.course._id)) {
 					this.labs.push(lab);
 				}
@@ -174,8 +176,8 @@ export default {
 				this.endDateFormatted = moment(this.endDate).format('YYYY-MM-DD');
 				this.selectedLab = worksession.lab;
 				this.workHours = [];
-				worksession.workdays.forEach(workday => {
-					let workdayGrab = workdays.find(item => item._id === workday);
+				worksession.workdays.forEach((workday) => {
+					let workdayGrab = workdays.find((item) => item._id === workday);
 					this.workHours.push(workdayGrab.workhours);
 				});
 				this.showDays();
