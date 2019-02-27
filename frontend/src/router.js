@@ -29,7 +29,7 @@ export default new Router({
 			component: () => import(/* webpackChunkName: "workload" */ './views/Workload.vue')
 		},
 		{
-			path: '/addsession/:id',
+			path: '/addsession/:id?',
 			name: 'addsession',
 			component: () => import(/* webpackChunkName: "workload" */ './views/AddSession.vue')
 		},
