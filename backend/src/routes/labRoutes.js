@@ -20,6 +20,7 @@ const getMilestones = async (milestones) => {
 const getValidationChecks = () => {
 	return [
 		check('name').trim().not().isEmpty().withMessage('De naam van het lab mag niet leeg zijn.'),
+		check('description').trim().not().isEmpty().withMessage('De beschrijving van het lab mag niet leeg zijn.'),
 		check('startDate').isISO8601().withMessage('Gelieve een geldige startdatum te geven.'),
 		check('endDate').custom((value, { req }) => value >= req.body.startDate).withMessage('Gelieve een geldige einddatum te geven, deze mag niet voor de startdatum zijn.'),
 		check('hourEstimate').isFloat().withMessage('Gelieve een inschatting van de werkuren in te geven, dit moet een positief getal zijn.'),
@@ -53,6 +54,7 @@ labRouter.route('/')
 
 		let lab = new Lab();
 		lab.name = req.body.name;
+		lab.description = req.body.description;
 		lab.startDate = req.body.startDate;
 		lab.endDate = req.body.endDate;
 		lab.hourEstimate = req.body.hourEstimate;
@@ -106,6 +108,7 @@ labRouter.route('/:labId')
 		}
 
 		req.lab.name = req.body.name;
+		req.lab.description = req.body.description;
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
 		req.lab.hourEstimate = req.body.hourEstimate;

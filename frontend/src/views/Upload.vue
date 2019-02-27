@@ -144,6 +144,7 @@ export default {
 					for (let i = 1; i < labsJSON.length; ++i) {
 						let labJSONTemplate = {
 							name: '',
+							description: '',
 							startDate: '',
 							endDate: '',
 							hourEstimate: '',
@@ -152,10 +153,11 @@ export default {
 						};
 
 						labJSONTemplate.name = labsJSON[i][0];
-						labJSONTemplate.startDate = labsJSON[i][1];
-						labJSONTemplate.endDate = labsJSON[i][2];
-						labJSONTemplate.hourEstimate = labsJSON[i][3];
-						labJSONTemplate.course = labsJSON[i][4];
+						labJSONTemplate.description = labsJSON[i][1]
+						labJSONTemplate.startDate = labsJSON[i][2];
+						labJSONTemplate.endDate = labsJSON[i][3];
+						labJSONTemplate.hourEstimate = labsJSON[i][4];
+						labJSONTemplate.course = labsJSON[i][5];
 
 						labs.push(labJSONTemplate);
 					}
