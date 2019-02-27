@@ -161,9 +161,7 @@ export default {
 				}
 			});
 			this.selectedLab = this.labs[0];
-			let uri = window.location.search.substring(1);
-			let params = new URLSearchParams(uri);
-			this.id = params.get('id');
+			this.id = this.$route.params.id;
 			if (this.id) {
 				let worksessionrequest = await WorksessionService.getId(this.id);
 				let worksession = worksessionrequest.data;
