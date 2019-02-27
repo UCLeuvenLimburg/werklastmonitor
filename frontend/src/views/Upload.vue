@@ -154,7 +154,7 @@ export default {
 						};
 
 						labJSONTemplate.name = labsJSON[i][0];
-						labJSONTemplate.description = labsJSON[i][1]
+						labJSONTemplate.description = labsJSON[i][1];
 						labJSONTemplate.startDate = labsJSON[i][2];
 						labJSONTemplate.endDate = labsJSON[i][3];
 						labJSONTemplate.hourEstimate = labsJSON[i][4];
