@@ -58,6 +58,7 @@ export default {
 			this.$store.dispatch('clearUsername');
 			this.$store.dispatch('clearName');
 			logoutService.get().then(console.log('logged out'));
+			this.$router.push('/');
 		},
 		auth () {
 			autservice.get()

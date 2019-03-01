@@ -2,6 +2,7 @@ const express = require('express');
 const secret = require('../secrets')
 const autrouter = express.Router();
 const fetch = require('node-fetch');
+const User = require('../models/userModel');
 
 autrouter.route('/')
 	.get((req, res) => {
@@ -29,8 +30,19 @@ autrouter.route('/')
 			req.session.token = result.access_token;
 			console.log('session: ' + req.session.token);
 			let info = await askInfo(result.access_token);
-			console.log('second print ' + info);
+			console.log('------------------');
+			console.log(info);
 			res.status('200').send(info);
+			console.log('----------------------------' + info.accountId);
+			User.findById(info.accountId, (user) => {
+				if (!user) {
+					let user = new User();
+					user._id = info.accountId;
+					user.courses = [];
+					user.milestones = [];
+					user.save();
+				}
+			});
 		});
 	});
 function askInfo(token) {
