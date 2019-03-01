@@ -2,7 +2,7 @@ const express = require('express');
 const Lab = require('../models/labModel');
 const Milestone = require('../models/milestoneModel');
 const Course = require('../models/courseModel')
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let labRouter = express.Router();
 
@@ -20,6 +20,7 @@ const getMilestones = async (milestones) => {
 const getValidationChecks = () => {
 	return [
 		check('name').trim().not().isEmpty().withMessage('De naam van het lab mag niet leeg zijn.'),
+		check('description').trim().not().isEmpty().withMessage('De beschrijving van het lab mag niet leeg zijn.'),
 		check('startDate').isISO8601().withMessage('Gelieve een geldige startdatum te geven.'),
 		check('endDate').custom((value, { req }) => value >= req.body.startDate).withMessage('Gelieve een geldige einddatum te geven, deze mag niet voor de startdatum zijn.'),
 		check('hourEstimate').isFloat().withMessage('Gelieve een inschatting van de werkuren in te geven, dit moet een positief getal zijn.'),
@@ -46,13 +47,13 @@ labRouter.route('/')
 	})
 	.post(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
 		let lab = new Lab();
 		lab.name = req.body.name;
+		lab.description = req.body.description;
 		lab.startDate = req.body.startDate;
 		lab.endDate = req.body.endDate;
 		lab.hourEstimate = req.body.hourEstimate;
@@ -63,8 +64,13 @@ labRouter.route('/')
 		}
 		lab.milestones = await getMilestones(req.body.milestones);
 
-		if(!lab.course) {
-			res.status(422).json({ errors: [{'msg':'Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.', 'param': 'courseId'}]});
+		if (!lab.course) {
+			res.status(422).json({
+				errors: [{
+					msg: 'Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.',
+					param: 'courseId'
+				}]
+			});
 		} else {
 			lab.save();
 		}
@@ -78,12 +84,12 @@ labRouter.route('/')
 			} else {
 				res.status('204').send(err);
 			}
-		})
+		});
 	});
 
 labRouter.use('/:labId', (req, res, next) => {
 	Lab.findById(req.params.labId, (err, lab) => {
-		if(err) {
+		if (err) {
 			res.status(500).send(err);
 		} else {
 			req.lab = lab;
@@ -100,12 +106,12 @@ labRouter.route('/:labId')
 	})
 	.put(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
 		req.lab.name = req.body.name;
+		req.lab.description = req.body.description;
 		req.lab.startDate = req.body.startDate;
 		req.lab.endDate = req.body.endDate;
 		req.lab.hourEstimate = req.body.hourEstimate;

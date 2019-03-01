@@ -4,10 +4,10 @@
 		calendar-view.calendar.theme-default(
 			:show-date="showDate",
 			:events="events",
-			:startingDayOfWeek=1,
+			:startingDayOfWeek="1",
 			@click-event="showEvent",
 			@drop-on-date="dropDate",
-			enableDragDrop=true,
+			:enableDragDrop="true",
 			locale="nl",
 			:key="cal")
 			calendar-view-header(
@@ -21,15 +21,15 @@
 			div
 				p #[span.section-title Van:] {{ selectedEvent.startDate | dateFormatDayMonth }}
 				p #[span.section-title Tot:] {{ selectedEvent.endDate | dateFormatDayMonth }}
-				div(v-if='editable')
-					router-link.button(:to="'/addsession?id='+ selectedEvent.id") Aanpassen
-					a.button(v-on:click="deleteEvent") Verwijderen
-				div(v-if='milestonable')
-					h3(v-if='milestonable') Verhouding {{ getPercentage(getLab (selectedEvent.id)) }}%
-					p(v-if='milestonable') {{ getWorkedHours(getLab (selectedEvent.id)) }} uren gewerkt. Verwacht gemiddelde: {{ getLab(selectedEvent.id).hourEstimate }} uren.
+				div(v-if="editable")
+					router-link.button(:to="{ name: 'addsession', params: { id: selectedEvent.id } }") Aanpassen
+					a.button(@click="deleteEvent") Verwijderen
+				div(v-if="milestonable")
+					h3(v-if="milestonable") Verhouding {{ getPercentage(selectedLab) }}%
+					p(v-if="milestonable") {{ getWorkedHours(selectedLab) }} uren gewerkt. Verwacht gemiddelde: {{ selectedLab.hourEstimate }} uren.
 					h3 Milestones
 					ul
-						li(v-if='milestonable' v-for="(milestone, index) in getMilestones(selectedEvent.id)" :key="milestone._id" v-on:click="check(milestone)" :class="isChecked(milestone)")  {{ milestone.name }}
+						li(v-if="milestonable" v-for="milestone in milestones" @click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
 		app-modal(ref="showWarningModal")
 			span(slot="title") Waarschuwing
 			div
@@ -38,8 +38,8 @@
 			span(slot="title") Bevestiging
 			div
 				p Wilt u de werksessie verplaatsen?
-				a.button(v-on:click="confirmTrue") Ja
-				a.button(v-on:click="confirmFalse") Nee
+				a.button(@click="confirmTrue") Ja
+				a.button(@click="confirmFalse") Nee
 </template>
 
 <script>
@@ -86,6 +86,20 @@ export default {
 	computed: {
 		username () {
 			return this.$store.state.username;
+		},
+		selectedLab () {
+			return this.getLab(this.selectedEvent.id);
+		},
+		milestones () {
+			let milestones = [];
+			if (this.$refs.showEventModal) {
+				this.labs.forEach((lab) => {
+					if (lab._id === this.selectedEvent.id) {
+						milestones = lab.milestones;
+					}
+				});
+			}
+			return milestones;
 		}
 	},
 	methods: {
@@ -110,8 +124,8 @@ export default {
 			this.selectedEvent = e;
 			if (!e.classes.includes('purple')) {
 				let newDate = moment(date);
-				var oldStart = moment(e.startDate); // todays date
-				var oldEnd = moment(e.endDate); // another date
+				var oldStart = moment(e.startDate); // Today's date
+				var oldEnd = moment(e.endDate); // Another date
 				let days = Math.abs(oldEnd.diff(oldStart, 'days'));
 				this.newStart = moment(newDate).add(2, 'hours').format('YYYY-MM-DD');
 				newDate.add(days, 'days');
@@ -135,7 +149,7 @@ export default {
 					}
 				}
 				let days = moment(worksession.startDate).diff(moment(oldStart), 'days');
-				worksession.workdays.forEach(workday => {
+				worksession.workdays.forEach((workday) => {
 					workday.day = moment(workday.day).add(days, 'days').toDate();
 					delete workday._id;
 				});
@@ -161,19 +175,8 @@ export default {
 				this.$refs.showEventModal.hide();
 			})();
 		},
-		getMilestones (l) {
-			let milestones = [];
-			if (this.$refs.showEventModal) {
-				this.labs.forEach(lab => {
-					if (lab._id === this.selectedEvent.id) {
-						milestones = lab.milestones;
-					}
-				});
-			}
-			return milestones;
-		},
 		redraw () {
-			this.cal += 1;
+			this.cal++;
 		},
 		isChecked (milestone) {
 			for (let i = 0; i < this.userMilestones.length; ++i) {
@@ -246,7 +249,7 @@ export default {
 						let event = {};
 						event.id = lab._id;
 						event.startDate = moment(lab.endDate).format('YYYY-MM-DD');
-						event.title = 'Deadline ' + lab.name + ' (' + lab.course.name + ')';
+						event.title = `Deadline ${lab.name} (${lab.course.name})`;
 						event.classes = 'purple';
 						this.events.push(event);
 					}
@@ -254,12 +257,12 @@ export default {
 				let worksessions = await WorksessionService.get();
 				let unfilteredWorksessions = worksessions.data;
 				this.worksessions = [];
-				unfilteredWorksessions.forEach(worksession => {
+				unfilteredWorksessions.forEach((worksession) => {
 					if (worksession.studentNumber === this.username) {
 						this.worksessions.push(worksession);
 					}
 				});
-				this.worksessions.forEach(worksession => {
+				this.worksessions.forEach((worksession) => {
 					let event = {};
 					event.id = worksession._id;
 					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
@@ -289,6 +292,7 @@ export default {
 		width: 3rem;
 		font-weight: bold;
 	}
+
 	a.button {
 		cursor: pointer;
 		appearance: button;
@@ -300,33 +304,31 @@ export default {
 		font-size: 120%;
 		display: inline-block;
 		margin: 15px 5px 5px;
+
+		&:hover {
+			background-color: #003469;
+		}
 	}
-	a.button:hover {
-		background-color: #003469;
-	}
-	ul li:nth-child(even) {
-		background: #e9f3f8;
-	}
-	ul li:nth-child(even).checked {
-		background: #888;
-	}
-	.checked::before {
-		content: '';
-		position: absolute;
-		border-color: #fff;
-		border-style: solid;
-		border-width: 0 2px 2px 0;
-		top: 10px;
-		left: 16px;
-		transform: rotate(45deg);
-		height: 15px;
-		width: 7px;
-	}
+
 	.checked {
 		background: #888;
 		color: #fff;
 		text-decoration: line-through;
+
+		&::before {
+			content: '';
+			position: absolute;
+			border-color: #fff;
+			border-style: solid;
+			border-width: 0 2px 2px 0;
+			top: 10px;
+			left: 16px;
+			transform: rotate(45deg);
+			height: 15px;
+			width: 7px;
+		}
 	}
+
 	ul li {
 		cursor: pointer;
 		position: relative;
@@ -339,10 +341,18 @@ export default {
 		-moz-user-select: none;
 		-ms-user-select: none;
 		user-select: none;
-	}
 
-	ul li:hover {
-		background: #ddd;
+		&:hover {
+			background: #ddd;
+		}
+
+		&:nth-child(even) {
+			background: #e9f3f8;
+
+			&.checked {
+				background: #888;
+			}
+		}
 	}
 }
 </style>

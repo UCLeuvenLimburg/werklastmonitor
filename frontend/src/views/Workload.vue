@@ -19,9 +19,9 @@
 			:paddingBottom="padding")
 			tooltip(:names="filteredCourses.names", position="right")
 			legends(:names="filteredCourses.names", :filter="true")
-		.toggler(v-if='isStudent')
+		.toggler(v-if="isStudent")
 			label.switch(@change="toggleChange")
-				input(type='checkbox')
+				input(type="checkbox")
 				span.slider
 			p Algemene/Persoonlijke werklast
 </template>
@@ -60,40 +60,37 @@ export default {
 			this.toggle = !this.toggle;
 		},
 		getCourseById (id) {
-			let lab = this.labs.find(item => item._id === id);
+			let lab = this.labs.find((item) => item._id === id);
 			return lab.course;
 		},
 		compareWorkdays (a, b) {
 			if (a.day < b.day) {
 				return -1;
 			}
-			if (a.day > b.day) {
-				return 1;
-			}
-			return 0;
+			return a.day > b.day;
 		},
 		calcCourses () {
 			let courses = [];
-			this.userCourses.forEach(course => {
+			this.userCourses.forEach((course) => {
 				let temp = {};
 				temp.id = course;
 				temp.workdays = [];
 				temp.name = '';
 				courses.push(temp);
 			});
-			this.worksessions.forEach(worksession => {
+			this.worksessions.forEach((worksession) => {
 				if (worksession.studentNumber === this.username) {
-					courses.find(item => item.id === this.getCourseById(worksession.lab)._id).name = this.getCourseById(worksession.lab).name;
-					worksession.workdays.forEach(workday => {
-						courses.find(item => item.id === this.getCourseById(worksession.lab)._id).workdays.push(workday);
+					courses.find((item) => item.id === this.getCourseById(worksession.lab)._id).name = this.getCourseById(worksession.lab).name;
+					worksession.workdays.forEach((workday) => {
+						courses.find((item) => item.id === this.getCourseById(worksession.lab)._id).workdays.push(workday);
 					});
 				}
 			});
-			courses.forEach(course => {
+			courses.forEach((course) => {
 				course.workdays.sort(this.compareWorkdays);
 			});
 			this.calculatedCourses = [];
-			courses.forEach(course => {
+			courses.forEach((course) => {
 				if (course.name !== '') {
 					this.calculatedCourses.push(course);
 				}
@@ -317,7 +314,7 @@ export default {
 		},
 		colorNames (names) {
 			let colorList = [];
-			names.forEach(name => {
+			names.forEach((name) => {
 				colorList.push('' + this.toColor(name).toUpperCase());
 			});
 			return colorList;
@@ -336,10 +333,10 @@ export default {
 		},
 		colors () {
 			let colorList = [];
-			this.filteredCourses.names.forEach(name => {
+			this.filteredCourses.names.forEach((name) => {
 				colorList.push(this.toColor(name).toUpperCase());
 			});
-			// Belangrijk want kleuren updaten niet dynamisch
+			// Important! Colours do not update dynamically
 			this.reRender();
 			return colorList;
 		},
@@ -347,11 +344,7 @@ export default {
 			return this.$store.state.username;
 		},
 		isStudent () {
-			if (this.username) {
-				return (this.username.charAt(0) === 'r');
-			} else {
-				return false;
-			}
+			return this.username && this.username.charAt(0) === 'r';
 		}
 	},
 	created () {

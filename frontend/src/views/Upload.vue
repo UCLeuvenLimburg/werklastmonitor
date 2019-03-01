@@ -28,7 +28,7 @@
 					|  de &quot;labnaam&quot; in het blad Milestones moet overeenkomen met een van de labnamen.
 			h3 Voorbeeld
 			.table
-				table(v-if='!tab')
+				table(v-if="!tab")
 					tr
 						th naam
 						th startdatum
@@ -54,7 +54,7 @@
 						td
 						td
 
-				table(v-if='tab')
+				table(v-if="tab")
 					tr
 						th naam
 						th werkuren
@@ -86,7 +86,6 @@ import XLSX from 'xlsx';
 import LabsService from '@/api/LabsService';
 import fileservice from '../api/FileService.js';
 import FileDownload from 'js-file-download';
-import moment from 'moment';
 
 export default {
 	name: 'upload',
@@ -145,6 +144,7 @@ export default {
 					for (let i = 1; i < labsJSON.length; ++i) {
 						let labJSONTemplate = {
 							name: '',
+							description: '',
 							startDate: '',
 							endDate: '',
 							hourEstimate: '',
@@ -153,10 +153,11 @@ export default {
 						};
 
 						labJSONTemplate.name = labsJSON[i][0];
-						labJSONTemplate.startDate = labsJSON[i][1];
-						labJSONTemplate.endDate = labsJSON[i][2];
-						labJSONTemplate.hourEstimate = labsJSON[i][3];
-						labJSONTemplate.course = labsJSON[i][4];
+						labJSONTemplate.description = labsJSON[i][1];
+						labJSONTemplate.startDate = labsJSON[i][2];
+						labJSONTemplate.endDate = labsJSON[i][3];
+						labJSONTemplate.hourEstimate = labsJSON[i][4];
+						labJSONTemplate.course = labsJSON[i][5];
 
 						labs.push(labJSONTemplate);
 					}
@@ -170,14 +171,14 @@ export default {
 						milestoneJSONTemplate.name = milestoneJSON[i][0];
 						milestoneJSONTemplate.duration = milestoneJSON[i][1];
 
-						labs.forEach(lab => {
+						labs.forEach((lab) => {
 							if (lab.name === milestoneJSON[i][2]) {
 								lab.milestones.push(milestoneJSONTemplate);
 							}
 						});
 					}
 
-					labs.forEach(lab => {
+					labs.forEach((lab) => {
 						if (lab.startDate && lab.endDate) {
 							lab.startDate.setHours(lab.startDate.getHours() + 1);
 							lab.endDate.setHours(lab.endDate.getHours() + 1);
@@ -186,14 +187,11 @@ export default {
 						}
 					});
 
-					console.log(labs);
-
 					labs.forEach(async (lab) => {
 						await LabsService.post(lab)
 							.catch((err) => {
-								console.log('error:' + err.response.data.errors);
-								err.response.data.errors.forEach(function (error) {
-									self.errors.push(error);
+								err.response.data.errors.forEach((err) => {
+									self.errors.push(err);
 								});
 							});
 					});
@@ -258,9 +256,9 @@ label {
 	}
 }
 .error {
-			color: red;
-			margin: 1%;
-		}
+	color: red;
+	margin: 1%;
+}
 
 .errorlist {
 	list-style: none;
@@ -284,6 +282,12 @@ ul.table{
 	padding-top: 5px;
 	padding-bottom: 2px;
 	background-color: $color-fg;
+
+	&::after{
+		margin-left: 1em;
+		content: "Wissel tussen bladen";
+		color: white;
+	}
 }
 
 li.table {
@@ -294,17 +298,11 @@ li.table {
 	color:white;
 	background-color: $color-accent;
 	cursor: pointer;
-}
 
-li.table:hover{
-	background: white;
-	color: $color-fg;
-}
-
-ul.table::after{
-	margin-left: 1em;
-	content: "Wissel tussen bladen";
-	color: white;
+	&:hover{
+		background: white;
+		color: $color-fg;
+	}
 }
 
 @media only screen and (max-width: 600px) {
@@ -326,10 +324,11 @@ ul.table::after{
 	}
 	ol {
 		margin-left: 5%;
+		margin-bottom: 1em;
+
 		li {
 			padding: 5px;
 		}
-		margin-bottom: 1em;
 	}
 
 	table {

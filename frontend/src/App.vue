@@ -11,7 +11,7 @@
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 
-import AuthenticationService from '@/api/AuthenticationService';
+import AuthenticationService from '@/api/AutService';
 
 export default {
 	name: 'App',
@@ -20,14 +20,17 @@ export default {
 		AppFooter
 	},
 	created () {
-		AuthenticationService.get()
-			.then((res) => {
-				this.$store.dispatch('setUsername', res.data.user._id);
-			})
-			.catch(() => {
-				localStorage.removeItem('jwtToken');
-				this.$store.dispatch('clearUsername');
-			});
+		let urlstring = window.location.href;
+		let url = new URL(urlstring);
+		let code = url.searchParams.get('code');
+		if (code && !this.$store.state.username) {
+			AuthenticationService.post({ code })
+				.then(res => {
+					this.$store.dispatch('setUsername', res.data.accountId);
+					this.$store.dispatch('setName', res.data.name);
+				})
+				.catch((err) => console.error(err));
+		}
 	}
 };
 </script>

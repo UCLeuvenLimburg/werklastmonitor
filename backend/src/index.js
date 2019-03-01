@@ -38,6 +38,7 @@ app.use('/auth', require('./routes/authRoutes'));
 app.use('/aut', require('./routes/autRoutes'));
 app.use('/users', require('./routes/userRoutes'));
 app.use('/programs', require('./routes/programRoutes'));
+app.use('/logout', require('./routes/logoutRoute'));
 app.use('/static', express.static('static'));
 
 app.listen(config.port, () => {
