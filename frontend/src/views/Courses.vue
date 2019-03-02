@@ -5,6 +5,7 @@
 			h2.course-name {{ course }}
 			div.labs(v-for="(lab, index) in assignments(course)" :key="lab._id")
 				h3.lab-name {{ lab.name }}
+				p {{ getDescription(lab) }}
 				#progress
 					#bar(v-bind:style="getBarStyle(lab)")
 						p {{ getPercentage(lab) }}%
@@ -88,6 +89,13 @@ export default {
 				}
 			});
 			return workedHours;
+		},
+		getDescription (lab) {
+			let description = 'Dit lab heeft nog geen beschrijving';
+			if (lab.description) {
+				description = lab.description;
+			}
+			return description;
 		},
 		getBarStyle (lab) {
 			let style = {};
