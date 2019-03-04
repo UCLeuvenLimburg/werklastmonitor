@@ -2,7 +2,7 @@ const express = require('express');
 const Lab = require('../models/labModel');
 const Milestone = require('../models/milestoneModel');
 const Course = require('../models/courseModel')
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let labRouter = express.Router();
 
@@ -47,8 +47,7 @@ labRouter.route('/')
 	})
 	.post(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
@@ -65,8 +64,13 @@ labRouter.route('/')
 		}
 		lab.milestones = await getMilestones(req.body.milestones);
 
-		if(!lab.course) {
-			res.status(422).json({ errors: [{'msg':'Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.', 'param': 'courseId'}]});
+		if (!lab.course) {
+			res.status(422).json({
+				errors: [{
+					msg: 'Gelieve een geldige vakcode in te geven, bijvoorbeeld: B-UCLL-MBI04A.',
+					param: 'courseId'
+				}]
+			});
 		} else {
 			lab.save();
 		}
@@ -80,12 +84,12 @@ labRouter.route('/')
 			} else {
 				res.status('204').send(err);
 			}
-		})
+		});
 	});
 
 labRouter.use('/:labId', (req, res, next) => {
 	Lab.findById(req.params.labId, (err, lab) => {
-		if(err) {
+		if (err) {
 			res.status(500).send(err);
 		} else {
 			req.lab = lab;
@@ -102,8 +106,7 @@ labRouter.route('/:labId')
 	})
 	.put(getValidationChecks(), async (req, res) => {
 		const errors = validationResult(req);
-
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 

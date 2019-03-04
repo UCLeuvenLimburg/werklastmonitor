@@ -6,21 +6,21 @@
 		ul(:class="{ mobile: isMobileMenuOpen }", @click="isMobileMenuOpen = false")
 			li
 				router-link(to="/") Home
-			li(v-if='isStudent')
+			li(v-if="isStudent")
 				router-link(to="/courses") Vakken
-			li(v-if='isIngelogd')
+			li(v-if="isSignedIn")
 				router-link(to="/workload") Werklast
-			li(v-if='isStudent')
+			li(v-if="isStudent")
 				router-link(to="/agenda") Agenda
-			li(v-if='isStudent')
+			li(v-if="isStudent")
 				router-link(to="/addsession") Toevoegen
-			li(v-if="!isStudent")
+			li(v-if="username")
 				router-link(to="/upload") Upload
-			li(v-if='isStudent')
+			li(v-if="isStudent")
 				router-link(to="/registration") Inschrijvingen
-			li.right(v-if='!isIngelogd')
-				router-link.highlight(to="/login") Aanmelden
-			li.right(v-if='isIngelogd')
+			li.right(v-if="!isSignedIn")
+				a.highlight(href="#", v-on:click="auth") Aanmelden
+			li.right(v-if="isSignedIn")
 				a.highlight(href="#", @click.prevent="logout") Afmelden
 
 		.mobile-menu-close(v-if="isMobileMenuOpen", @click="isMobileMenuOpen = false")
@@ -28,6 +28,8 @@
 
 <script>
 import 'mdi-vue/MenuIcon';
+import autservice from '@/api/AutService';
+import logoutService from '@/api/LogoutService';
 
 export default {
 	name: 'AppNavBar',
@@ -41,13 +43,9 @@ export default {
 			return this.$store.state.username;
 		},
 		isStudent () {
-			if (this.username) {
-				return (this.username.charAt(0) === 'r');
-			} else {
-				return false;
-			}
+			return this.username && this.username.charAt(0) === 'r';
 		},
-		isIngelogd () {
+		isSignedIn () {
 			return (this.username);
 		}
 	},
@@ -58,6 +56,16 @@ export default {
 		logout () {
 			localStorage.removeItem('jwtToken');
 			this.$store.dispatch('clearUsername');
+			this.$store.dispatch('clearName');
+			logoutService.get().then(console.log('logged out'));
+			this.$router.push('/');
+		},
+		auth () {
+			autservice.get()
+				.then((res) => {
+					console.log(res.data);
+					window.location = res.data;
+				});
 		}
 	}
 };

@@ -5,17 +5,19 @@ const LocalStrategy = require('passport-local');
 const User = require('../models/userModel');
 
 const express = require('express');
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let authRouter = express.Router();
 
 passport.use(new LocalStrategy((username, password, done) => {
 	if (username.trim() === '' || password.trim() === '') {
 		return done(null, false, {
-			message: 'Login gegevens zijn ongeldig.'
+			message: 'Invalid login credentials.'
 		});
 	}
 
+	// Find user by his username
+	// If none found, insert new user into database
 	User.findById(username, (err, user) => {
 		if (err) {
 			return done(err);
@@ -43,9 +45,21 @@ passport.deserializeUser((username, done) => {
 });
 
 authRouter.route('/')
+	.get(auth.optional, async (req, res) => {
+		if (!req.user) {
+			return res.status(400);
+		}
+		let user = await User.findById(req.user._id);
+		if (!user) {
+			return res.status(400);
+		}
+		return res.json({
+			user: user.toAuthJSON()
+		});
+	})
 	.post([
-		check('username').trim().not().isEmpty().withMessage('Gebruikersnaam mag niet leeg zijn'),
-		check('password').trim().not().isEmpty().withMessage('Wachtwoord mag niet leeg zijn')
+		check('username').trim().not().isEmpty().withMessage('Username cannot be empty'),
+		check('password').trim().not().isEmpty().withMessage('Password cannot be empty')
 	], async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -64,15 +78,6 @@ authRouter.route('/')
 			}
 			return res.status(400).info;
 		})(req, res, next);
-	})
-	.get(auth.required, async (req, res) => {
-		let user = await User.findById(req.user._id);
-		if (!user) {
-			return res.status(400);
-		}
-		return res.json({
-			user: user.toAuthJSON()
-		});
 	});
 
 module.exports = authRouter;

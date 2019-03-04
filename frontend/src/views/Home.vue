@@ -1,6 +1,7 @@
 <template lang="pug">
 	.page.home
 		h1 Home
+		h2(v-if="name") Welkom {{name}}
 		p De Werklastmonitor is een tool om studenten van de UC Leuven-Limburg te helpen met het inschatten van hun werklast en studiesessies in te plannen.
 		p Wanneer je een gedurende een bepaalde periode wilt werken of hebt gewerkt aan een vak, kun je deze werksessie toevoegen via de pagina ‘Toevoegen’. Je werksessies worden vervolgens op de agenda gevisualiseerd.
 		p Je docenten hebben ook je deadlines en milestones toegevoegd. Deze krijg je eveneens in je agenda te zien.
@@ -9,6 +10,11 @@
 
 <script>
 export default {
-	name: 'home'
+	name: 'home',
+	computed: {
+		name () {
+			return this.$store.state.name;
+		}
+	}
 };
 </script>

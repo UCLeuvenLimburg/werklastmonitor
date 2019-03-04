@@ -1,6 +1,6 @@
 const express = require('express');
 const Milestone = require('../models/milestoneModel');
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 let milestoneRouter = express.Router();
 
@@ -20,7 +20,7 @@ milestoneRouter.route('/')
 	.post(getValidationChecks(), (req, res) => {
 		const errors = validationResult(req);
 
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 
@@ -39,7 +39,7 @@ milestoneRouter.route('/')
 
 milestoneRouter.use('/:milestoneId', (req, res, next) => {
 	Milestone.findById(req.params.milestoneId, (err, milestone) => {
-		if(err) {
+		if (err) {
 			res.status(500).send(err);
 		} else {
 			req.milestone = milestone;
@@ -54,7 +54,7 @@ milestoneRouter.route('/:milestoneId')
 	})
 	.delete((req, res) => {
 		req.milestone.remove((err) => {
-			if(err) {
+			if (err) {
 				res.status(500).send(err);
 			} else {
 				res.status(204).send('removed');
@@ -63,7 +63,6 @@ milestoneRouter.route('/:milestoneId')
 	})
 	.put(getValidationChecks(), (req, res) => {
 		const errors = validationResult(req);
-
 		if(!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
