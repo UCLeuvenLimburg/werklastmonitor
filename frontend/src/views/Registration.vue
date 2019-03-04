@@ -178,7 +178,7 @@ h3 {
 	overflow: hidden;
 
 	&.active {
-		max-height: 493px;
+		max-height: 510px;
 	}
 
 	li {
