@@ -267,7 +267,7 @@ export default {
 					event.id = worksession._id;
 					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
 					event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-					event.title = this.getLab(worksession.lab).name;
+					event.title = this.getLab(worksession.lab).name + ' (' + this.getLab(worksession.lab).course.name + ')';
 					this.events.push(event);
 				});
 			})();
