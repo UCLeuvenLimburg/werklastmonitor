@@ -190,12 +190,20 @@ export default {
 			UserService.get(this.username)
 				.then((result) => {
 					let user = result.data;
-					user.milestones.push(m._id);
+					let index = user.milestones.indexOf(m._id);
+					if (index === -1) {
+						user.milestones.push(m._id);
+					} else {
+						user.milestones.splice(index, 1);
+					}
 					UserService.put(user._id, user)
 						.then((res) => {
 							this.userMilestones = user.milestones;
 							this.isChecked(m);
 						});
+				})
+				.catch((err) => {
+					console.error(err);
 				});
 		},
 		getPercentage (lab) {
@@ -267,7 +275,7 @@ export default {
 					event.id = worksession._id;
 					event.startDate = moment(worksession.startDate).format('YYYY-MM-DD');
 					event.endDate = moment(worksession.endDate).format('YYYY-MM-DD');
-					event.title = this.getLab(worksession.lab).name;
+					event.title = this.getLab(worksession.lab).name + ' (' + this.getLab(worksession.lab).course.name + ')';
 					this.events.push(event);
 				});
 			})();
