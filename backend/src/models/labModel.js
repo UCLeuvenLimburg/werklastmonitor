@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const labSchema = new Schema({
 	name: { type: String},
+	description: { type: String },
 	startDate: { type: Date },
 	endDate: { type: Date },
 	hourEstimate: { type: Number },
