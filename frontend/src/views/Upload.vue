@@ -3,8 +3,9 @@
 		h1 Excel-bestand uploaden
 		ul(v-if="errors.length !== 0").errorlist
 			li(v-for="error in errors").error {{error.param}}: {{error.msg}}
-		p Selecteer een Office Excel, LibreOffice Calc, of een CSV-bestand.
-		input(name="file", id="file", type="file", accept=".xls,.xlsx,.ods,.csv" @change="onFileChange")
+		p(v-if="success && errors.length === 0").success Uw labo's zijn succesvol toegevoegd!
+		p Selecteer een Office Excel (.xls, .xlsx) of LibreOffice Calc (.ODS)
+		input(name="file", id="file", type="file", accept=".xls,.xlsx,.ods" @change="onFileChange")
 		label(for="file")
 			mdi-upload-icon
 			p Kies een bestand...
@@ -97,7 +98,8 @@ export default {
 		return {
 			image: '',
 			errors: [],
-			tab: false
+			tab: false,
+			success: false
 		};
 	},
 	methods: {
@@ -111,11 +113,17 @@ export default {
 			this.tab = b;
 		},
 		onFileChange (e) {
+			let self = this;
+			self.success = false;
 			let files = e.target.files || e.dataTransfer.files;
 			if (!files.length) {
 				return;
 			}
 			this.parseSheet(files[0]);
+			if(self.errors.length === 0) {
+				console.log(self.errors.length);
+				self.success = true;
+			}
 		},
 		formatDate (date) {
 			let tempDate = new Date(date);
@@ -269,6 +277,10 @@ label {
 	border-style: solid;
 	border-width: 2px;
 	border-color: red;
+}
+
+.success {
+	color: green
 }
 
 table, th, td {
