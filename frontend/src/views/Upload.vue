@@ -31,24 +31,28 @@
 				table(v-if="!tab")
 					tr
 						th naam
+						th beschrijving
 						th startdatum
 						th einddatum
 						th aantal werkuren
 						th vaknummer
 					tr
 						td 3D raytracer
+						td Begin op tijd aan MESH!
 						td 4-3-2019
 						td 3-6-2019
 						td 6
 						td B-UCLL-MBI59A
 					tr
 						td VGO
+						td Deze opdracht moeten jullie ook mondeling verdedigen op het examen.
 						td 24-11-2019
 						td 26-11-2019
 						td 8
 						td B-UCLL-MBI59A
 					tr
 						td &nbsp;
+						td
 						td
 						td
 						td
