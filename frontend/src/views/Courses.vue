@@ -10,7 +10,7 @@
 					#bar(v-bind:style="getBarStyle(lab)")
 						p {{ getPercentage(lab) }}%
 				p Je hebt {{ getWorkedHours(lab) }} uren gewerkt. De lector schat een gemiddelde van {{ lab.hourEstimate }} uren.
-				h4.milestones Milestones
+				h4.milestones Milestones ({{ getMilestonesPercentage(lab.milestones) }}%)
 				ul
 					li(v-for="(milestone, index) in lab.milestones" :key="milestone._id" @click="check(milestone)" :class="isChecked(milestone)") {{ milestone.name }}
 </template>
@@ -51,6 +51,16 @@ export default {
 				}
 			});
 			return assignmentList;
+		},
+		getMilestonesPercentage(milestones) {
+			let size = milestones.length;
+			let checkedAmount = 0;
+			for (let i = 0; i < size; ++i) {
+				if (this.isChecked(milestones[i]) === 'checked') {
+					++checkedAmount;
+				}
+			}
+			return (checkedAmount / size) * 100;
 		},
 		check (m) {
 			UserService.get(this.username)
