@@ -120,8 +120,8 @@ export default {
 				return;
 			}
 			this.parseSheet(files[0]);
-			if(self.errors.length === 0) {
-				console.log(self.errors.length);
+			if (self.errors.length === 0) {
+				// console.log(self.errors.length);
 				self.success = true;
 			}
 		},
@@ -190,6 +190,7 @@ export default {
 						});
 					}
 
+					let milestonesCount = 0;
 					labs.forEach((lab) => {
 						if (lab.startDate && lab.endDate) {
 							lab.startDate.setHours(lab.startDate.getHours() + 1);
@@ -197,16 +198,25 @@ export default {
 							lab.startDate = this.formatDate(lab.startDate);
 							lab.endDate = this.formatDate(lab.endDate);
 						}
+						milestonesCount += lab.milestones.length;
 					});
 
-					labs.forEach(async (lab) => {
-						await LabsService.post(lab)
-							.catch((err) => {
-								err.response.data.errors.forEach((err) => {
-									self.errors.push(err);
+					if (milestonesCount !== milestoneJSON.length - 1) {
+						self.errors.push({
+							msg: 'Een milestone in het bestand heeft een onbestaande lab naam',
+							param: 'bestand'
+						});
+					} else {
+						labs.forEach(async (lab) => {
+							await LabsService.post(lab)
+								.catch((err) => {
+									err.response.data.errors.forEach((err) => {
+										self.errors.push(err);
+									});
 								});
-							});
-					});
+						});
+					}
+
 				} else {
 					self.errors.push({
 						msg: 'mag niet leeg zijn',

@@ -4,7 +4,7 @@
 		div(v-for="(course, index) in courses" :key="course")
 			h2.course-name {{ course }}
 			div.labs(v-for="(lab, index) in assignments(course)" :key="lab._id")
-				h3.lab-name {{ lab.name }}
+				h3.lab-name {{ lab.name }} (deadline: {{ getFormattedEndDate(lab.endDate) }})
 				p {{ getDescription(lab) }}
 				#progress
 					#bar(v-bind:style="getBarStyle(lab)")
@@ -19,6 +19,8 @@
 import LabsService from '@/api/LabsService';
 import WorksessionService from '@/api/WorksessionService';
 import UserService from '../api/UsersService.js';
+import moment from 'moment';
+
 export default {
 	name: 'courses',
 	data () {
@@ -52,7 +54,10 @@ export default {
 			});
 			return assignmentList;
 		},
-		getMilestonesPercentage(milestones) {
+		getFormattedEndDate (endDate) {
+			return moment(endDate).format('DD/MM/YYYY');
+		},
+		getMilestonesPercentage (milestones) {
 			let size = milestones.length;
 			let checkedAmount = 0;
 			for (let i = 0; i < size; ++i) {
@@ -60,7 +65,7 @@ export default {
 					++checkedAmount;
 				}
 			}
-			return (checkedAmount / size) * 100;
+			return Math.round((checkedAmount / size) * 10000) / 100;
 		},
 		check (m) {
 			UserService.get(this.username)
