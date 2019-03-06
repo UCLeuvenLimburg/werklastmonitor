@@ -7,7 +7,7 @@
 			p Kies periode
 		app-date-range-picker(ref="dateRangePicker")
 
-		ul.errors(v-if="toggle && messages")
+		ul.errors(v-if="toggle && messages.length > 0")
 			mdi-alert-icon
 			li(v-for="message of messages") {{ message }}
 
@@ -62,7 +62,7 @@ export default {
 			userCourses: [],
 			calculatedCourses: [],
 			padding: 70,
-			messages: null
+			messages: []
 		};
 	},
 	methods: {
