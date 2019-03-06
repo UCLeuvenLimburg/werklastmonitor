@@ -120,8 +120,8 @@ export default {
 				return;
 			}
 			this.parseSheet(files[0]);
-			if(self.errors.length === 0) {
-				console.log(self.errors.length);
+			if (self.errors.length === 0) {
+				// console.log(self.errors.length);
 				self.success = true;
 			}
 		},
@@ -216,7 +216,6 @@ export default {
 								});
 						});
 					}
-
 				} else {
 					self.errors.push({
 						msg: 'mag niet leeg zijn',

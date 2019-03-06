@@ -54,10 +54,10 @@ export default {
 			});
 			return assignmentList;
 		},
-		getFormattedEndDate(endDate) {
+		getFormattedEndDate (endDate) {
 			return moment(endDate).format('DD/MM/YYYY');
 		},
-		getMilestonesPercentage(milestones) {
+		getMilestonesPercentage (milestones) {
 			let size = milestones.length;
 			let checkedAmount = 0;
 			for (let i = 0; i < size; ++i) {
