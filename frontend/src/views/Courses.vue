@@ -60,7 +60,7 @@ export default {
 					++checkedAmount;
 				}
 			}
-			return (checkedAmount / size) * 100;
+			return Math.round((checkedAmount / size) * 10000) / 100;
 		},
 		check (m) {
 			UserService.get(this.username)
