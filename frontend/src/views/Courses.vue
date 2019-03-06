@@ -143,7 +143,7 @@ export default {
 			let labs = await LabsService.get();
 			let unfilteredLabs = labs.data;
 			unfilteredLabs.forEach((lab) => {
-				if (this.userCourses.includes(lab.course._id)) {
+				if (this.userCourses.includes(lab.course._id) && moment(lab.endDate).isSameOrAfter(moment())) {
 					this.labs.push(lab);
 				}
 			});
