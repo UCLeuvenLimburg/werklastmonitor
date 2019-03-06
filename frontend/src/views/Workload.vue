@@ -222,7 +222,7 @@ export default {
 				for (let hours in courseHours) {
 					let period = moment(start).add(hours, 'months');
 					if (courseHours[hours] > 7 * period.daysInMonth() /* month */) {
-						this.messages.push(`Je hebt voor ${period.format('MMMM, YYYY')} meer dan ${7 * period.daysInMonth()} werkuren ingepland.`)
+						this.messages.push(`Je hebt voor ${period.format('MMMM, YYYY')} meer dan ${7 * period.daysInMonth()} werkuren ingepland.`);
 					}
 				}
 				break;
@@ -231,7 +231,7 @@ export default {
 				for (let hours in courseHours) {
 					let period = moment(start).add(hours, 'weeks');
 					if (courseHours[hours] > 56 /* 8 * 7 = week */) {
-						this.messages.push(`Je hebt voor ${period.format('DD/MM')} - ${period.endOf('week').format('DD/MM')} meer dan 56 werkuren ingepland.`)
+						this.messages.push(`Je hebt voor ${period.format('DD/MM')} - ${period.endOf('week').format('DD/MM')} meer dan 56 werkuren ingepland.`);
 					}
 				}
 				break;
@@ -239,7 +239,7 @@ export default {
 			case 2:
 				for (let hours in courseHours) {
 					if (courseHours[hours] > 8) {
-						this.messages.push(`Je hebt voor ${moment(start).add(hours, 'days').format('DD/MM')} meer dan 8 werkuren ingepland.`)
+						this.messages.push(`Je hebt voor ${moment(start).add(hours, 'days').format('DD/MM')} meer dan 8 werkuren ingepland.`);
 					}
 				}
 				break;
