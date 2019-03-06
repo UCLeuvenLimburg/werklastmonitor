@@ -65,27 +65,30 @@ export default {
 			return this.$store.state.username;
 		}
 	},
-	mounted () {
-		let self = this;
-		(async () => {
-			console.log(self.username);
-			let req = await userService.get(self.username);
-			self.user = req.data;
-			self.userCourses = self.user.courses;
-			let labs = await labService.get();
-			labs.data.forEach((lab) => {
-				if (self.userCourses.includes(lab.course._id)) {
-					self.labs.push(lab);
-				}
-			});
-			let worksessions = await worksessionService.get();
-			worksessions.data.forEach((worksession) => {
-				if (worksession.studentNumber === self.username) {
-					self.worksessions.push(worksession);
-				}
-			});
-			self.fillDeadlines();
-		})();
+	watch: {
+		username () {
+			console.log('triggered username');
+			let self = this;
+			(async () => {
+				console.log(self.username);
+				let req = await userService.get(self.username);
+				self.user = req.data;
+				self.userCourses = self.user.courses;
+				let labs = await labService.get();
+				labs.data.forEach((lab) => {
+					if (self.userCourses.includes(lab.course._id)) {
+						self.labs.push(lab);
+					}
+				});
+				let worksessions = await worksessionService.get();
+				worksessions.data.forEach((worksession) => {
+					if (worksession.studentNumber === self.username) {
+						self.worksessions.push(worksession);
+					}
+				});
+				self.fillDeadlines();
+			})();
+		}
 	}
 };
 </script>
