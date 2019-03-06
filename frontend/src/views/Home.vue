@@ -42,11 +42,8 @@ export default {
 					let totalhours = 0;
 					this.worksessions.forEach((worksession) => {
 						if (worksession.lab === lab._id) {
-							console.log(worksession.lab);
-							console.log(lab._id);
 							worksession.workdays.forEach((workday) => {
 								totalhours += workday.workhours;
-								console.log(totalhours);
 							});
 						}
 					});
@@ -67,27 +64,27 @@ export default {
 	},
 	watch: {
 		username () {
-			console.log('triggered username');
-			let self = this;
-			(async () => {
-				console.log(self.username);
-				let req = await userService.get(self.username);
-				self.user = req.data;
-				self.userCourses = self.user.courses;
-				let labs = await labService.get();
-				labs.data.forEach((lab) => {
-					if (self.userCourses.includes(lab.course._id)) {
-						self.labs.push(lab);
-					}
-				});
-				let worksessions = await worksessionService.get();
-				worksessions.data.forEach((worksession) => {
-					if (worksession.studentNumber === self.username) {
-						self.worksessions.push(worksession);
-					}
-				});
-				self.fillDeadlines();
-			})();
+			if (this.$store.state.username !== null) {
+				let self = this;
+				(async () => {
+					let req = await userService.get(self.username);
+					self.user = req.data;
+					self.userCourses = self.user.courses;
+					let labs = await labService.get();
+					labs.data.forEach((lab) => {
+						if (self.userCourses.includes(lab.course._id)) {
+							self.labs.push(lab);
+						}
+					});
+					let worksessions = await worksessionService.get();
+					worksessions.data.forEach((worksession) => {
+						if (worksession.studentNumber === self.username) {
+							self.worksessions.push(worksession);
+						}
+					});
+					self.fillDeadlines();
+				})();
+			}
 		}
 	}
 };
