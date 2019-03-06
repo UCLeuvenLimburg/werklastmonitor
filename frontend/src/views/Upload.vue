@@ -216,7 +216,6 @@ export default {
 								});
 						});
 					}
-
 				} else {
 					self.errors.push({
 						msg: 'mag niet leeg zijn',

@@ -65,15 +65,13 @@ export default {
 			return this.$store.state.username;
 		}
 	},
-	created () {
+	mounted () {
 		let self = this;
 		(async () => {
-			userService.get(self.username)
-				.then((result) => {
-					self.user = result.data;
-					console.log(self.user);
-					self.userCourses = self.user.courses;
-				});
+			console.log(self.username);
+			let req = await userService.get(self.username);
+			self.user = req.data;
+			self.userCourses = self.user.courses;
 			let labs = await labService.get();
 			labs.data.forEach((lab) => {
 				if (self.userCourses.includes(lab.course._id)) {
