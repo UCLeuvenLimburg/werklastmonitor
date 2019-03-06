@@ -6,6 +6,11 @@
 			mdi-calendar-icon
 			p Kies periode
 		app-date-range-picker(ref="dateRangePicker")
+
+		ul.errors(v-if="toggle && messages")
+			mdi-alert-icon
+			li(v-for="message of messages") {{ message }}
+
 		graph-stackbar(
 			:height="400",
 			:labels="filteredCourses.tags",
@@ -27,11 +32,15 @@
 </template>
 
 <script>
+import 'mdi-vue/AlertIcon';
 import 'mdi-vue/CalendarIcon';
+
 import AppDateRangePicker from '@/components/AppDateRangePicker';
+
 import UserService from '../api/UsersService.js';
 import WorksessionService from '@/api/WorksessionService';
 import LabsService from '@/api/LabsService';
+
 import moment from 'moment';
 
 export default {
@@ -52,7 +61,8 @@ export default {
 			],
 			userCourses: [],
 			calculatedCourses: [],
-			padding: 70
+			padding: 70,
+			messages: null
 		};
 	},
 	methods: {
@@ -198,6 +208,43 @@ export default {
 					}
 				}
 			});
+
+			let courseHours = new Array(courses.hours[0].length).fill(0);
+			for (let course in courses.hours) {
+				for (let period in courses.hours[course]) {
+					courseHours[period] += courses.hours[course][period];
+				}
+			}
+
+			this.messages = [];
+			switch (type) {
+			case 0:
+				for (let hours in courseHours) {
+					let period = moment(start).add(hours, 'months');
+					if (courseHours[hours] > 7 * period.daysInMonth() /* month */) {
+						this.messages.push(`Je hebt voor ${period.format('MMMM, YYYY')} meer dan ${7 * period.daysInMonth()} werkuren ingepland.`)
+					}
+				}
+				break;
+
+			case 1:
+				for (let hours in courseHours) {
+					let period = moment(start).add(hours, 'weeks');
+					if (courseHours[hours] > 56 /* 8 * 7 = week */) {
+						this.messages.push(`Je hebt voor ${period.format('DD/MM')} - ${period.endOf('week').format('DD/MM')} meer dan 56 werkuren ingepland.`)
+					}
+				}
+				break;
+
+			case 2:
+				for (let hours in courseHours) {
+					if (courseHours[hours] > 8) {
+						this.messages.push(`Je hebt voor ${moment(start).add(hours, 'days').format('DD/MM')} meer dan 8 werkuren ingepland.`)
+					}
+				}
+				break;
+			}
+
 			return courses;
 		},
 		showDateRangePicker () {
@@ -469,6 +516,29 @@ export default {
 			font: 1rem $font;
 			line-height: 1.5rem;
 			font-weight: bold;
+		}
+	}
+
+	ul.errors {
+		position: relative;
+		padding: 16px;
+		background: $color-error;
+		color: $color-content-bg;
+		list-style: none;
+		border-radius: 4px;
+		margin: 8px 0;
+
+		svg {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 24px;
+			height: 24px;
+			fill: $color-content-bg;
+		}
+
+		li {
+			padding-left: 42px;
 		}
 	}
 }
