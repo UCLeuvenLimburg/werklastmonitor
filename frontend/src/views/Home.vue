@@ -5,8 +5,9 @@
 			h2 Welkom {{name}}
 			.deadlines
 				h3 Deadlines binnen de 7 dagen
-				ul
+				ul(v-if="deadlines.length !== 0")
 					li(v-for="deadline in deadlines" :class="{ red: deadline.red }") {{deadline.name}} : {{deadline.endDate}}, je hebt {{deadline.worked}} uren gewerkt van de {{deadline.hourEstimate}} uren voorzien volgens de lector.
+				p(v-if="deadlines.length ===0") Er zijn geen deadlines in de komende 7 dagen.
 		h3 Functie van deze applicatie
 		p De Werklastmonitor is een tool om studenten van de UC Leuven-Limburg te helpen met het inschatten van hun werklast en studiesessies in te plannen.
 		p Wanneer je een gedurende een bepaalde periode wilt werken of hebt gewerkt aan een vak, kun je deze werksessie toevoegen via de pagina ‘Toevoegen’. Je werksessies worden vervolgens op de agenda gevisualiseerd.
