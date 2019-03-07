@@ -43,14 +43,14 @@
 						td 4-3-2019
 						td 3-6-2019
 						td 6
-						td B-UCLL-MBI59A
+						td B-UCLL-MBI62A
 					tr
 						td VGO
 						td Deze opdracht moeten jullie ook mondeling verdedigen op het examen.
 						td 24-11-2019
 						td 26-11-2019
 						td 8
-						td B-UCLL-MBI59A
+						td B-UCLL-MBI50X
 					tr
 						td &nbsp;
 						td
