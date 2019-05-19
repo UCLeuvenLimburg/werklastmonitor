@@ -6,17 +6,17 @@
 		ul(:class="{ mobile: isMobileMenuOpen }", @click="isMobileMenuOpen = false")
 			li
 				router-link(to="/") Home
-			li(v-if="isStudent")
+			li(v-if="isSignedIn")
 				router-link(to="/courses") Vakken
 			li(v-if="isSignedIn")
 				router-link(to="/workload") Werklast
-			li(v-if="isStudent")
+			li(v-if="isSignedIn")
 				router-link(to="/agenda") Agenda
-			li(v-if="isStudent")
+			li(v-if="isSignedIn")
 				router-link(to="/addsession") Toevoegen
-			li(v-if="username")
+			li(v-if="isSignedIn")
 				router-link(to="/upload") Upload
-			li(v-if="isStudent")
+			li(v-if="isSignedIn")
 				router-link(to="/registration") Inschrijvingen
 			li.right(v-if="!isSignedIn")
 				a.highlight(href="#", v-on:click="auth") Aanmelden
